@@ -35,7 +35,9 @@ ALTER SEQUENCE public.db_version_id_seq OWNED BY public.db_version.id;
 CREATE TABLE IF NOT EXISTS public.organizations (
     organization_name character varying NOT NULL,
     organization_id bigint NOT NULL,
-    organization_key character varying NOT NULL
+    organization_key character varying NOT NULL,
+    reg_email character varying NOT NULL,
+    reg_password character varying NOT NULL
 );
 
 
