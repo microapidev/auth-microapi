@@ -3,6 +3,9 @@ import cors from "cors";
 import v1Router from "./v1/routes";
 import CustomError from "./utils/customError";
 import errorHandler from "./utils/errorhandler";
+import { swaggerSpec } from "./utils/swaggerSpec";
+
+const swaggerUi = require("swagger-ui-express");
 
 // create express app
 const app = express();
@@ -18,6 +21,9 @@ app.use(express.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.status(200).send("Fury!");
 });
+
+// use swagger-Ui-express for your app documentation endpoint
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // router for api version 1
 app.use("/api/v1", v1Router);
