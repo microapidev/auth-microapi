@@ -1,3 +1,4 @@
+require("custom-env").env();
 
 module.exports = {
   dbConfig: {
@@ -5,10 +6,10 @@ module.exports = {
     port: process.env.DB_PORT,
     host: process.env.DB_HOST,
     password: process.env.DB_PASSWORD,
-    user: process.env.DB_USER
+    user: process.env.DB_PASSWORD,
   },
 
   server: {
-    port: process.env.PORT || 3000
-  }
+    port: process.env.PORT || 3000,
+  },
 };
