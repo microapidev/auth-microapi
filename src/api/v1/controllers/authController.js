@@ -20,12 +20,10 @@ const hashPassword = async (password) => {
   return hash;
 };
 
-/**
 const comparePassword = async (password, hashed) => {
   const isValid = await bcrypt.compare(password, hashed);
   return isValid;
 };
-*/
 
 const registerOrg = async (orgData) => {
   let hashedPassword = "";
@@ -85,6 +83,65 @@ const authCtrl = {
         );
       }
 
+      return next(error);
+    }
+  },
+  loginOrg: async (req, res, next) => {
+    // check if organization exists
+    let organization;
+    try {
+      // console.log(`req.body signIn: ${JSON.stringify(req.body)}`);
+      const sql = `
+        SELECT * from organizations 
+        WHERE email = $1
+      `;
+
+      const values = [req.body.email];
+      const rows = await db.query(sql, values);
+      organization = rows[0];
+    } catch (error) {
+      // if organization not exist return login error
+      if (error.message.indexOf("not found") >= 0) {
+        return next(
+          new CustomError(401, "Invalid organization email or password")
+        );
+      }
+
+      debug(error.message);
+      return next(error);
+    }
+
+    // organization exists compare password
+    try {
+      let passwordOk;
+      try {
+        passwordOk = await comparePassword(
+          req.body.password,
+          organization.password
+        );
+      } catch (error) {
+        return next(
+          new CustomError(401, "Invalid organization email or password")
+        );
+      }
+
+      if (passwordOk) {
+        // return token, orgId and message
+        const token = generateToken(organization);
+
+        return handleResponse(res, 200, {
+          organizationId: organization.organization_id,
+          organizationName: organization.organization_name,
+          message: "Login successful",
+          token,
+        });
+      }
+
+      return next(
+        new CustomError(401, "Invalid organization email or password")
+      );
+    } catch (error) {
+      console.log(error.message);
       return next(error);
     }
   },

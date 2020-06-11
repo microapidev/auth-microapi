@@ -140,6 +140,11 @@ ALTER TABLE ONLY public.organizations
 ALTER TABLE ONLY public.organizations
     ADD CONSTRAINT organization_pkey PRIMARY KEY (organization_id);
 
+ALTER TABLE public.organizations
+  DROP CONSTRAINT IF EXISTS organizations_email_key;
+ALTER TABLE public.organizations
+  ADD CONSTRAINT organizations_email_key UNIQUE(email);
+
 
 --
 -- Name: users_organization_id_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
