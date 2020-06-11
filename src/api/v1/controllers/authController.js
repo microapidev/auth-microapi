@@ -7,10 +7,7 @@ const debug = require("debug")("log");
 
 export const generateToken = (orgData) => {
   const { organization_id: organizationId, email } = orgData;
-  const secretPhrase = Buffer.from(
-    process.env.JWT_SECRET || "Go fury go!",
-    "base64"
-  );
+  const secretPhrase = Buffer.from(process.env.JWT_SECRET, "base64");
   const token = jwt.sign({ organizationId, email }, secretPhrase, {
     expiresIn: "14d",
   });
