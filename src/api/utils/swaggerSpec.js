@@ -9,8 +9,7 @@ const swaggerDefinition = {
     description:
       "This is the REST API Documentation for the Authentication Microservice created by the Fury backend team", // short description of the app
   },
-  host: "localhost:3000", // the host or url of the app
-  basePath: "/api/v1", // the basepath of your endpoint
+  basePath: "/v1", // the basepath of your endpoint
 };
 
 // options for the swagger docs
