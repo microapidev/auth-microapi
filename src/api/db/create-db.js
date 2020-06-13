@@ -15,12 +15,12 @@ const createDB = async (dbConfig) => {
   });
 
   const migrateFn = async () => {
-    debug("Running migration ...");
+    debug("Running initial migration ...");
     const sql = await fs.readFile(
       path.join(__dirname, "./sql/db-create.sql"),
       "utf8"
     );
-    debug("SQL migration file read successfully");
+    debug("SQL initial migration file read successfully");
 
     // reconnect client first
     const migrationClient = await pool.connect();
@@ -34,7 +34,7 @@ const createDB = async (dbConfig) => {
 
     // do some seeding here maybe create an initial super-admin, admin and responder
 
-    debug("Migration run succesfully");
+    debug("Initial migration run succesfully");
     migrationClient.release();
 
     await pool.end();
@@ -58,20 +58,23 @@ const createDB = async (dbConfig) => {
 
       // Table exists check if it has any rows
       if (result.rows[0].migrated) {
-        debug("Database has already been migrated");
+        debug("Initial database migration has already been run");
+
+        // run additional migrations here
+
         client.release();
         await pool.end();
 
         return "dbAlreadyMigrated";
       }
       // migration table is empty
-      throw new Error("Error: DB exists but migration table is empty");
+      throw new Error("Error: DB exists but version table is empty");
     } catch (error) {
       // release old connection
       client.release();
 
       if (error.message.includes('relation "db_version" does not exist')) {
-        debug("Migration has not run yet. Attempting to run ...");
+        debug("Initial migration has not run yet. Attempting to run ...");
         try {
           await migrateFn();
 
