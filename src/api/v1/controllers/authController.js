@@ -147,4 +147,20 @@ const authCtrl = {
   },
 };
 
+exports.logoutOrg = (req, res, next) {
+  //check for a session
+  if(req.session) {
+    //if found, destroy it
+    req.session.destroy(function(err) {
+      if(err) {
+        return next(err);
+      } 
+      else {
+        //return to index
+        return res.redirect('/');
+      }
+    });
+  }
+};
+
 export default authCtrl;
