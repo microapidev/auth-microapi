@@ -1,4 +1,6 @@
 
+ 
+
 1. Okewole Oluwatobi [xt.]
 2. Oketunde Micheal [gelgit]
 1. Okewole Oluwatobi [xt.]
@@ -71,3 +73,7 @@ Kingsley Chiemerie Amoke
 Okputu Emmanuel Okputu - Slack username - @immanuelredd
 Temitope Emmanuel Ojo - slack username = @Yhamagee
 Chijioke Ikechukwu - slack username @dacruz
+
+
+
+Osemeke Onyekachukwu - @onyeka
