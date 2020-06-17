@@ -1,3 +1,3 @@
-kamula isaac
-@isaac
+name kamula isaac
+slack username @isaac
 
