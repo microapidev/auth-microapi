@@ -25,6 +25,14 @@ const createDB = async (dbConfig) => {
     // reconnect client first
     const migrationClient = await pool.connect();
 
+    // create schema if not exists
+    await migrationClient.query(
+      `CREATE SCHEMA IF NOT EXISTS ${dbConfig.schema}`
+    );
+
+    // set default schema
+    await migrationClient.query(`SET SCHEMA '${dbConfig.schema}'`);
+
     await migrationClient.query(sql);
     await migrationClient.query(`
         INSERT INTO DB_VERSION (ID, VERSION)
@@ -52,6 +60,8 @@ const createDB = async (dbConfig) => {
     try {
       debug("Checking for initial migration ....");
 
+      // set default schema
+      await client.query(`SET SCHEMA '${dbConfig.schema}'`);
       const result = await client.query(
         "select exists(select version from db_version where version >= 1) as migrated"
       );
