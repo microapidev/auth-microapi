@@ -15,7 +15,7 @@ class DBConnection {
         password: dbConfig.password,
         port: dbConfig.port,
       });
-
+      this.schema = dbConfig.schema;
       this.client = await this.pool.connect();
       debug("Connected to DB successfully");
     } catch (error) {
@@ -28,6 +28,7 @@ class DBConnection {
     if (!this.pool) {
       await this.connect();
     }
+    await this.client.query(`SET SCHEMA '${this.schema}'`);
     const result = await this.client.query(sql, params);
     return result.rows;
   }
