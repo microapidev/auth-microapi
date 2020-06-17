@@ -4,5 +4,3 @@ slackname:Amanie
 Name: Abdulazeez Shittu 
 slackname:abdulazeez.shittu 
 
-Name: Adegoke Bestman
-Slackname: adegoke
