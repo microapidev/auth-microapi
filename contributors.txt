@@ -1,11 +1,10 @@
-<<<<<<< HEAD
-=======
+
 
  William Imoukhuede @Agbebakun
 
 1. Okewole Oluwatobi [xt.]
 2. Oketunde Micheal [gelgit]
->>>>>>> ba0ded62e61409f612704b8d9927f20e8d5463c1
+
 1. Okewole Oluwatobi [xt.]
 10. Samuel Ayegbusi [@sambalicious]
 1. Okewole Oluwatobi
@@ -87,7 +86,10 @@ Ezinne Miracle|| @Miracle
 Temitope Emmanuel Ojo - slack username = @Yhamagee
 Usman Abdulsamad Olawale - @AbdulsamadUsman
 Emmanuel Obu Junior - @Obu
+
 Oduro Twumasi John Barnes - @Barnes
+Jack Ojee
+
 Chijioke Ikechukwu - slack username @dacruz
 
 Anash Uddin - @anash_udn
@@ -98,7 +100,7 @@ samuel ayomide - @Tanimola
 
 
 
-
+Jibril Salaudeen
 Ajayi olawale - @horlawale
 
 
