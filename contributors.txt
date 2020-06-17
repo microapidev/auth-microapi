@@ -1,6 +1,6 @@
 
- 
-
+1. Okewole Oluwatobi [xt.]
+2. Oketunde Micheal [gelgit]
 1. Okewole Oluwatobi [xt.]
 10. Samuel Ayegbusi [@sambalicious]
 1. Okewole Oluwatobi
@@ -68,3 +68,4 @@ Abdulazeez Shittu @abdulazeez.shittu
 Alikali Ojonugwa Justice - @Ojay - FRONTEND
 Kingsley Chiemerie Amoke
 Okputu Emmanuel Okputu - Slack username - @immanuelredd
+
