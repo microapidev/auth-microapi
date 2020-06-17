@@ -15,6 +15,7 @@ Hi, I am making corn here :) @adah
 
 
 ### To Contribute:
+FOLLOW THE RIGHT FORMAT WHILE MAKING PULL REQUEST(by @Esi)
 * Clone the code to your Local
 * Create a branch with the feature name you wish to work on
 * Add any changes
