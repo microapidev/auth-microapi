@@ -1,5 +1,5 @@
 
- William Imoukhuede @Agbebakun
+ 
 
 1. Okewole Oluwatobi [xt.]
 2. Oketunde Micheal [gelgit]
@@ -74,7 +74,6 @@ Jibola Bakare ~ slack username:  @everybees
 36. Taiwo Adejare - @jboy
 37. Andeh Ebele -@jandeh
 38. Oluwaseun Abiola, @Oluwaseun
-Peter Israel-Ovirih, @PeterIsrael
 Amanam Sandy @Amanie
 Abdulazeez Shittu @abdulazeez.shittu
 Alikali Ojonugwa Justice - @Ojay - FRONTEND
@@ -97,6 +96,8 @@ samuel ayomide - @Tanimola
 
 
 Ajayi olawale - @horlawale
+
+Abiola Titus - @Botus
 
 
 
