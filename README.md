@@ -2,7 +2,7 @@
 This is the microapi which is used to for authentication of users to access other microapis.
 
 ## Getting Started
-
+Follow the right process when creating a Pull request (by Esi)
 # fury-backend-auth
 Auth-Micro API
      A backend projectby HNG Interns in stage 3, however it is a stage two project that was 
