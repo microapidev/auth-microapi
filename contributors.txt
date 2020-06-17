@@ -1,0 +1,2 @@
+     
+     Joseph Ebin (@Ericblack) -Create user schema and connect to database (User Model)
