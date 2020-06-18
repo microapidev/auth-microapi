@@ -27,5 +27,6 @@ app.get('/', (req, res) => {
 //     err.status = 404;
 //     next(err);
 // });
+console.log(process.env.DB_URL)
 
 app.listen(PORT, () => console.log(`App started @${PORT}`))

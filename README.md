@@ -49,3 +49,6 @@ Please always follow the right format in making pull request
 
 #Password encryption
 	-bcrypt - encrypt and hash the password
+
+#Database Connection
+	-Host the DB to the mongoDB atlas
