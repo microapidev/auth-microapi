@@ -36,4 +36,16 @@ Please always follow the right format in making pull request
 * Add any changes
 * Make a pull request to develop branch
 
+#Set Up - folder structures and install needed packages
+	-npm install
+	-npm install express cors jsonwebtoken bcrypt mongoose and moment
+	-set up folder bolerplate
 
+#Create user models
+	-username
+	-email
+	-password
+	isAdmin - false
+
+#Password encryption
+	-bcrypt - encrypt and hash the password
