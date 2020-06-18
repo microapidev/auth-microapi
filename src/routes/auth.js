@@ -27,13 +27,20 @@ router.post('/login', async(req, res, next){
 	if(!user) return res.status(400).json({'message':'Invalid Email or Password'});
 
 	//Checking if password is correct
-	const validPassword = await User.comparePassword(req.body.password);
-	if (!validPassword) return res.status(400).json({ 'message': 'Invalid Email or Password' });
+	await User.comparePassword(req.body.password, function(err){
 
-	const {token} = User.generateToken();
+		if (err) return res.status(400).json({ 'message': 'Invalid Email or Password' });
 
-	res.header('auth-token', token);
+		
+	});
+	
+	await User.generateToken(function(result) {
 
+		const {token} = result;
+		res.header('auth-token', token);
+	});
+
+	
 
 });
 
