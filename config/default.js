@@ -20,6 +20,7 @@ module.exports = {
     host: db_host || process.env.DB_HOST,
     password: db_password || process.env.DB_PASSWORD,
     user: db_user || process.env.DB_USER,
+    schema: process.env.DB_SCHEMA || "auth",
   },
 
   server: {
