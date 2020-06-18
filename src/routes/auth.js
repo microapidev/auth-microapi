@@ -1,12 +1,10 @@
 const router = require('express').Router();
-const db = ('../models')
+const db = require('../models')
 
 //**HARDCODED USER**//
 //POST - /api/auth/current-user
 //msg - Get current user
 router.get('/current-user', (req, res, next) => {
-	const user = db.User.find();
-	console.log(user)
 	res.json({
 		name: "khalifa",
 		email: "khalifa@gmail.com",
