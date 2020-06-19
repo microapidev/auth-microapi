@@ -21,7 +21,11 @@ app.get('/', (req, res) => {
     })
 });
 
-
+app.get('/', (req, res) => {
+    res.json({
+        massage: "Wellcome micro-auth-api"
+    })
+});
 // app.use((req, res, next) => {
 //     let err = new Error("Not Found");
 //     err.status = 404;
