@@ -1,11 +1,18 @@
 # auth-microapi
 This is the microapi which is used to for authentication of users to access other microapis.
 
+
+[![Build Status](https://travis-ci.org/hngi/fury-backend-auth.svg?branch=develop)](https://travis-ci.org/hngi/fury-backend-auth) [![Coverage Status](https://coveralls.io/repos/github/hngi/fury-backend-auth/badge.svg?branch=develop)](https://coveralls.io/github/hngi/fury-backend-auth?branch=develop)
+
 ## Getting Started
+
+
+=======
 Follow the right process when creating a Pull request (by Esi)
 # fury-backend-auth
+
 Auth-Micro API
-     A backend projectby HNG Interns in stage 3, however it is a stage two project that was 
+     A backend project by HNG Interns in stage 3, however it is a stage two project that was 
 rolled over due to incompletion. 
 
 
@@ -19,24 +26,29 @@ However, as we scour through this topic of API authentication, it’s crucial to
 One very common example is the Oauth Authentication;
 OAuth Authentication
 Technically, Oauth is a technique that does both authentication and authorization. It is a form of API authentication that gives applications with the ability to communicate with API server to provide access. When a user logs into the system, it requests authentication in the form of a token. The client is required to forward the request to an authentication server, which either allows or rejects this it. OAuth authentication is fundamentally a more secure and powerful system than the rests, and it’s quickly becoming the number one choice for many clients and applications.
-[![Build Status](https://travis-ci.org/hngi/fury-backend-auth.svg?branch=develop)](https://travis-ci.org/hngi/fury-backend-auth) [![Coverage Status](https://coveralls.io/repos/github/hngi/fury-backend-auth/badge.svg?branch=develop)](https://coveralls.io/github/hngi/fury-backend-auth?branch=develop)
-
-
-```
-Hello @017n is here 😊 
-
-```
-
-Hi, I am making corn here :) @adah
 
 
 ### To Contribute:
-please always follow the right format in making pull request
+Please always follow the right format in making pull request
+
 * Clone the code to your Local
 * Create a branch with the feature name you wish to work on
 * Add any changes
 * Make a pull request to develop branch
 
-[![Build Status](https://travis-ci.org/hngi/fury-backend-auth.svg?branch=develop)](https://travis-ci.org/hngi/fury-backend-auth) [![Coverage Status](https://coveralls.io/repos/github/hngi/fury-backend-auth/badge.svg?branch=develop)](https://coveralls.io/github/hngi/fury-backend-auth?branch=develop)
+#Set Up - folder structures and install needed packages
+	-npm install
+	-npm install express cors jsonwebtoken bcrypt mongoose and moment
+	-set up folder bolerplate
 
+#Create user models
+	-username
+	-email
+	-password
+	isAdmin - false
 
+#Password encryption
+	-bcrypt - encrypt and hash the password
+
+#Database Connection
+	-Host the DB to the mongoDB atlas
