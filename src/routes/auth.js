@@ -1,26 +1,29 @@
 const router = require('express').Router();
-const db = require('../models')
+const express = require("express");
+const {
+	protect
+} = require("../middleware/auth");
+const {
+	register,
+	login,
+	getUser
+} = require("../controllers/auth");
 
-//**HARDCODED USER**//
-//POST - /api/auth/current-user
-//msg - Get current user
-router.get('/current-user', (req, res, next) => {
-	res.json({
-		name: "khalifa",
-		email: "khalifa@gmail.com",
-		isAdmin: true
-	})
-})
+// A protected Route
+router.get("/home", protect, (req,res) => {
+		res.status(200).json({success: true, message: "hola"});
 
-//POST - /api/auth/current-user
-//msg - Register route
-router.post('/register')
+});
 
-//POST - /api/auth/current-user
-//msg - Login route
-router.post('/login')
 
-//POST - /api/auth/current-user
+router.post('/register', register)
+
+
+router.post('/login', login)
+
+//URL - /api/v1/auth/current-user
+// Get current User credentials
+router.get('/getuser', protect, getUser)
 //msg - LogOut route
 router.get('/logout')
 
