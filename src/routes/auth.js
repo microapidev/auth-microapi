@@ -2,7 +2,7 @@ const router = require('express').Router();
 const express = require("express");
 const {
 	protect
-} = require("../middleware/auth");
+} = require("../Middleware/auth");
 const {
 	register,
 	login,

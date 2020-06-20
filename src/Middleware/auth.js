@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("./async");
 const errorResponse = require("../utils/errorResponse");
-const User = require("../models/User");
+const User = require("../models/user");
 
 // Implement route Protection and also get current User id
 // Anytime a user makes a request to a protected route, the current user id (req.user.id) can then be run through the database to get the active user 
