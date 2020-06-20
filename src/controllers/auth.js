@@ -1,10 +1,10 @@
-const User = require('../models/User');
-const asyncHandler = require("../middleware/async");
+const User = require('../models/user');
+const asyncHandler = require("../Middleware/async");
 const ErrorResponse = require('../utils/errorResponse');
 
 const {
     protect
-} = require("../middleware/auth");
+} = require("../Middleware/auth");
 
 //@Desc register
 //@route Post /api/v1/auth/register

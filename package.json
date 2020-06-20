@@ -12,7 +12,7 @@
     "lint:fix": "eslint --fix \"src/**/*.js\"",
     "build": "babel src --out-dir dist --delete-dir-on-start --copy-files --ignore src/**/temp_models",
     "dev": "cross-env DEBUG=log NODE_ENV=development nodemon --exec babel-node ./src/index.js",
-    "start": "cross-env DEBUG=log NODE_ENV=production node ./dist/index.js"
+    "start": "node src/server.js"
   },
   "repository": {
     "type": "git",
