@@ -4,6 +4,7 @@ const cors = require('cors');
 const PORT = process.env.PORT || 5000;
 
 const authRoute = require('./routes/auth');
+const registerRoute= require('./routes/register');
 
 const app = express();
 
@@ -14,6 +15,8 @@ app.use(express.urlencoded({
 }));
 
 app.use('/api/auth', authRoute);
+
+app.use('/api/register', registerRoute);
 
 app.get('/', (req, res) => {
     res.json({
