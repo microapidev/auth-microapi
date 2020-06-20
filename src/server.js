@@ -1,35 +1,24 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const PORT = process.env.PORT || 5000;
-const connectDB = require("./controllers/index");
-const authRoute = require('./routes/auth');
+const express = require("express");
+const dotenv = require("dotenv");
+const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
+// routes
+const auth = require("./routes/auth");
 
 const app = express();
-
-// connectDB
-connectDB();
-
-app.use(cors());
+//bodyParser
 app.use(express.json());
-app.use(express.urlencoded({
-    extended: true
-}));
-
-app.use('/api/v1/auth', authRoute);
-
-app.get('/', (req, res) => {
-    res.json({
-        message: "Welcome to micro-auth-api"
-    })
+app.use(cookieParser());
+//mounts
+app.use("/api/v1/auth", auth);
+mongoose.connect(process.env.DB_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 });
 
 
-// app.use((req, res, next) => {
-//     let err = new Error("Not Found");
-//     err.status = 404;
-//     next(err);
-// });
 
 
-app.listen(PORT, () => console.log(`App started @${PORT}`))
+app.listen(process.env.PORT, () => {
+  console.log("Server running on port 5000");
+});

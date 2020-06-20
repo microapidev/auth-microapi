@@ -5,23 +5,23 @@ const connectDB = () => {
     // // const DB_URL = process.env.DB_URL;
 
     // //Replace it with with mongodb-cluster
-    // mongoose.connect('mongodb://localhost/auth-api', {
-    //         keepAlive: true,
-    //         useNewUrlParser: true,
-    //         useUnifiedTopology: true
-    //     })
-    //     .then(() => console.log("Database connected!!"))
-    //     .catch(err => console.log(`Error: ${err}`));
-
-    mongoose.connect(process.env.DB_URL, {
+    mongoose.connect('mongodb://localhost/auth-api', {
             keepAlive: true,
             useNewUrlParser: true,
-            useUnifiedTopology: true,
-            useFindAndModify: false,
-            useCreateIndex: true
+            useUnifiedTopology: true
         })
         .then(() => console.log("Database connected!!"))
         .catch(err => console.log(`Error: ${err}`));
+
+    // mongoose.connect(process.env.DB_URL, {
+    //         keepAlive: true,
+    //         useNewUrlParser: true,
+    //         useUnifiedTopology: true,
+    //         useFindAndModify: false,
+    //         useCreateIndex: true
+    //     })
+        // .then(() => console.log("Database connected!!"))
+        // .catch(err => console.log(`Error: ${err}`));
 };
 
 
