@@ -12,15 +12,18 @@ const connectDB = () => {
     //     })
     //     .then(() => console.log("Database connected!!"))
     //     .catch(err => console.log(`Error: ${err}`));
-
+    //console.time("start");
     mongoose.connect(process.env.DB_URL, {
-            keepAlive: true,
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-            useFindAndModify: false,
-            useCreateIndex: true
+        keepAlive: true,
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useFindAndModify: false,
+        useCreateIndex: true
+    })
+        .then(() => {
+            console.log("Database connected!!");
+            // console.timeEnd("Time elapse");
         })
-        .then(() => console.log("Database connected!!"))
         .catch(err => console.log(`Error: ${err}`));
 };
 
