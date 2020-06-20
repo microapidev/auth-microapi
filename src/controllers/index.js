@@ -5,10 +5,11 @@ const connectDB = () => {
     // // const DB_URL = process.env.DB_URL;
 
     // //Replace it with with mongodb-cluster
-    // mongoose.connect('mongodb://localhost/auth-api', {
+    // mongoose.connect('mongodb://localhost:27017/authapi', {
     //         keepAlive: true,
     //         useNewUrlParser: true,
-    //         useUnifiedTopology: true
+    //         useUnifiedTopology: true,
+    //         useCreateIndex:true
     //     })
     //     .then(() => console.log("Database connected!!"))
     //     .catch(err => console.log(`Error: ${err}`));

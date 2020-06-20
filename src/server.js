@@ -20,7 +20,7 @@ app.use('/api/v1/auth', authRoute);
 
 app.get('/', (req, res) => {
     res.json({
-        message: "Welcome micro-auth-api"
+        message: "Welcome to micro-auth-api"
     })
 });
 
