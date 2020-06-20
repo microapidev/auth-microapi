@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config()
@@ -20,8 +21,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    required: true,
-    enum: 'user'
+  
   },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
@@ -48,5 +48,16 @@ userSchema.methods.getSignedJwtToken = function () {
 userSchema.methods.matchPasswords = async function (enteredPassword) {
 return await bcrypt.compare(enteredPassword, this.password);
 };
+
+// generate & hash
+userSchema.methods.getResetPasswordToken = function () {
+  const resetToken = crypto.randomBytes(20).toString("hex");
+
+// Hash and store token
+this.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest("hex");
+
+// Token Expires
+this.resetPasswordExpire = Date.now + 10 * 60 * 1000;
+}
 
 module.exports = mongoose.model("User", userSchema);

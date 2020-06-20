@@ -20,8 +20,8 @@ const connectDB = () => {
     //         useFindAndModify: false,
     //         useCreateIndex: true
     //     })
-        // .then(() => console.log("Database connected!!"))
-        // .catch(err => console.log(`Error: ${err}`));
+    //     .then(() => console.log("Database connected!!"))
+    //     .catch(err => console.log(`Error: ${err}`));
 };
 
 

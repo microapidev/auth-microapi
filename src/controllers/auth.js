@@ -47,21 +47,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   sendTokenResponse(user,200,res);
 });
 
-const sendTokenResponse = (user,statusCode,res) => {
-  const token = user.getSignedJwtToken();
-  const options = {
-    expires: new Date(Date.now()+process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
-    httpOnly: true
-  }
-  res
-  .status(statusCode)
-  .cookie("token",token,options)
-  .json({success:true,
-    token
-  
-  })
 
-}
 
 //@Desc getuser
 //@route Post /api/v1/auth/getuser
@@ -88,3 +74,41 @@ exports.logOut = asyncHandler(async (req, res, next) => {
     data: {}
   });
 });
+
+//@Desc forgotpassword
+//@route  POST/api/v1/auth/forgotpassword
+//@access Public
+
+exports.forgotpassword = asyncHandler(async (req, res, next) => {
+  const user = await User.findOne({email : req.body.email});
+
+  if(!user){
+    return next (new ErrorResponse("No such user exists",401));
+  }
+
+  //Get reset token
+  const resetToken = user.getResetPasswordToken();
+
+  res.status(200).json({
+    success: true,
+    data: {}
+  });
+});
+
+// Send Token Response
+const sendTokenResponse = (user, statusCode, res) => {
+  const token = user.getSignedJwtToken();
+  const options = {
+    expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
+    httpOnly: true
+  }
+  res
+    .status(statusCode)
+    .cookie("token", token, options)
+    .json({
+      success: true,
+      token
+
+    })
+
+}
