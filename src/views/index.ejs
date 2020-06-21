@@ -41,7 +41,19 @@ The password reset link is then sent to this email.</small><br><br><h5 class="la
 &nbsp;
 {{URL}}/api/v1/auth/getuser</h4></a></div><div id=collapse-Routes-GetUser class="panel-collapse collapse"><div class=panel-body><h5 class="label label-default">Description</h5><br><small><p>Route to get logged in user
 This route is used to get the credentials of the logged in user.
-It returns the credentials of the user as an object. This object can be tapped to get any information you need about the user.</small><br><br></div></div></div><div class="panel panel-success" id=jump-Routes-LogIn><div class=panel-heading><small class="pull-right text-muted">raw</small>
+It returns the credentials of the user as an object. This object can be tapped to get any information you need about the user.</small><br><br><select class=resp-selector>
+<option value>Select Example Request/Response
+<option value=req_res_Routes_GetUser_0_GetUser>Get User</select><br><section id=req_res_Routes_GetUser_0_GetUser style=display:none><h4>Example Request</h4><h5>URL: {{URL}}/api/v1/auth/getuser</h5><h5 class="label label-primary">Body</h5><h4>Example Response</h4><h5 class="label label-success">Body</h5><span class=resp-prettyprint>{
+&#34;success&#34;: true,
+&#34;data&#34;: {
+&#34;_id&#34;: &#34;5eee3b0a949cd00a4cf5f0f7&#34;,
+&#34;name&#34;: &#34;Oduro Twumasi Jay&#34;,
+&#34;email&#34;: &#34;kwame@me.com&#34;,
+&#34;role&#34;: &#34;user&#34;,
+&#34;createdAt&#34;: &#34;2020-06-20T16:36:26.837Z&#34;,
+&#34;__v&#34;: 0
+}
+}</span><div class=clearfix></div><h5 class="label label-info">Code:</h5><strong>200</strong></section></div></div></div><div class="panel panel-success" id=jump-Routes-LogIn><div class=panel-heading><small class="pull-right text-muted">raw</small>
 <a class=text-success data-toggle=collapse data-parent=#accordion-Routes href=#collapse-Routes-LogIn><h4 class=panel-title><span class="glyphicon glyphicon-plus"></span><strong>Log In</strong> &nbsp;|&nbsp;
 <strong class="request-method border-success">POST</strong>
 &nbsp;
@@ -52,13 +64,44 @@ These credentials are the
 * Password</small><br><br><h5 class="label label-primary">Body</h5><span class=resp-prettyprint>{
 &#34;email&#34;:&#34;kwame@me.com&#34;,
 &#34;password&#34;:&#34;kwame@2000&#34;
-}</span><div class=clearfix></div></div></div></div><div class="panel panel-info" id=jump-Routes-LogOut><div class=panel-heading><small class="pull-right text-muted">raw</small>
+}</span><div class=clearfix></div><select class=resp-selector>
+<option value>Select Example Request/Response
+<option value=req_res_Routes_LogIn_0_LogIn>Log In
+<option value=req_res_Routes_LogIn_1_LogIn_28WithWrongCredentials_29>Log In (With Wrong Credentials)</select><br><section id=req_res_Routes_LogIn_0_LogIn style=display:none><h4>Example Request</h4><h5>URL: {{URL}}/api/v1/auth/login</h5><h5 class="label label-primary">Body</h5><span class=resp-prettyprint>{
+&#34;email&#34;:&#34;kwame@me.com&#34;,
+&#34;password&#34;:&#34;kwame@2000&#34;
+}</span><div class=clearfix></div><h4>Example Response</h4><h5 class="label label-success">Body</h5><span class=resp-prettyprint>{
+&#34;success&#34;: true,
+&#34;token&#34;: &#34;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZWUzYjBhOTQ5Y2QwMGE0Y2Y1ZjBmNyIsImlhdCI6MTU5MjcxNjMyMSwiZXhwIjoxNTk1MzA4MzIxfQ.e1yJD-Rdy4hb9AZCtE9IEUXYUuW_VjSJlgxx0GMWJ5I&#34;
+}</span><div class=clearfix></div><h5 class="label label-info">Code:</h5><strong>200</strong></section><section id=req_res_Routes_LogIn_1_LogIn_28WithWrongCredentials_29 style=display:none><h4>Example Request</h4><h5>URL: {{URL}}/api/v1/auth/login</h5><h5 class="label label-primary">Body</h5><span class=resp-prettyprint>{
+&#34;email&#34;:&#34;kwame@me.com&#34;,
+&#34;password&#34;:&#34;kwame@200&#34;
+}</span><div class=clearfix></div><h4>Example Response</h4><h5 class="label label-success">Body</h5><span class=resp-prettyprint>&lt;!DOCTYPE html&gt;
+&lt;html lang=&#34;en&#34;&gt;
+&lt;head&gt;
+&lt;meta charset=&#34;utf-8&#34;&gt;
+&lt;title&gt;Error&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;pre&gt;Error: Invalid Credentials
+&lt;br&gt; &amp;nbsp; &amp;nbsp;at G:\Jobs\auth-microapi\src\controllers\auth.js:44:17
+&lt;/pre&gt;
+&lt;/body&gt;
+&lt;/html&gt;</span><div class=clearfix></div><h5 class="label label-info">Code:</h5><strong>401</strong></section></div></div></div><div class="panel panel-info" id=jump-Routes-LogOut><div class=panel-heading><small class="pull-right text-muted">raw</small>
 <a class=text-info data-toggle=collapse data-parent=#accordion-Routes href=#collapse-Routes-LogOut><h4 class=panel-title><span class="glyphicon glyphicon-plus"></span><strong>Log Out</strong> &nbsp;|&nbsp;
 <strong class="request-method border-info">GET</strong>
 &nbsp;
 {{URL}}/api/v1/auth/logout</h4></a></div><div id=collapse-Routes-LogOut class="panel-collapse collapse"><div class=panel-body><h5 class="label label-default">Description</h5><br><small><p>Log out route
 This route is used to log the user out.
-Anytime you direct a user to this route, the user gets deauthenticated and his/her token gets expired and hence the user cannot access all the protected routes</small><br><br></div></div></div><div class="panel panel-success" id=jump-Routes-RegisterUser><div class=panel-heading><small class="pull-right text-muted">raw</small>
+Anytime you direct a user to this route, the user gets deauthenticated and his/her token gets expired and hence the user cannot access all the protected routes</small><br><br><select class=resp-selector>
+<option value>Select Example Request/Response
+<option value=req_res_Routes_LogOut_0_LogOut_28Whenyouarenotloggedin_29>Log Out (When you are not logged in)
+<option value=req_res_Routes_LogOut_1_LogOut>Log Out</select><br><section id=req_res_Routes_LogOut_0_LogOut_28Whenyouarenotloggedin_29 style=display:none><h4>Example Request</h4><h5>URL: {{URL}}/api/v1/auth/logout</h5><h5 class="label label-primary">Body</h5><h4>Example Response</h4><h5 class="label label-success">Body</h5><span class=resp-prettyprint>{
+&#34;success&#34;: false
+}</span><div class=clearfix></div><h5 class="label label-info">Code:</h5><strong>401</strong></section><section id=req_res_Routes_LogOut_1_LogOut style=display:none><h4>Example Request</h4><h5>URL: {{URL}}/api/v1/auth/logout</h5><h5 class="label label-primary">Body</h5><h4>Example Response</h4><h5 class="label label-success">Body</h5><span class=resp-prettyprint>{
+&#34;success&#34;: true,
+&#34;data&#34;: {}
+}</span><div class=clearfix></div><h5 class="label label-info">Code:</h5><strong>200</strong></section></div></div></div><div class="panel panel-success" id=jump-Routes-RegisterUser><div class=panel-heading><small class="pull-right text-muted">raw</small>
 <a class=text-success data-toggle=collapse data-parent=#accordion-Routes href=#collapse-Routes-RegisterUser><h4 class=panel-title><span class="glyphicon glyphicon-plus"></span><strong>Register User</strong> &nbsp;|&nbsp;
 <strong class="request-method border-success">POST</strong>
 &nbsp;
@@ -90,4 +133,4 @@ if(IsJsonString(html)){var obj=JSON.parse(html);var formattedJson=JSON.stringify
 function IsJsonString(str){try{JSON.parse(str);}catch(e){return false;}
 return true;}
 String.prototype.replaceAll=function(replaceThis,withThis){var re=new RegExp(RegExp.quote(replaceThis),"g");return this.replace(re,withThis);};RegExp.quote=function(str){return str.replace(/([.?*+^$[\]\\(){}-])/g,"\\$1");};function syntaxHighlight(json){json=json.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,function(match){var cls='number';if(/^"/.test(match)){if(/:$/.test(match)){cls='key';}else{cls='string';}}else if(/true|false/.test(match)){cls='boolean';}else if(/null/.test(match)){cls='null';}
-return '<span class="'+cls+'">'+match+'</span>';});}</script><br><br><footer class="navbar-default navbar-fixed-bottom"><div class=container-fluid><div class="span12 text-center"><span data-toggle=tooltip title="If the application help you, please feel free to give a star to the project in github. Your star inspire me to work more on open-source projects like this!">Made with <em class=love-color>&#9829;</em> by <a href=https://github.com/thedevsaddam target=_blank class=text-muted>thedevsaddam</a> | Generated at: 2020-06-20 21:57:58 by <a href=https://github.com/thedevsaddam/docgen target=_blank class=text-muted>docgen</a></span></div></div></footer>
+return '<span class="'+cls+'">'+match+'</span>';});}</script><br><br><footer class="navbar-default navbar-fixed-bottom"><div class=container-fluid><div class="span12 text-center"><span data-toggle=tooltip title="If the application help you, please feel free to give a star to the project in github. Your star inspire me to work more on open-source projects like this!">Made with <em class=love-color>&#9829;</em> by <a href=https://github.com/thedevsaddam target=_blank class=text-muted>thedevsaddam</a> | Generated at: 2020-06-20 22:34:53 by <a href=https://github.com/thedevsaddam/docgen target=_blank class=text-muted>docgen</a></span></div></div></footer>
