@@ -23,7 +23,7 @@ app.use('/api/register', registerRoute);
 
 app.get('/', (req, res) => {
     res.json({
-        message: "Welcome micro-auth-api"
+        message: "Welcome to micro-auth-api"
     })
 });
 

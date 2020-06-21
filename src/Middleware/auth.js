@@ -14,10 +14,10 @@ exports.protect = asyncHandler(async (req, res, next) => {
         token = req.headers.authorization.split(" ")[1];
     }
 
-    //cookies 
-    // else if (req.cookies.token){
-    //     token = req.cookies.token;
-    // }
+    // cookies 
+    else if (req.cookies.token){
+        token = req.cookies.token;
+    }
 
     // Make Sure token exist 
     if (!token) {
@@ -36,6 +36,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
         res.status(401).json({
             success: false
         });
-    }
+    };
+
 
 });
