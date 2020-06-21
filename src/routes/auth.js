@@ -6,7 +6,8 @@ const {
 const {
 	register,
 	login,
-	getUser
+	getUser,
+	logOut
 } = require("../controllers/auth");
 
 // A protected Route
@@ -25,6 +26,6 @@ router.post('/login', login)
 // Get current User credentials
 router.get('/getuser', protect, getUser)
 //msg - LogOut route
-router.get('/logout')
+router.get('/logout', protect, logOut)
 
 module.exports = router;
