@@ -12,14 +12,31 @@ const { protect } = require("../middleware/auth");
 exports.register = asyncHandler(async (req, res, next) => {
   const { name, email, password, role } = req.body;
 
-  const user = await User.create({
+  if (!email && !password && !role) {
+    return next(new ErrorResponse("Mandatory fields missing", 400));
+  }
+  //check if user exist
+  const user = await User.findOne({
+    email: email,
+  }).select("+password");
+
+  if (user) {
+    return next(new ErrorResponse("User Already exist", 401));
+  }
+
+  const newuser = await User.create({
     name,
     email,
     password,
     role,
-  });
+  }, (err)=>{
+    if(err) {
+        return next(new ErrorResponse("Registration not completed", 400));
+    }
+    
+        sendTokenResponse(newuser, 200, res);    
 
-  sendTokenResponse(user, 200, res);
+  }); 
 });
 
 //@Desc login

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 const jwt = require("jsonwebtoken");
 const asyncHandler = require("./async");
 const errorResponse = require("../utils/errorResponse");

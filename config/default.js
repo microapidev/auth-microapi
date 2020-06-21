@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 require("custom-env").env();
 
 // parse DATABASE_URL if set in environment
