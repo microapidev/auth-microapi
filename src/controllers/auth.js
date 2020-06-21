@@ -1,4 +1,4 @@
-const User = require('../models/User');
+const db = require('../models');
 const asyncHandler = require("../middleware/async");
 const ErrorResponse = require('../utils/errorResponse');
 
@@ -17,7 +17,7 @@ exports.register = asyncHandler(async (req, res, next) => {
         role
     } = req.body;
 
-    const user = await User.create({
+    const user = await db.User.create({
         name,
         email,
         password,
@@ -41,7 +41,7 @@ exports.login = asyncHandler(async (req, res, next) => {
         return next(new ErrorResponse("Please provide an email and password", 400));
     }
     //FInd user in DB
-    const user = await User.findOne({
+    const user = await db.User.findOne({
         email: email
     }).select('+password');
 
@@ -80,7 +80,7 @@ const sendTokenResponse = (user, statusCode, res) => {
 //@access Private
 
 exports.getUser = asyncHandler( async (req, res, next ) => {
-    const user = await User.findById(req.user.id);
+    const user = await db.User.findById(req.user.id);
 
     res.status(200).json({
         success: true,
