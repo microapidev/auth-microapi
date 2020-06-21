@@ -1,5 +1,6 @@
+/* eslint-disable prettier/prettier */
 const router = require('express').Router();
-const express = require("express");
+
 const {
 	protect
 } = require("../middleware/auth");

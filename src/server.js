@@ -1,9 +1,11 @@
+/* eslint-disable prettier/prettier */
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const PORT = process.env.PORT || 5000;
 const connectDB = require("./controllers/index");
 const authRoute = require('./routes/auth');
+
 
 const app = express();
 
@@ -17,6 +19,8 @@ app.use(express.urlencoded({
 }));
 
 app.use('/api/v1/auth', authRoute);
+
+
 
 app.get('/', (req, res) => {
     res.json({
