@@ -1,6 +1,8 @@
 const db = require('../models');
 const asyncHandler = require("../middleware/async");
 const ErrorResponse = require('../utils/errorResponse');
+const {registerValidation} = require('./validation');
+const {loginValidation} = require('./validation');
 
 const {
     protect
@@ -16,6 +18,13 @@ exports.register = asyncHandler(async (req, res, next) => {
         password,
         role
     } = req.body;
+    //validate the data before making a user
+    const { error } = registerValidation(req.body);
+    if(error) return res.status(400).send(error.details[0].message);
+
+     //checking if the user is already in the database
+     const emailExists = await User.findOne({email: req.body.email});
+     if(emailExists) return res.status(400).send('Email already exists');
 
     const user = await db.User.create({
         name,
@@ -40,6 +49,11 @@ exports.login = asyncHandler(async (req, res, next) => {
     if (!email && !password) {
         return next(new ErrorResponse("Please provide an email and password", 400));
     }
+    //validate the data before logging in a user
+    const { error } = loginValidation(req.body);
+    if(error) return res.status(400).send(error.details[0].message);
+
+
     //FInd user in DB
     const user = await db.User.findOne({
         email: email
