@@ -5,7 +5,7 @@ const connectDB = () => {
     // // const DB_URL = process.env.DB_URL;
 
     // //Replace it with with mongodb-cluster
-    mongoose.connect('mongodb://localhost/auth-api', {
+    mongoose.connect(process.env.DB_URL_LOCAL, {
             keepAlive: true,
             useNewUrlParser: true,
             useUnifiedTopology: true

@@ -10,13 +10,10 @@ router.post("/register", register);
 router.post("/login", login);
 
 
-router.get("/home", protect, () => {
-    console.log("hello");
-})
+router.get("/logout", protect, logOut);
+
+router.post("/forgotpassword", forgotpassword);
 
 router.get("/getuser", protect, getUser);
 module.exports = router;
 
-router.get("/logout", protect, logOut);
-
-router.post("/forgotpassword", forgotpassword)
