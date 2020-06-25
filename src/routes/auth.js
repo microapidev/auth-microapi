@@ -13,9 +13,12 @@ router.get("/active", auth, (req, res) => {
 });
 
 router.post("/register", (req, res) => {
-
+	User.findOne({ email: req.body.email }, (err, check_user) => {
+		if(check_user) return res.json({
+                loginSuccess: false,
+                message: "Auth failed, email already exist"
+   });
     const user = new User(req.body);
-
     user.save((err, doc) => {
         if (err) return res.json({ success: false, err });
         return res.status(200).json({
@@ -23,6 +26,7 @@ router.post("/register", (req, res) => {
             doc
         });
     });
+	})
 });
 
 router.post("/login", (req, res) => {
