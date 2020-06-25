@@ -1,6 +1,6 @@
 # Auth-Micro API
 ---
-Site coming soon 🎈
+auth.microapi.dev 🎈
 
 ## Installation:
 ---
