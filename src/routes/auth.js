@@ -1,31 +1,19 @@
-const router = require('express').Router();
 const express = require("express");
-const {
-	protect
-} = require("../middleware/auth");
-const {
-	register,
-	login,
-	getUser,
-	logOut
-} = require("../controllers/auth");
-
-// A protected Route
-router.get("/home", protect, (req,res) => {
-		res.status(200).json({success: true, message: "hola"});
-
-});
+const passport = require("passport");
+const { register, login, logOut, getUser, forgotpassword } = require("../controllers/auth");
+const { protect } = require("../middleware/auth");
 
 
-router.post('/register', register)
+const router = express.Router();
+
+router.post("/register", register);
+router.post("/login", login);
 
 
-router.post('/login', login)
+router.get("/logout", protect, logOut);
 
-//URL - /api/v1/auth/current-user
-// Get current User credentials
-router.get('/getuser', protect, getUser)
-//msg - LogOut route
-router.get('/logout', protect, logOut)
+router.post("/forgotpassword", forgotpassword);
 
+router.get("/getuser", protect, getUser);
 module.exports = router;
+
