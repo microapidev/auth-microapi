@@ -3,7 +3,7 @@ name: Documentation
 about: Add new or edit existing documentation
 title: "[DOCS]:"
 labels: documentation
-assignees: ''
+assignees: Please include your slack username here
 
 ---
 
