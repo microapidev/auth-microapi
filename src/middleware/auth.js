@@ -14,23 +14,17 @@ exports.protect = asyncHandler(async (req, res, next) => {
         token = req.headers.authorization.split(" ")[1];
     }
 
-    if(token === undefined) {
-        res.json({
-            success: false,
-            msg: "Login first"
-        })
-    }
     // cookies
-    if (req.cookies.token){
+    else if (req.cookies.token){
         token = req.cookies.token;
     }
 
     // Make Sure token exist
-    if (!token) {
-        res.status(401).json({
+    if (!token ) {
+         res.json({
             success: false,
-            msg: "Unauthorized"
-        });
+            msg: "Login first"
+        })
     }
 
     // Verify token
