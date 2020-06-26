@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const mongoose = require("mongoose");
 mongoose.set("debug", true);
 mongoose.Promise = Promise;
@@ -17,3 +18,5 @@ mongoose
   .catch((err) => console.log(`Error: ${err}`));
 
 module.exports.User = require("../models/user");
+=======
+>>>>>>> upstream/develop

@@ -1,12 +1,17 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const PORT = process.env.PORT || 5000;
 const authRoute = require("./routes/auth");
+const { connectDB } = require("./controllers/db");
 
 const app = express();
 
+connectDB();
+
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 app.use(
   express.urlencoded({
@@ -14,7 +19,7 @@ app.use(
   })
 );
 
-app.use("/api/v1/auth", authRoute);
+app.use("/api/auth", authRoute);
 
 app.get("/", (req, res) => {
   res.json({
