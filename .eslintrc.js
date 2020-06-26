@@ -4,7 +4,7 @@ module.exports = {
     commonjs: true,
     es2020: true,
   },
-  extends: ['airbnb-base'],
+  // extends: ['airbnb-base'],
   parserOptions: {
     ecmaVersion: 11,
   },
@@ -24,8 +24,6 @@ module.exports = {
     'no-var': 'error',
     'one-var': ['error', 'never'],
     'prefer-arrow-callback': 'error',
-    strict: 'error',
-    'symbol-description': 'error',
     yoda: ['error', 'never', { exceptRange: true }],
   },
 };

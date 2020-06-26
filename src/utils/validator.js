@@ -1,4 +1,4 @@
-require("@hapi/joi");
+require('@hapi/joi');
 
 module.exports = async (schema, toValidate, res, next) => {
   try {

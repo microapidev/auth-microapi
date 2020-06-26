@@ -1,9 +1,9 @@
-const router = require("express").Router();
-const { User } = require("../models/user");
-const validation = require("../validation/authValidation");
-const { auth } = require("../middleware/auth");
+const router = require('express').Router();
+const { User } = require('../models/user');
+const validation = require('../validation/authValidation');
+const { auth } = require('../middleware/auth');
 
-router.get("/active", auth, (req, res) => {
+router.get('/active', auth, (req, res) => {
   res.status(200).json({
     _id: req.user._id,
     isAdmin: req.user.isAdmin,
@@ -13,16 +13,17 @@ router.get("/active", auth, (req, res) => {
   });
 });
 
-router.post("/register", validation.registerValidation(), (req, res) => {
+router.post('/register', validation.registerValidation(), (req, res) => {
   User.findOne({ email: req.body.email }, (err, check_user) => {
-    if (check_user)
+    if (check_user) {
       return res.json({
         loginSuccess: false,
-        message: "Auth failed, email already exist",
+        message: 'Auth failed, email already exist',
       });
+    }
     const user = new User(req.body);
     user.save((err, doc) => {
-      if (err) return res.json({ success: false, err });
+      if (err) {return res.json({ success: false, err });}
       return res.status(200).json({
         success: true,
         doc,
@@ -31,26 +32,26 @@ router.post("/register", validation.registerValidation(), (req, res) => {
   });
 });
 
-router.post("/login", validation.loginValidation(), (req, res) => {
+router.post('/login', validation.loginValidation(), (req, res) => {
   User.findOne({ email: req.body.email }, (err, user) => {
     if (!user) {
       return res.json({
         loginSuccess: false,
-        message: "Auth failed, email not found",
+        message: 'Auth failed, email not found',
       });
     }
 
     user.comparePassword(req.body.password, (err, isMatch) => {
       if (!isMatch) {
-        return res.json({ loginSuccess: false, message: "Wrong password" });
+        return res.json({ loginSuccess: false, message: 'Wrong password' });
       }
 
       user.generateToken((err, user) => {
         if (err) {
           return res.status(400).send(err);
         }
-        res.cookie("w_authExp", user.tokenExp);
-        res.cookie("w_auth", user.token).status(200).json({
+        res.cookie('w_authExp', user.tokenExp);
+        res.cookie('w_auth', user.token).status(200).json({
           loginSuccess: true,
           userId: user._id,
         });
@@ -59,10 +60,10 @@ router.post("/login", validation.loginValidation(), (req, res) => {
   });
 });
 
-router.get("/logout", auth, (req, res) => {
+router.get('/logout', auth, (req, res) => {
   User.findOneAndUpdate(
     { _id: req.user._id },
-    { token: "", tokenExp: "" },
+    { token: '', tokenExp: '' },
     (err, doc) => {
       if (err) {
         return res.json({ success: false, err });
@@ -70,7 +71,7 @@ router.get("/logout", auth, (req, res) => {
       return res.status(200).send({
         success: true,
       });
-    }
+    },
   );
 });
 module.exports = router;

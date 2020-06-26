@@ -1,5 +1,5 @@
-const Joi = require("@hapi/joi");
-const validator = require("../utils/validator");
+const Joi = require('@hapi/joi');
+const validator = require('../utils/validator');
 
 exports.registerValidation = () => (req, res, next) => {
   const schema = Joi.object().keys({

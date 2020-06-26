@@ -1,39 +1,31 @@
-<<<<<<< HEAD
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const saltRounds = 10;
-const jwt = require("jsonwebtoken");
-const moment = require("moment");
-=======
 const mongoose = require('mongoose');
+
 const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
->>>>>>> d88082a2edbf69d624ca69e46279f5fd74778167
 
-<<<<<<< HEAD
 // Modified user model
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "Please add a name"],
+    required: [true, 'Please add a name'],
   },
   email: {
     type: String,
-    required: [true, "Please enter an email"],
+    required: [true, 'Please enter an email'],
   },
   password: {
     type: String,
-    required: [true, "Please enter a Password"],
+    required: [true, 'Please enter a Password'],
     minlength: 8,
     select: false,
   },
   role: {
     type: String,
     required: true,
-    enum: "user",
+    enum: 'user',
   },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
@@ -44,7 +36,7 @@ const userSchema = new mongoose.Schema({
 });
 
 // hashing password
-userSchema.pre("save", async function (next) {
+userSchema.pre('save', async function (next) {
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
@@ -54,7 +46,7 @@ userSchema.methods.matchPasswords = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-//Sign JWT
+// Sign JWT
 userSchema.methods.getSignedJwtToken = function () {
   return jwt.sign(
     {
@@ -63,36 +55,11 @@ userSchema.methods.getSignedJwtToken = function () {
     process.env.JWT_SECRET,
     {
       expiresIn: process.env.JWT_EXPIRE,
-    }
+    },
   );
 };
 
-const User = mongoose.model("User", userSchema);
-
-module.exports = User;
-=======
-const userSchema = mongoose.Schema({
-  username: {
-    type: String,
-    maxlength: 50,
-  },
-  email: {
-    type: String,
-    trim: true,
-    unique: 1,
-  },
-  password: {
-    type: String,
-    minglength: 5,
-  },
-  isAdmin: false,
-  token: {
-    type: String,
-  },
-  tokenExp: {
-    type: Number,
-  },
-});
+const User = mongoose.model('User', userSchema);
 
 userSchema.pre('save', function (next) {
   const user = this;
@@ -144,11 +111,4 @@ userSchema.statics.findByToken = function (token, cb) {
   });
 };
 
-const User = mongoose.model('User', userSchema);
-
-<<<<<<< HEAD
-module.exports = { User }
->>>>>>> upstream/develop
-=======
 module.exports = { User };
->>>>>>> d88082a2edbf69d624ca69e46279f5fd74778167
