@@ -4,8 +4,10 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 const PORT = process.env.PORT || 5000;
-const authRoute = require("./routes/auth");
-const { connectDB } = require("./controllers/db");
+
+const authRoute = require('./routes/auth');
+const { connectDB } = require('./controllers/db')
+const { errorHandler } = require('./utils/error')
 
 const app = express();
 
@@ -28,10 +30,12 @@ app.get("/", (req, res) => {
   });
 });
 
-// app.use((req, res, next) => {
-//     let err = new Error("Not Found");
-//     err.status = 404;
-//     next(err);
-// });
+app.use((req, res, next) => {
+    let err = new Error("Not Found");
+    err.status = 404;
+    next(err);
+});
 
-app.listen(PORT, () => console.log(`App started @${PORT}`));
+app.use(errorHandler)
+
+app.listen(PORT, () => console.log(`App started @${PORT}`))
