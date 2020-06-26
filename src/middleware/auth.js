@@ -16,6 +16,13 @@ const auth = (req, res, next) => {
     req.user = user;
     next();
   });
+  // This middleware will check if user's cookie is still saved in browser and user is not set
+  app.use((req, res, next) => {
+    if (req.cookies.user_sid && !req.session.user) {
+      res.clearCookie('user_sid');        
+    }
+    next();
+  });
 };
 
 module.exports = { auth };

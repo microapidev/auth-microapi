@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const session = require('express-session')
 const cookieParser = require('cookie-parser');
 
 const PORT = process.env.PORT || 5000;
@@ -10,7 +11,7 @@ const { connectDB } = require('./controllers/db');
 const { errorHandler } = require('./utils/error');
 
 const app = express();
-
+app.use(cookieParser())
 connectDB();
 
 app.use(cors());
@@ -21,6 +22,14 @@ app.use(
     extended: true,
   }),
 );
+// initialize express-session to allow us track the logged-in user.
+app.use(session({
+  key: 'user_sid',
+  secret: 'somerandonstuffsjl',
+  resave: false,
+  saveUninitialized: false,
+}));
+
 
 app.use('/api/auth', authRoute);
 
