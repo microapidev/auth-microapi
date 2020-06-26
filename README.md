@@ -1,5 +1,6 @@
 # Auth-Micro API
-Site coming soon 🎈
+---
+auth.microapi.dev 🎈
 
 ## Installation:
 - Node v~12.16.0
