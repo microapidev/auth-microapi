@@ -1,13 +1,11 @@
 # Auth-Micro API
----
 Site coming soon 🎈
 
 ## Installation:
----
-Node v~12.16.0
-npm v~6.14.5
-Create MongoDB Cluster and get its URI
-Clone repo
+- Node v~12.16.0
+- npm v~6.14.5
+- Create MongoDB Cluster and get its URI
+- Clone repo
 
 ## How to:
 ---
