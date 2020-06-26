@@ -33,18 +33,22 @@ router.post("/register", validation.registerValidation(), (req, res) => {
 
 router.post("/login", validation.loginValidation(), (req, res) => {
   User.findOne({ email: req.body.email }, (err, user) => {
-    if (!user)
+    if (!user) {
       return res.json({
         loginSuccess: false,
         message: "Auth failed, email not found",
       });
+    }
 
     user.comparePassword(req.body.password, (err, isMatch) => {
-      if (!isMatch)
+      if (!isMatch) {
         return res.json({ loginSuccess: false, message: "Wrong password" });
+      }
 
       user.generateToken((err, user) => {
-        if (err) return res.status(400).send(err);
+        if (err) {
+          return res.status(400).send(err);
+        }
         res.cookie("w_authExp", user.tokenExp);
         res.cookie("w_auth", user.token).status(200).json({
           loginSuccess: true,
@@ -60,7 +64,9 @@ router.get("/logout", auth, (req, res) => {
     { _id: req.user._id },
     { token: "", tokenExp: "" },
     (err, doc) => {
-      if (err) return res.json({ success: false, err });
+      if (err) {
+        return res.json({ success: false, err });
+      }
       return res.status(200).send({
         success: true,
       });
