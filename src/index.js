@@ -11,7 +11,6 @@ const { connectDB } = require('./controllers/db');
 const { errorHandler } = require('./utils/error');
 
 const app = express();
-app.use(cookieParser())
 connectDB();
 
 app.use(cors());

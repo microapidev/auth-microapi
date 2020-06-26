@@ -1,3 +1,6 @@
+const cookieParser = require('cookie-parser');
+
+app.use(cookieParser())
 const { User } = require('../models/user');
 
 const auth = (req, res, next) => {
