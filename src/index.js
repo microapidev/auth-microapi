@@ -1,13 +1,13 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 const PORT = process.env.PORT || 5000;
 
 const authRoute = require('./routes/auth');
-const { connectDB } = require('./controllers/db')
-const { errorHandler } = require('./utils/error')
+const { connectDB } = require('./controllers/db');
+const { errorHandler } = require('./utils/error');
 
 const app = express();
 
@@ -19,23 +19,23 @@ app.use(express.json());
 app.use(
   express.urlencoded({
     extended: true,
-  })
+  }),
 );
 
-app.use("/api/auth", authRoute);
+app.use('/api/auth', authRoute);
 
-app.get("/", (req, res) => {
+app.get('/', (req, res) => {
   res.json({
-    message: "Welcome to micro-auth-api",
+    message: 'Welcome to micro-auth-api',
   });
 });
 
 app.use((req, res, next) => {
-    let err = new Error("Not Found");
-    err.status = 404;
-    next(err);
+  const err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
-app.use(errorHandler)
+app.use(errorHandler);
 
-app.listen(PORT, () => console.log(`App started @${PORT}`))
+app.listen(PORT, () => console.log(`App started @${PORT}`));
