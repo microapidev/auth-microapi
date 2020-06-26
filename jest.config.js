@@ -3,5 +3,6 @@ module.exports = {
   testRegex: ['.spec.js$', '.test.js$'],
   coverageDirectory: './coverage',
   testEnvironment: 'node',
-  setupFilesAfterEnv: ['./__tests__/config/setup.js']
+  // setupFilesAfterEnv: ['./__tests__/config/setup.js']
+  coveragePathIgnorePatterns: ['/node_modules/']
 };

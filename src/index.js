@@ -39,3 +39,4 @@ app.use((req, res, next) => {
 app.use(errorHandler);
 
 app.listen(PORT, () => console.log(`App started @${PORT}`));
+module.exports = app;
