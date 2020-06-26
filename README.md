@@ -1,6 +1,8 @@
 # Auth-Micro API
+Auth-Micro API allows for easy integration of authentication services into applications. 
 ---
-auth.microapi.dev 🎈
+## Usage 
+[Go to support website](auth.microapi.dev) 🎈
 
 ## Installation:
 - Node v~12.16.0
