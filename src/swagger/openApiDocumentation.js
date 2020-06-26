@@ -16,10 +16,10 @@ const openApiDocumentation = {
   ],
   tags: [
     {
-      name: "API Authentication",
+      name: "Authentication",
     },
     {
-      name: "Auth Operations",
+      name: "CRUD Operations ",
     }
   ],
   security: {
@@ -27,6 +27,78 @@ const openApiDocumentation = {
   },
   //input api paths in here
   paths: {
+    "/api/auth/active": {
+      get: {
+        tags: ["Active User"],
+        description: "gets active user",
+        operationId: "getactiveuser",
+        security: [ {bearerAuth: {}}],
+        parameters: [],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/api/auth/register": {
+      post: {
+        tags: ["Register User","User Authentication","CRUD Operations"],
+        description: "Registers user",
+        operationId: "registeruser",
+        security: [ {bearerAuth: {}}],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+            
+              },
+            },
+          },
+          required: true,
+        },
+        parameters: [],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
 
   },
 

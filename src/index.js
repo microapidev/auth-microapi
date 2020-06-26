@@ -26,11 +26,6 @@ app.use(
 app.use("/api/auth", authRoute);
 app.use("/", swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
 
-// app.get("/", (req, res) => {
-//   res.json({
-//     message: "Welcome to micro-auth-api",
-//   });
-// });
 
 app.get("/", (req, res) => {
   res.redirect("/api-docs");
