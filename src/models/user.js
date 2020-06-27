@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     required: true,
-    enum: "user",
+    enum: ["user", "admin"],
   },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
@@ -85,7 +85,12 @@ userSchema.methods.comparePassword = function (candidatePassword, cb) {
 userSchema.methods.generateAPIKEY = function () {
   const admin = this;
   return jwt.sign(
-    { id: admin._id, email: admin.email, DBURI: process.env.MONGO_URL },
+    {
+      id: admin._id,
+      email: admin.email,
+      DBURI: process.env.MONGO_URL,
+      role: String(admin.role),
+    },
     process.env.JWT_SECRET
   );
 };
