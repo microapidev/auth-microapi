@@ -72,14 +72,21 @@ Jibola Bakare ~ slack username:  @everybees
 35. Usman Abass | @Usmanajibola1
 36. Taiwo Adejare - @jboy
 37. Andeh Ebele -@jandeh
+<<<<<<< HEAD
+7. Alikali Ojonugwa Justice - @Ojay - FRONTEND
+=======
 38. Oluwaseun Abiola, @Oluwaseun
 39. Jude Biose @Jude.
 Peter Israel-Ovirih, @PeterIsrael
+>>>>>>> feb071bfe866b224e5c71d05ed9843e3e5532b8c
 Amanam Sandy @Amanie
 Abdulazeez Shittu @abdulazeez.shittu
 Alikali Ojonugwa Justice - @Ojay - FRONTEND
 Kingsley Chiemerie Amoke
 Okputu Emmanuel Okputu - Slack username - @immanuelredd
+<<<<<<< HEAD
+Fabamise Adeolu @Bamz
+=======
 Ezinne Miracle|| @Miracle
 Temitope Emmanuel Ojo - slack username = @Yhamagee
 Usman Abdulsamad Olawale - @AbdulsamadUsman
@@ -100,7 +107,7 @@ Jibril Salaudeen
 Ajayi olawale - @horlawale
 Fabamise Adeolu @Bamz
 
-
+Fabamise Adeolu - @Bamz
 
 Abiola Titus - @botus
 christian ndu - @delightfulcodes
@@ -558,3 +565,4 @@ Ifeoluwa Adefioye --@hefeholuwah
 
 
 Oluwayanmife Akeju
+>>>>>>> feb071bfe866b224e5c71d05ed9843e3e5532b8c
