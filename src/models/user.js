@@ -22,6 +22,11 @@ const userSchema = new mongoose.Schema({
     minlength: 8,
     select: false,
   },
+  phone_number : {
+    type: String,
+    required: [true, 'Please enter a phone number'],
+    min: 10,
+  },
   role: {
     type: String,
     required: true,
