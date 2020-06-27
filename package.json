@@ -4,7 +4,7 @@
   "description": "A microservice for managing users authentication and authorization",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest",
+    "test": "cross-env NODE_ENV=test jest --detectOpenHandles",
     "test:watch": "cross-env NODE_ENV=test jest --watch",
     "test:cover": "cross-env NODE_ENV=test jest --coverage",
     "test:ci": "cross-env NODE_ENV=test jest --coverage && cat ./coverage/lcov.info | coveralls",

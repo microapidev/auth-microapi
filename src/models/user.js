@@ -1,36 +1,36 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 const saltRounds = 10;
-const jwt = require('jsonwebtoken');
-const moment = require('moment');
+const jwt = require("jsonwebtoken");
+const moment = require("moment");
 
 // Modified user model
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Please add a name'],
+    required: [true, "Please add a name"],
   },
   email: {
     type: String,
-    required: [true, 'Please enter an email'],
+    required: [true, "Please enter an email"],
   },
   password: {
     type: String,
-    required: [true, 'Please enter a Password'],
+    required: [true, "Please enter a Password"],
     minlength: 8,
-    select: false,
+    // select: false,
   },
-  phone_number : {
+  phone_number: {
     type: String,
-    required: [true, 'Please enter a phone number'],
+    required: [true, "Please enter a phone number"],
     min: 10,
   },
   role: {
     type: String,
     required: true,
-    enum: 'user',
+    enum: "user",
   },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
@@ -41,10 +41,10 @@ const userSchema = new mongoose.Schema({
 });
 
 // hashing password
-userSchema.pre('save', async function (next) {
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-});
+// userSchema.pre("save", async function (next) {
+//   const salt = await bcrypt.genSalt(10);
+//   this.password = await bcrypt.hash(this.password, salt);
+// });
 
 // Match User Entered Password
 userSchema.methods.matchPasswords = async function (enteredPassword) {
@@ -60,47 +60,47 @@ userSchema.methods.getSignedJwtToken = function () {
     process.env.JWT_SECRET,
     {
       expiresIn: process.env.JWT_EXPIRE,
-    },
+    }
   );
 };
 
-const User = mongoose.model('User', userSchema);
-
-userSchema.pre('save', function (next) {
+userSchema.pre("save", function save(next) {
   const user = this;
 
-  if (user.isModified('password')) {
-    // console.log('password changed')
-    bcrypt.genSalt(saltRounds, (err, salt) => {
-      if (err) { return next(err); }
-
-      bcrypt.hash(user.password, salt, (err, hash) => {
-        if (err) { return next(err); }
-        user.password = hash;
-        next();
-      });
-    });
-  } else {
-    next();
+  // check if password is present and is modified.
+  if (user.password && user.isModified("password")) {
+    // call your hashPassword method here which will return the hashed password.
+    user.password = bcrypt.hashSync(user.password, 10);
   }
+  // everything is done, so let's call the next callback.
+  next();
 });
 
-userSchema.methods.comparePassword = function (plainPassword, cb) {
-  bcrypt.compare(plainPassword, this.password, (err, isMatch) => {
-    if (err) { return cb(err); }
-    cb(null, isMatch);
+userSchema.methods.comparePassword = function (candidatePassword, cb) {
+  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
+    cb(err, isMatch);
   });
+};
+
+userSchema.methods.generateAPIKEY = function () {
+  const admin = this;
+  return jwt.sign(
+    { id: admin._id, email: admin.email, DBURI: process.env.MONGO_URL },
+    process.env.JWT_SECRET
+  );
 };
 
 userSchema.methods.generateToken = function (cb) {
   const user = this;
-  const token = jwt.sign(user._id.toHexString(), 'secret');
-  const oneHour = moment().add(1, 'hour').valueOf();
+  const token = jwt.sign(user._id.toHexString(), "secret");
+  const oneHour = moment().add(1, "hour").valueOf();
 
   user.tokenExp = oneHour;
   user.token = token;
   user.save((err, user) => {
-    if (err) { return cb(err); }
+    if (err) {
+      return cb(err);
+    }
     cb(null, user);
   });
 };
@@ -108,12 +108,15 @@ userSchema.methods.generateToken = function (cb) {
 userSchema.statics.findByToken = function (token, cb) {
   const user = this;
 
-  jwt.verify(token, 'secret', (err, decode) => {
+  jwt.verify(token, "secret", (err, decode) => {
     user.findOne({ _id: decode, token }, (err, user) => {
-      if (err) { return cb(err); }
+      if (err) {
+        return cb(err);
+      }
       cb(null, user);
     });
   });
 };
+const User = mongoose.model("User", userSchema);
 
 module.exports = { User };
