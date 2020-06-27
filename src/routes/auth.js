@@ -13,7 +13,7 @@ router.get("/active", auth, (req, res) => {
   });
 });
 
-router.post("/register", validation.registerValidation(), (req, res) => {
+router.post("/admin/register", validation.registerValidation(), (req, res) => {
   User.findOne({ email: req.body.email }, (err, check_user) => {
     if (check_user) {
       return res.json({
@@ -35,12 +35,12 @@ router.post("/register", validation.registerValidation(), (req, res) => {
   });
 });
 
-router.post("/login/guest", (req, res) => {
+router.post("/guest/login", (req, res) => {
   // check cookie header for token
   const { api_key } = req.body;
 });
 
-router.post("/login", validation.loginValidation(), (req, res) => {
+router.post("/admin/login", validation.loginValidation(), (req, res) => {
   User.findOne({ email: req.body.email }, (err, user) => {
     if (!user) {
       return res.json({
