@@ -1,51 +1,30 @@
-# auth-microapi
-This is the microapi which is used to for authentication of users to access other microapis.
+# Auth-Micro API
+Auth-Micro API allows for easy integration of authentication services into applications. The process flow is simple: an adminUser plugs this auth service into their app by firstly registering an account; whereby a confirmation email will be sent to them. On confirmation, an API_KEY is given to them - this API_KEY will be signed with their unique ID which will be used to identify all requests to auth-microapi made from their app. Examples of requests made from their app to auth-microapi are registration and login of a new user on their app platform; these resgistration and login requests will be authorized and granted authentication if they are sent with the adminUser's API_KEY, thereby creating a guestUser on their app which is stored in the adminUser's database collection.
+---
+## Usage 
+[Go to support website](auth.microapi.dev) 🎈
 
+## Installation:
+- Node v~12.16.0
+- npm v~6.14.5
+- Create MongoDB Cluster and get its URI
+- Clone repo
 
-[![Build Status](https://travis-ci.org/hngi/fury-backend-auth.svg?branch=develop)](https://travis-ci.org/hngi/fury-backend-auth) [![Coverage Status](https://coveralls.io/repos/github/hngi/fury-backend-auth/badge.svg?branch=develop)](https://coveralls.io/github/hngi/fury-backend-auth?branch=develop)
-
-## Getting Started
-
-
-=======
-Follow the right process when creating a Pull request (by Esi)
-# fury-backend-auth
-
-Auth-Micro API
-     A backend project by HNG Interns in stage 3, however it is a stage two project that was 
-rolled over due to incompletion. 
-
-
-Since API is a profound entity with an external resource that has the capability of accepting and responding to protected resource requests by users and clients, they must be equipped to ensure that applications and clients trying to access data are authentic, so that they can proceed to authorized full access when identity is confirmed. The processes of certifying the identity of users trying to access resources on the server and this is what is known as API authentication. And, before we delve deeper into this topic, let’s differentiate between authentication and authorization.
-
-Authentication is when an entity verifies the identity of a user. In other words, it proves that the clients trying to access a remote server are really who they say they are.
-
-On the other hand, authorization is the next thing that happens after successful authentication. It is the approval that a certain client has the right to make a request. Simply, authorization is when an entity verifies that you have the right to access data or information on a given server.
-However, as we scour through this topic of API authentication, it’s crucial to understand that we’re discussing a system that only proves identity (API Authentication).
-
-One very common example is the Oauth Authentication;
-OAuth Authentication
-Technically, Oauth is a technique that does both authentication and authorization. It is a form of API authentication that gives applications with the ability to communicate with API server to provide access. When a user logs into the system, it requests authentication in the form of a token. The client is required to forward the request to an authentication server, which either allows or rejects this it. OAuth authentication is fundamentally a more secure and powerful system than the rests, and it’s quickly becoming the number one choice for many clients and applications.
-
+## How to:
+---
+### ::start server, run in terminal:
+- `cd auth-microapi`
+- `npm install`
+- `npm start`
 
 ### To Contribute:
 Please always follow the right format in making pull request
 
-* Clone the code to your Local
-* Create a branch with the feature name you wish to work on
+* Fork this repository into your remote repository
+* Clone the code from your remote repository into your local machine `git clone <url>`
+* Create a branch with the feature name you wish to work on `git checkout -b <name_of_feature>`
 * Add any changes
-* Make a pull request to develop branch
-
-#Set Up - folder structures and install needed packages
-	-npm install
-	-npm install express cors jsonwebtoken bcrypt mongoose and moment
-	-set up folder bolerplate
-
-#Create user models
-	-username
-	-email
-	-password
-	isAdmin - false
-
-#Password encryption
-	-bcrypt - encrypt and hash the password
+* Add tests with jest and make sure they pass `npm run test`
+* Create an upstream on your local machine to pull the latest code from the develop branch of this repository `git remote add upstream develop` and `git pull upstream develop`
+* Push to the remote branch which you forked `git add .` | `git commit -m "cool feature"` | `git push origin <name_of_feature>`
+* Make a pull request to the develop branch of this repository
