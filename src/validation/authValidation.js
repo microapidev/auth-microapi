@@ -31,3 +31,23 @@ exports.loginValidation = () => (req, res, next) => {
   });
   return validator(schema, req.body, res, next);
 };
+
+exports.forgotValidation = () => (req, res, next) => {
+  const schema = Joi.object().keys({
+    email: Joi.string()
+      .email({
+        minDomainSegments: 2,
+        tlds: { allow: true },
+      })
+      .trim()
+      .required(),
+  });
+  return validator(schema, req.body, res, next);
+};
+
+exports.resetPasswordValidation = () => (req, res, next) => {
+  const schema = Joi.object().keys({
+    password: Joi.string().min(8).max(20).required(),
+  });
+  return validator(schema, req.body, res, next);
+};

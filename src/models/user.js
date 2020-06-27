@@ -1,36 +1,36 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
-const jwt = require("jsonwebtoken");
-const moment = require("moment");
+const jwt = require('jsonwebtoken');
+const moment = require('moment');
 
 // Modified user model
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "Please add a name"],
+    required: [true, 'Please add a name'],
   },
   email: {
     type: String,
-    required: [true, "Please enter an email"],
+    required: [true, 'Please enter an email'],
   },
   password: {
     type: String,
-    required: [true, "Please enter a Password"],
+    required: [true, 'Please enter a Password'],
     minlength: 8,
     // select: false,
   },
   phone_number: {
     type: String,
-    required: [true, "Please enter a phone number"],
+    required: [true, 'Please enter a phone number'],
     min: 10,
   },
   role: {
     type: String,
     required: true,
-    enum: ["user", "admin"],
+    enum: ['user', 'admin'],
   },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
@@ -64,11 +64,11 @@ userSchema.methods.getSignedJwtToken = function () {
   );
 };
 
-userSchema.pre("save", function save(next) {
+userSchema.pre('save', function save(next) {
   const user = this;
 
   // check if password is present and is modified.
-  if (user.password && user.isModified("password")) {
+  if (user.password && user.isModified('password')) {
     // call your hashPassword method here which will return the hashed password.
     user.password = bcrypt.hashSync(user.password, 10);
   }
@@ -97,8 +97,8 @@ userSchema.methods.generateAPIKEY = function () {
 
 userSchema.methods.generateToken = function (cb) {
   const user = this;
-  const token = jwt.sign(user._id.toHexString(), "secret");
-  const oneHour = moment().add(1, "hour").valueOf();
+  const token = jwt.sign(user._id.toHexString(), 'secret');
+  const oneHour = moment().add(1, 'hour').valueOf();
 
   user.tokenExp = oneHour;
   user.token = token;
@@ -122,6 +122,6 @@ userSchema.statics.findByToken = function (token, cb) {
     });
   });
 };
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = { User };

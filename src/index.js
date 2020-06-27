@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const session = require('express-session')
+const session = require('express-session');
 const cookieParser = require('cookie-parser');
 
 const PORT = process.env.PORT || 5000;
@@ -9,9 +9,9 @@ const PORT = process.env.PORT || 5000;
 const authRoute = require('./routes/auth');
 const { connectDB } = require('./controllers/db');
 const { errorHandler } = require('./utils/error');
-const openApiDocumentation = require("./swagger/openApiDocumentation");
-const swaggerDocs = require("./swagger.json");
-const swaggerUi = require("swagger-ui-express");
+const openApiDocumentation = require('./swagger/openApiDocumentation');
+const swaggerDocs = require('./swagger.json');
+const swaggerUi = require('swagger-ui-express');
 const app = express();
 connectDB();
 
@@ -33,13 +33,13 @@ app.use(session({
 
 
 app.use('/api/auth', authRoute);
-app.use("/", swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
+app.use('/', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
 
-app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 
-app.get("/", (req, res) => {
-  res.redirect("/api-docs");
+app.get('/', (req, res) => {
+  res.redirect('/api-docs');
 });
 
 
