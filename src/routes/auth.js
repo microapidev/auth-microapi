@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { User } = require('../models/user');
 const validation = require('../validation/authValidation');
 const { auth } = require('../middleware/auth');
+const EmailVerification = require('../utils/EmailVerification');
 
 router.get('/active', auth, (req, res) => {
   res.status(200).json({
@@ -24,6 +25,10 @@ router.post('/register', validation.registerValidation(), (req, res) => {
     const user = new User(req.body);
     user.save((err, doc) => {
       if (err) {return res.json({ success: false, err });}
+
+      // Send verification link to user email address
+      EmailVerification.createVerificationLink(doc, req);
+
       return res.status(200).json({
         success: true,
         doc,
