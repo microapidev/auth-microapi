@@ -1,6 +1,4 @@
-const cookieParser = require('cookie-parser');
 
-app.use(cookieParser())
 const { User } = require('../models/user');
 
 const auth = (req, res, next) => {
@@ -21,7 +19,7 @@ const auth = (req, res, next) => {
   });
   // This middleware will check if user's cookie is still saved in browser and user is not set
   app.use((req, res, next) => {
-    if (req.cookies.user_sid && !req.session.user) {
+    if (req.cookies.user_sid && !req.session.user && !req.session.isAdmin) {
       res.clearCookie('user_sid');        
     }
     next();
