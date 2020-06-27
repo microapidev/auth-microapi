@@ -1,25 +1,25 @@
 const openApiDocumentation = {
-  swagger: "3.0",
-  openapi: "3.0.1",
+  swagger: '3.0',
+  openapi: '3.0.1',
   info: {
-    title: "HNGI Authetication Micro-Service",
-    description: "A Dockerized Microservice for Authentication",
+    title: 'HNGI Authetication Micro-Service',
+    description: 'A Dockerized Microservice for Authentication',
     contact: {
-      name: "HNGI",
+      name: 'HNGI',
     },
   },
   server: [
     {
-      url: "http:localhost:5000",
-      description: "Local Server",
+      url: 'http:localhost:5000',
+      description: 'Local Server',
     },
   ],
   tags: [
     {
-      name: "Authentication",
+      name: 'Authentication',
     },
     {
-      name: "CRUD Operations ",
+      name: 'CRUD Operations ',
     }
   ],
   security: {
@@ -27,30 +27,30 @@ const openApiDocumentation = {
   },
   //input api paths in here
   paths: {
-    "/api/auth/active": {
+    '/api/auth/active': {
       get: {
-        tags: ["Active User"],
-        description: "gets active user",
-        operationId: "getactiveuser",
+        tags: ['Active User'],
+        description: 'gets active user',
+        operationId: 'getactiveuser',
         security: [ {bearerAuth: {}}],
         parameters: [],
         responses: {
-          "200": {
-            description: "Success",
+          '200': {
+            description: 'Success',
             content: {
-              "application/json": {
+              'application/json': {
                 schema: {
-                  $ref: "#/components/schemas/Response",
+                  $ref: '#/components/schemas/Response',
                 },
               },
             },
           },
-          "400": {
-            description: "Bad Request",
+          '400': {
+            description: 'Bad Request',
             content: {
-              "application/json": {
+              'application/json': {
                 schema: {
-                  $ref: "#/components/schemas/Response",
+                  $ref: '#/components/schemas/Response',
                 },
               },
             },
@@ -58,15 +58,15 @@ const openApiDocumentation = {
         },
       },
     },
-    "/api/auth/register": {
+    '/api/auth/register': {
       post: {
-        tags: ["Register User","User Authentication","CRUD Operations"],
-        description: "Registers user",
-        operationId: "registeruser",
+        tags: ['Register User','User Authentication','CRUD Operations'],
+        description: 'Registers user',
+        operationId: 'registeruser',
         security: [ {bearerAuth: {}}],
         requestBody: {
           content: {
-            "application/json": {
+            'application/json': {
               schema: {
 
               },
@@ -76,22 +76,22 @@ const openApiDocumentation = {
         },
         parameters: [],
         responses: {
-          "200": {
-            description: "Success",
+          '200': {
+            description: 'Success',
             content: {
-              "application/json": {
+              'application/json': {
                 schema: {
-                  $ref: "#/components/schemas/Response",
+                  $ref: '#/components/schemas/Response',
                 },
               },
             },
           },
-          "400": {
-            description: "Bad Request",
+          '400': {
+            description: 'Bad Request',
             content: {
-              "application/json": {
+              'application/json': {
                 schema: {
-                  $ref: "#/components/schemas/Response",
+                  $ref: '#/components/schemas/Response',
                 },
               },
             },
@@ -99,15 +99,15 @@ const openApiDocumentation = {
         },
       },
     },
-    "/api/auth/login": {
+    '/api/auth/login': {
       post: {
-        tags: ["Login User","User Authentication","CRUD Operations"],
-        description: "login user",
-        operationId: "loginuser",
+        tags: ['Login User','User Authentication','CRUD Operations'],
+        description: 'login user',
+        operationId: 'loginuser',
         security: [ {bearerAuth: {}}],
         requestBody: {
           content: {
-            "application/json": {
+            'application/json': {
               schema: {
 
               },
@@ -117,22 +117,22 @@ const openApiDocumentation = {
         },
         parameters: [],
         responses: {
-          "200": {
-            description: "Success",
+          '200': {
+            description: 'Success',
             content: {
-              "application/json": {
+              'application/json': {
                 schema: {
-                  $ref: "#/components/schemas/Response",
+                  $ref: '#/components/schemas/Response',
                 },
               },
             },
           },
-          "400": {
-            description: "Bad Request",
+          '400': {
+            description: 'Bad Request',
             content: {
-              "application/json": {
+              'application/json': {
                 schema: {
-                  $ref: "#/components/schemas/Response",
+                  $ref: '#/components/schemas/Response',
                 },
               },
             },
@@ -140,15 +140,15 @@ const openApiDocumentation = {
         },
       },
     },
-    "/api/auth/logout": {
+    '/api/auth/logout': {
       post: {
-        tags: ["Logout User","User Authentication","CRUD Operations"],
-        description: "logout user",
-        operationId: "logoutuser",
+        tags: ['Logout User','User Authentication','CRUD Operations'],
+        description: 'logout user',
+        operationId: 'logoutuser',
         security: [ {bearerAuth: {}}],
         requestBody: {
           content: {
-            "application/json": {
+            'application/json': {
               schema: {
 
               },
@@ -158,22 +158,22 @@ const openApiDocumentation = {
         },
         parameters: [],
         responses: {
-          "200": {
-            description: "Success",
+          '200': {
+            description: 'Success',
             content: {
-              "application/json": {
+              'application/json': {
                 schema: {
-                  $ref: "#/components/schemas/Response",
+                  $ref: '#/components/schemas/Response',
                 },
               },
             },
           },
-          "400": {
-            description: "Bad Request",
+          '400': {
+            description: 'Bad Request',
             content: {
-              "application/json": {
+              'application/json': {
                 schema: {
-                  $ref: "#/components/schemas/Response",
+                  $ref: '#/components/schemas/Response',
                 },
               },
             },
@@ -187,60 +187,60 @@ const openApiDocumentation = {
   components: {
     schemas: {
       User: {
-        type: "object",
+        type: 'object',
         properties: {
           name: {
-            type: "string",
-            description: "User's Name",
+            type: 'string',
+            description: 'User\'s Name',
           },
           email: {
-            type: "string",
-            description: "User Email Address",
+            type: 'string',
+            description: 'User Email Address',
           },
           password: {
-            type: "string",
-            description: "User Password",
+            type: 'string',
+            description: 'User Password',
           },
           role: {
-            type: "String",
-            enum: ["User"],
+            type: 'String',
+            enum: ['User'],
           },
           resetPasswordToken: {
-            type: "string",
-            description: "User password reset token",
+            type: 'string',
+            description: 'User password reset token',
           },
           resetPasswordExpire: {
-            type: "Date object",
-            description: "User password reset token expiration time",
+            type: 'Date object',
+            description: 'User password reset token expiration time',
           },
           createdAt:{
-            type: "Date object",
-            description: "date and time user was created",
+            type: 'Date object',
+            description: 'date and time user was created',
           }
         },
       },
       Response: {
-        type: "object",
+        type: 'object',
         properties: {
           status: {
-            type: "string",
+            type: 'string',
           },
           message: {
-            type: "string",
+            type: 'string',
           },
           data: {
-            type: "object",
+            type: 'object',
           },
         },
       },
     },
     securitySchemes: {
       bearerAuth: {
-        type: "http",
-        scheme: "bearer",
-        bearerFormat: "JWT",
-        name: "Authorization",
-        in: "header",
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'Authorization',
+        in: 'header',
       },
     },
   },

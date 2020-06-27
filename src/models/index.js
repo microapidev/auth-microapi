@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-mongoose.set("debug", true);
+mongoose.set('debug', true);
 mongoose.Promise = Promise;
 
 mongoose
@@ -14,5 +14,5 @@ mongoose
   .then(() => console.log(process.env.MONGO_URL))
   .catch((err) => console.log(`Error: ${err}`));
 
-module.exports.User = require("./user");
-module.exports.ApiKey = require("./apikey");
+module.exports.User = require('./user');
+module.exports.ApiKey = require('./apikey');

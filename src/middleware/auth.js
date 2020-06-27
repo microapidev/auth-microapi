@@ -1,11 +1,15 @@
 
 const { User } = require('../models/user');
+const { AuthError } = require('../utils/error');
 
 const auth = (req, res, next) => {
   const token = req.cookies.w_auth;
 
   User.findByToken(token, (err, user) => {
-    if (err) { throw err; }
+    if (err) {
+      return next(new AuthError(err, 500));
+    }
+
     if (!user) {
       return res.json({
         isAuth: false,
