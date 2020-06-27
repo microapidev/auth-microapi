@@ -8,7 +8,8 @@ const PORT = process.env.PORT || 5000;
 const authRoute = require('./routes/auth');
 const { connectDB } = require('./controllers/db');
 const { errorHandler } = require('./utils/error');
-
+const openApiDocumentation = require("./swagger/openApiDocumentation");
+const swaggerUi = require("swagger-ui-express");
 const app = express();
 
 connectDB();
@@ -23,12 +24,13 @@ app.use(
 );
 
 app.use('/api/auth', authRoute);
+app.use("/", swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
 
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Welcome to micro-auth-api',
-  });
+
+app.get("/", (req, res) => {
+  res.redirect("/api-docs");
 });
+
 
 app.use((req, res, next) => {
   const err = new Error('Not Found');
