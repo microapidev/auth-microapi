@@ -14,7 +14,7 @@ router.get('/active', auth, (req, res) => {
   });
 });
 
-router.post('/register', validation.registerValidation(), (req, res) => {
+router.post('/admin/register', validation.registerValidation(), (req, res) => {
   User.findOne({ email: req.body.email }, (err, check_user) => {
     if (check_user) {
       return res.json({
@@ -24,7 +24,10 @@ router.post('/register', validation.registerValidation(), (req, res) => {
     }
     const user = new User(req.body);
     user.save((err, doc) => {
-      if (err) {return res.json({ success: false, err });}
+      if (err) {
+        console.log(err);
+        return res.json({ success: false, err });
+      }
 
       // Send verification link to user email address
       EmailVerification.createVerificationLink(doc, req);
@@ -37,7 +40,12 @@ router.post('/register', validation.registerValidation(), (req, res) => {
   });
 });
 
-router.post('/login', validation.loginValidation(), (req, res) => {
+router.post('/guest/login', (req, res) => {
+  // check cookie header for token
+  const { api_key } = req.body;
+});
+
+router.post('/admin/login', validation.loginValidation(), (req, res) => {
   User.findOne({ email: req.body.email }, (err, user) => {
     if (!user) {
       return res.json({
@@ -59,6 +67,7 @@ router.post('/login', validation.loginValidation(), (req, res) => {
         res.cookie('w_auth', user.token).status(200).json({
           loginSuccess: true,
           userId: user._id,
+          API_KEY: user.generateAPIKEY(),
         });
       });
     });
@@ -76,7 +85,7 @@ router.get('/logout', auth, (req, res) => {
       return res.status(200).send({
         success: true,
       });
-    },
+    }
   );
 });
 module.exports = router;

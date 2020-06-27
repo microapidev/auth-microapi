@@ -4,7 +4,7 @@
   "description": "A microservice for managing users authentication and authorization",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test jest",
+    "test": "cross-env NODE_ENV=test jest --detectOpenHandles",
     "test:watch": "cross-env NODE_ENV=test jest --watch",
     "test:cover": "cross-env NODE_ENV=test jest --coverage",
     "test:ci": "cross-env NODE_ENV=test jest --coverage && cat ./coverage/lcov.info | coveralls",
@@ -42,6 +42,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-jwt": "^5.3.3",
+    "express-session": "^1.17.1",
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.27.0",
@@ -50,6 +51,7 @@
     "pg-hstore": "^2.3.3",
     "pgtools": "^0.3.0",
     "randomstring": "^1.1.5",
+    "should": "^13.2.3",
     "swagger-jsdoc": "^4.0.0",
     "swagger-ui-express": "^4.1.4"
   },
