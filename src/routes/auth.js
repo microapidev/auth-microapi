@@ -3,6 +3,7 @@ const { User } = require('../models/user');
 const validation = require('../validation/authValidation');
 const { auth } = require('../middleware/auth');
 const EmailVerification = require('../utils/EmailVerification');
+const emailVerificationRoute = require('../routes/EmailVerification');
 const jwt = require('jsonwebtoken');
 
 router.get('/active', auth, (req, res) => {
@@ -242,4 +243,9 @@ router.get('/logout', auth, (req, res) => {
     }
   );
 });
+
+// GET method to handle the EmailVerification of the User upon clicking link
+router.use('/email', emailVerificationRoute());
+
+
 module.exports = router;
