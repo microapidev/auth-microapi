@@ -10,10 +10,10 @@ exports.registerValidation = () => (req, res, next) => {
       })
       .trim()
       .required(),
-    name: Joi.string().min(4).max(20).required(),
+    username: Joi.string().min(4).max(20).required(),
     password: Joi.string().min(8).max(20).required(),
-    role: Joi.string().required(),
-    phone_number: Joi.string().min(10).max(11).pattern(/^[0-9]+$/).required(),
+    // role: Joi.string().required(),
+    // phone_number: Joi.string().min(10).max(11).pattern(/^[0-9]+$/).required(),
   });
   return validator(schema, req.body, res, next);
 };

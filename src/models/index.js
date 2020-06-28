@@ -4,14 +4,14 @@ mongoose.set('debug', true);
 mongoose.Promise = Promise;
 
 mongoose
-  .connect(`${process.env.MONGO_URL}`, {
+  .connect(`${process.env.DB_URL}`, {
     keepAlive: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
     useCreateIndex: true,
   })
-  .then(() => console.log(process.env.MONGO_URL))
+  .then(() => console.log(process.env.DB_URL))
   .catch((err) => console.log(`Error: ${err}`));
 
 module.exports.User = require('./user');

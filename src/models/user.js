@@ -8,9 +8,9 @@ const moment = require('moment');
 
 // Modified user model
 const userSchema = new mongoose.Schema({
-  name: {
+  username: {
     type: String,
-    required: [true, 'Please add a name'],
+    required: [true, 'Please add a username'],
   },
   email: {
     type: String,
@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema({
     minlength: 8,
     // select: false,
   },
+  /*
   phone_number: {
     type: String,
     required: [true, 'Please enter a phone number'],
@@ -32,6 +33,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     enum: ['user', 'admin'],
   },
+  */
   resetPasswordToken: String,
   resetPasswordExpire: Date,
   createdAt: {
@@ -88,7 +90,7 @@ userSchema.methods.generateAPIKEY = function () {
     {
       id: admin._id,
       email: admin.email,
-      DBURI: process.env.MONGO_URL,
+      DBURI: process.env.DB_URL,
       role: String(admin.role),
     },
     process.env.JWT_SECRET
@@ -113,7 +115,7 @@ userSchema.methods.generateToken = function (cb) {
 userSchema.statics.findByToken = function (token, cb) {
   const user = this;
 
-  jwt.verify(token, 'secret', (err, decode) => {
+  jwt.verify(token, process.env.JWT_SECRET, (err, decode) => {
     user.findOne({ _id: decode, token }, (err, user) => {
       if (err) {
         return cb(err);
