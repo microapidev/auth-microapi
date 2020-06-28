@@ -29,6 +29,10 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Please enter a phone number'],
     min: 10,
   },
+  isEmailVerified:{
+    type: Boolean,
+    default: false
+  },
   // role: {
   //   type: String,
   //   required: true,

@@ -12,7 +12,7 @@ class EmailVerification{
 
   async verifyEmail(req, res){
 
-    const data = await EmailVerService.verifyEmail(req.params);
+    const data = await EmailVerService.verifyEmail(req);
 
     return res.status(200).send(response('Email Address Verified', data));
 

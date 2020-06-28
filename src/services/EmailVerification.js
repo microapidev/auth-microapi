@@ -12,18 +12,26 @@ const CustomError = require('../utils/CustomError');
 
 class EmailVerificationService{
 
-  async verifyEmail(params){
+  async verifyEmail(req){
     // Collect the token from the URL and query for it
-    let token = await EmailVerification.findOne({token: params.token});
+    let token = await EmailVerification.findOne({token: req.params.token});
     this.logger('Here is the token: '+token);
     if(!token){
       throw new CustomError('Verification Link Invalid/Expired', 404);
     }
     
-    // Now update the user profile and return updated data 
-    let userData = await AdminUser.findByIdAndUpdate(token._userId, 
-      {$set: {isEmailVerified: true}}, 
-      {new: true});
+    // Now update the user/admin profile and return updated data 
+    this.logger(req.baseUrl);
+    let userData;
+    if(req.baseUrl !== '/api/admin/auth/email'){
+      userData = await User.findByIdAndUpdate(token._userId, 
+        {$set: {isEmailVerified: true}}, 
+        {new: true});
+    }else{
+      userData = await AdminUser.findByIdAndUpdate(token._userId, 
+        {$set: {isEmailVerified: true}}, 
+        {new: true});
+    }
 
     this.logger(userData);
     if(!userData)
@@ -37,7 +45,7 @@ class EmailVerificationService{
 
   // ================
   logger(msg){
-    let debug = false;
+    let debug = true;
     if(debug){
       console.log('==========MailService==LOGGER============');
       console.log(msg);

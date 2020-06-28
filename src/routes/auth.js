@@ -43,7 +43,7 @@ userRouter.post('/register', registerValidation(), async (request, response) => 
   return response.status(201).json({
     success: true,
     message: 'Account created successfully',
-    data: { ...user._doc.toJSON() },
+    data: { ...user.toJSON() },
   });
 });
 
