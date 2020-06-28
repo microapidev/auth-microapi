@@ -14,7 +14,7 @@ class AuthError extends AppError {
 
 class DbError extends AppError {
   constructor(message, statusCode) {
-    const description = 'an error occured connecting to the database';
+    const description = 'an error occured communicating with the database';
     super(message, statusCode, description);
   }
 }
@@ -42,7 +42,7 @@ const errorHandler = (error, req, res, next) =>
     : res.status(500).json({
       description: 'an error occured while processing your request',
       error: 'internal server error',
-      devErr: error,
+      devErr: error.toString(),
     });
 
 module.exports = {

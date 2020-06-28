@@ -207,7 +207,7 @@ router.post('/admin/login', validation.loginValidation(), (req, res) => {
 
     user.comparePassword(req.body.password, (err, isMatch) => {
       if (err) {
-        return next(err);
+        return next(new HashError(err, 500));
       }
       if (!isMatch) {
         return res.json({ loginSuccess: false, message: 'Wrong password' });
