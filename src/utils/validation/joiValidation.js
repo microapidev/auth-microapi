@@ -1,8 +1,16 @@
 const Joi = require('@hapi/joi');
-const validator = require('../utils/validator');
+
+
+const validator = async (schema, toValidate, res, next) => {
+  // This middleware will validate client's request body
+  await schema.validateAsync(toValidate);
+
+  next();
+};
 
 exports.registerValidation = () => (req, res, next) => {
   const schema = Joi.object().keys({
+    username: Joi.string().min(4).max(20).required(),
     email: Joi.string()
       .email({
         minDomainSegments: 2,
@@ -10,10 +18,8 @@ exports.registerValidation = () => (req, res, next) => {
       })
       .trim()
       .required(),
-    username: Joi.string().min(4).max(20).required(),
     password: Joi.string().min(8).max(20).required(),
-    // role: Joi.string().required(),
-    // phone_number: Joi.string().min(10).max(11).pattern(/^[0-9]+$/).required(),
+    phone_number: Joi.string().min(10).max(11).pattern(/^[0-9]+$/),
   });
   return validator(schema, req.body, res, next);
 };

@@ -27,7 +27,7 @@ class EmailVerificationUtil{
    */
 
   async createVerificationLink(user, req) {
-    this.logger('USER', user);
+    // console.log(req);
     let data = {
       token: RandomString.generate(64),
       _userId: user._id
@@ -35,18 +35,18 @@ class EmailVerificationUtil{
 
     if(!await EmailVerification.create(data)){
       let deletedUser = User.deleteOne({email: user.email});
-      this.logger('DELETED USER', deletedUser);
+      // this.logger('DELETED USER', deletedUser);
       throw new CustomError('Failed to generate token. Try signup again', 403);
     }
 
-    let verificationUrl = 'http:\/\/' + req.headers.host + '\/api\/auth\/email\/verification\/' + data.token;
-    this.logger('URL', verificationUrl);
+    let verificationUrl = 'http:\/\/' + req.headers.host + req.baseUrl + '\/email\/verification\/' + data.token;
+    console.log('URL', verificationUrl);
     //Now send the mail to the user (expires after 2mins)
     if(!await sendVerificationMail(user.email, verificationUrl)){
       throw new CustomError('Email Could not be Sent. Try Again.');
     }    
       
-    this.logger('SUCCESS', 'Sending mail...');
+    // this.logger('SUCCESS', 'Sending mail...');
     return{
       message: 'Check Your Mailbox for Link',
       status: 'success',

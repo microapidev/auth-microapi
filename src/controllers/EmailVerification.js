@@ -14,7 +14,7 @@ class EmailVerification{
 
     const data = await EmailVerService.verifyEmail(req.params);
 
-    res.status(200).send(response('Email Address Verified', data));
+    return res.status(200).send(response('Email Address Verified', data));
 
   }
 
