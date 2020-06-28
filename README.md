@@ -14,8 +14,10 @@ Auth-Micro API allows for easy integration of authentication services into appli
 ---
 ### ::start server, run in terminal:
 - `cd auth-microapi`
+- `cp sample.env .env`
+- Input your MongoDB URI in .env
 - `npm install`
-- `npm start`
+- `npm run dev`
 
 ### To Contribute:
 Please always follow the right format in making pull request
