@@ -1,26 +1,37 @@
 # Auth-Micro API
-Auth-Micro API allows for easy integration of authentication services into applications. The process flow is simple: an adminUser plugs this auth service into their app by firstly registering an account; whereby a confirmation email will be sent to them. On confirmation, an API_KEY is given to them - this API_KEY will be signed with their unique ID which will be used to identify all requests to auth-microapi made from their app. Examples of requests made from their app to auth-microapi are registration and login of a new user on their app platform; these resgistration and login requests will be authorized and granted authentication if they are sent with the adminUser's API_KEY, thereby creating a guestUser on their app which is stored in the adminUser's database collection.
----
+A microapi to allow easy integration of authentication into your service
+
 ## Usage 
 [Go to support website](auth.microapi.dev) 🎈
 
-## Installation:
+## Contributions
+https://docs.google.com/spreadsheets/d/1aNd-d2mQIOHOYnCLvG1wHn7pYS2XqHnmDSzABABQTBI/edit?usp=sharing
+
+## Features
+- [x] Register to use Auth Service
+- [x] Get API key after Email Verification
+- [x] Register/Login your App users with API key
+- [x] Email Verification for your App users on Registration 
+- [ ] Social Authentication
+- [ ] Get all your app users 
+- [ ] Get all active/online users 
+
+## Prerequisites:
 - Node v~12.16.0
 - npm v~6.14.5
-- Create MongoDB Cluster and get its URI
+- MongoDB Atlas URI
+- Sendgrid APIKEY
 - Clone repo
 
-## How to:
----
-### ::start server, run in terminal:
+## Setup:
 - `cd auth-microapi`
 - `cp sample.env .env`
-- Input your MongoDB URI in .env
+- `add MongoDB URI, and Sengrid APIkey in .env`
 - `npm install`
 - `npm run dev`
 
-### To Contribute:
-Please always follow the right format in making pull request
+## Contribution Guide:
+Please always follow the right format before making pull request
 
 * Fork this repository into your remote repository
 * Clone the code from your remote repository into your local machine `git clone <url>`
