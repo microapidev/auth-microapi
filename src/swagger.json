@@ -6,7 +6,7 @@
     "title": "Auth-Micro API"
   },
   "host": "auth.microapi.dev",
-  "basePath": "/api/auth",
+  "basePath": "/api",
   "tags": [
     {
       "name": "Auth",
@@ -22,7 +22,7 @@
     "http"
   ],
   "paths": {
-    "/register": {
+    "/auth/register": {
       "post": {
         "tags": [
           "Auth"
@@ -55,7 +55,7 @@
         }
       }
     },
-    "/login": {
+    "/auth/login": {
       "post": {
         "tags": [
           "Auth"
@@ -86,7 +86,7 @@
         }
       }
     },
-    "/logout": {
+    "/auth/logout": {
       "get": {
         "tags": [
           "Auth"
@@ -103,13 +103,125 @@
         }
       }
     },
-    "/active": {
+    "/auth/active": {
       "get": {
         "tags": [
           "Users"
         ],
         "summary": "View active users",
         "description": "Returns list of active users",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Active"
+            }
+          },
+          "404": {
+            "description": "users not found"
+          }
+        }
+      }
+    },
+    "/admin/auth/register": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Register admin user",
+        "description": "register a new admin user",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Admin"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/admin/auth/getKey": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Get token",
+        "description": "Authorization token registration and login",
+        "consumes": [
+          "application/json",
+          "application/xml"
+        ],
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Login"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/admin/auth/email/verification:token": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Email verification",
+        "description": "sends verification email",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Active"
+            }
+          },
+          "404": {
+            "description": "users not found"
+          }
+        }
+      }
+    },
+    "/admin/auth/email/resend/verification": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Resend Verification",
+        "description": "resends verification email",
         "produces": [
           "application/json"
         ],
@@ -186,6 +298,33 @@
         "isAuth": {
           "type": "string",
           "format": "boolean"
+        }
+      }
+    },
+    "Admin": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone_number": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     }
