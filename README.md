@@ -2,7 +2,7 @@
 A microapi to allow easy integration of authentication into your service
 
 ## Usage 
-[Go to support website](auth.microapi.dev) 🎈
+[Go to support website](https://auth.microapi.dev) 🎈
 
 ## Contributions
 https://docs.google.com/spreadsheets/d/1aNd-d2mQIOHOYnCLvG1wHn7pYS2XqHnmDSzABABQTBI/edit?usp=sharing
@@ -39,7 +39,7 @@ https://docs.google.com/spreadsheets/d/1aNd-d2mQIOHOYnCLvG1wHn7pYS2XqHnmDSzABABQ
 | POST   | api/admin/auth/getkey                    | email, password                         | application/json                              |
 | *POST  | api/auth/register                        | email, username, password, phone_number | application/json, Authorization: Bearer token |
 | *POST  | api/auth/login                           | email, password                         | application/json, Authorization: Bearer token |
-* - *(get Authorization token from api/admin/auth/getkey)
+* *(get Authorization token from api/admin/auth/getkey)
 
 ## Contribution Guide:
 Please always follow the right format before making pull request
