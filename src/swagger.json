@@ -192,7 +192,7 @@
         }
       }
     },
-    "/admin/auth/email/verification:token": {
+    "/admin/auth/email/verification/:token": {
       "get": {
         "tags": [
           "Admin"
