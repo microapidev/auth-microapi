@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { User } = require('../models/user');
 const validation = require('../validation/authValidation');
 const { auth } = require('../middleware/auth');
+const session = require('express-session')
 
 router.get('/active', auth, (req, res) => {
   res.status(200).json({
@@ -29,6 +30,9 @@ router.post('/register', validation.registerValidation(), (req, res) => {
         doc,
       });
     });
+    req.session.user = new User;
+		req.flash('success');
+		res.redirect('/');
   });
 });
 
@@ -55,6 +59,9 @@ router.post('/login', validation.loginValidation(), (req, res) => {
           loginSuccess: true,
           userId: user._id,
         });
+        req.session.user = user;
+		    req.flash('success');
+		    res.redirect('/');
       });
     });
   });
@@ -71,7 +78,12 @@ router.get('/logout', auth, (req, res) => {
       return res.status(200).send({
         success: true,
       });
-    },
-  );
+    });
+  req.logout();
+  res.clearCookie('user_sid');
+  req.session.destroy();
+  req.session.user = null;
+	req.flash('success');
+	res.redirect('/');
 });
 module.exports = router;
