@@ -29,22 +29,20 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Please enter a phone number'],
     min: 10,
   },
-  /*
-  role: {
-    type: String,
-    required: true,
-    enum: ['user', 'admin'],
+  isEmailVerified:{
+    type: Boolean,
+    default: false
   },
-  */
+  // role: {
+  //   type: String,
+  //   required: true,
+  //   enum: ['guest', 'admin'],
+  // },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
   createdAt: {
     type: Date,
     default: Date.now,
-  },
-  isEmailVerified: {
-    type: Boolean,
-    default: false
   }
 });
 
@@ -74,14 +72,17 @@ userSchema.pre('save', function () {
   }
 });
 
-userSchema.methods.generateToken = async function () {
-  // Generate token for user session, and save to user schema in DB
-  let user = this;
-  const token = jwt.sign(user.id.toHexString(), JWT_SECRET);
-
-  user.tokenExp = JWT_EXPIRE;
-  user.token = token;
-  return await user.save(); 
+userSchema.methods.generateAPIKEY = function () {
+  // Generate signed API KEY for admin
+  const admin = this;
+  return jwt.sign(
+    {
+      id: admin.id,
+      email: admin.email,
+      DBURI: APP_DB
+    },
+    JWT_ADMIN_SECRET
+  );
 };
 
 userSchema.statics.findByToken = function (token, cb) {
@@ -100,4 +101,4 @@ userSchema.statics.findByToken = function (token, cb) {
   });
 };
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('adminUser', userSchema);

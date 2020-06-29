@@ -1,77 +1,102 @@
-const router = require('express').Router();
-const { User } = require('../models/user');
-const validation = require('../validation/authValidation');
-const { auth } = require('../middleware/auth');
+/* -------- 🎃 Any client accessing this route is implicitly a guest,-----
+-------- hence eliminating the need for user role 🎃 --------- */
 
-router.get('/active', auth, (req, res) => {
-  res.status(200).json({
-    _id: req.user._id,
-    isAdmin: req.user.isAdmin,
-    isAuth: true,
-    email: req.user.email,
-    username: req.user.username,
-  });
-});
+const User = require('../models/user');
+const userRouter = require('express').Router();
+const { registerValidation, loginValidation } = require('../utils/validation/joiValidation');
+// const { auth } = require('../utils/middleware');
+const {createVerificationLink} = require('../utils/EmailVerification');
 
-router.post('/register', validation.registerValidation(), (req, res) => {
-  User.findOne({ email: req.body.email }, (err, check_user) => {
-    if (check_user) {
-      return res.json({
-        loginSuccess: false,
-        message: 'Auth failed, email already exist',
-      });
-    }
-    const user = new User(req.body);
-    user.save((err, doc) => {
-      if (err) {return res.json({ success: false, err });}
-      return res.status(200).json({
-        success: true,
-        doc,
-      });
+
+// guestRouter.get('/active', auth, (req, res) => {
+//   res.status(200).json({
+//     _id: req.user._id,
+//     isAdmin: req.user.isAdmin,
+//     isAuth: true,
+//     email: req.user.email,
+//     username: req.user.username,
+//   });
+// });
+
+
+userRouter.post('/register', registerValidation(), async (request, response) => {
+  // Register as guest
+  const { email } = request.body;
+
+  // Check if user email is taken in DB
+  let user = await User.findOne({ email });
+
+  if (user) {
+    return response.status(403).json({
+      success: false,
+      message: 'Email address already in use',
     });
+  }
+
+  user = new User({ ...request.body });
+  user = await user.save();
+
+  // Send a confirmation link to email
+  const mailStatus = await createVerificationLink(user, request);
+  console.log(mailStatus);
+
+  return response.status(201).json({
+    success: true,
+    message: 'Account created successfully',
+    data: { ...user.toJSON() },
   });
 });
 
-router.post('/login', validation.loginValidation(), (req, res) => {
-  User.findOne({ email: req.body.email }, (err, user) => {
-    if (!user) {
-      return res.json({
-        loginSuccess: false,
-        message: 'Auth failed, email not found',
-      });
-    }
+userRouter.post('/login', loginValidation(), async (request, response) => {
+  // Login as guest
+  const { email, password } = request.body;
 
-    user.comparePassword(req.body.password, (err, isMatch) => {
-      if (!isMatch) {
-        return res.json({ loginSuccess: false, message: 'Wrong password' });
-      }
+  // check if user exists in DB
+  let user = await User.findOne({ email });
 
-      user.generateToken((err, user) => {
-        if (err) {
-          return res.status(400).send(err);
-        }
-        res.cookie('w_authExp', user.tokenExp);
-        res.cookie('w_auth', user.token).status(200).json({
-          loginSuccess: true,
-          userId: user._id,
-        });
-      });
+  if (!user) {
+    return response.status(401).json({
+      success: false,
+      message: 'Invalid email or password',
     });
+  }
+
+  // check if password provided by user matches user password in DB
+  const isMatch = user.matchPasswords(password);
+
+  if (!isMatch) {
+    return response.status(401).json({
+      success: false,
+      message: 'Invalid email or password',
+    });
+  }
+
+  // Send token in response cookie for user session
+  user = user.generateToken();
+
+  response.cookie('w_authExp', user.tokenExp);
+  response.cookie('w_auth', user.token).status(200).json({
+    success: true,
+    userId: user.id
+    // token: user.token
   });
 });
 
-router.get('/logout', auth, (req, res) => {
-  User.findOneAndUpdate(
-    { _id: req.user._id },
-    { token: '', tokenExp: '' },
-    (err, doc) => {
-      if (err) {
-        return res.json({ success: false, err });
-      }
-      return res.status(200).send({
-        success: true,
-      });
-    },
-  );
+userRouter.get('/logout', async (request, response) => {
+  const query = {
+    id: request.body.id
+  };
+
+  const update = {
+    token: '',
+    tokenExp: ''
+  };
+
+  await User.findOneAndUpdate(query, update);
+
+  return response.status(200).send({
+    success: true,
+  });
 });
-module.exports = router;
+
+module.exports = userRouter;
