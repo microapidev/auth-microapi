@@ -11,7 +11,7 @@ https://docs.google.com/spreadsheets/d/1aNd-d2mQIOHOYnCLvG1wHn7pYS2XqHnmDSzABABQ
 - [x] Register to use Auth Service
 - [x] Get API key after Email Verification
 - [x] Register/Login your App users with API key
-- [x] Email Verification for your App users on Registration 
+- [x] Email Verification for your App users on Registration
 - [ ] Social Authentication
 - [ ] Get all your app users 
 - [ ] Get all active/online users 
@@ -29,6 +29,17 @@ https://docs.google.com/spreadsheets/d/1aNd-d2mQIOHOYnCLvG1wHn7pYS2XqHnmDSzABABQ
 - `add MongoDB URI, and Sengrid APIkey in .env`
 - `npm install`
 - `npm run dev`
+
+## API
+| Method | URI                                      | PARAMS                                  | HEADERS                                       |
+| :---   | :----                                    | :----:                                  | :----:                                        | 
+| POST   | api/admin/auth/reigster                  | email, username, password, phone_number | application/json                              |
+| GET    | api/admin/auth/email/verification:token  |                   -                     |             -                                 |
+| GET    | api/admin/auth/email/resend/verification |                   -                     |             -                                 |
+| POST   | api/admin/auth/getkey                    | email, password                         | application/json                              |
+| *POST  | api/auth/register                        | email, username, password, phone_number | application/json, Authorization: Bearer token |
+| *POST  | api/auth/login                           | email, password                         | application/json, Authorization: Bearer token |
+* - *(get Authorization token from api/admin/auth/getkey)
 
 ## Contribution Guide:
 Please always follow the right format before making pull request
