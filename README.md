@@ -8,8 +8,8 @@ A microapi to allow easy integration of authentication into your service
 https://docs.google.com/spreadsheets/d/1aNd-d2mQIOHOYnCLvG1wHn7pYS2XqHnmDSzABABQTBI/edit?usp=sharing
 
 ## Features
-- [x] Secure routing
 - [x] Login/logout/register + session expiry
+- [x] Secure routing
 - [x] Email verification
 - [ ] Password recovery
 - [ ] Password reset
@@ -42,8 +42,8 @@ Use Postman to test endpoints
 | GET    | api/admin/auth/email/resend/verification |                   -                     |             -                                 |
 | POST   | api/admin/auth/getkey                    | email, password                         | application/json                              |
 | *POST  | api/auth/register                        | email, username, password, phone_number | application/json, Authorization: Bearer token |
-| *POST  | api/auth//email/verification:token       | email, username, password, phone_number |               -                               |
-| GET    | api/auth//email/resend/verification      |                   -                     |                   -                           |
+| *POST  | api/auth/email/verification:token       | email, username, password, phone_number |               -                               |
+| GET    | api/auth/email/resend/verification      |                   -                     |                   -                           |
 | *POST  | api/auth/login                           | email, password                         | application/json, Authorization: Bearer token |
 * *(get Authorization token from api/admin/auth/getkey)
 
