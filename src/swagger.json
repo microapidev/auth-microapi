@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "Auth-Micro API"
   },
-  "host": "auth.microapi.dev",
+  "host": "http://localhost:5000",
   "basePath": "/api",
   "tags": [
     {
