@@ -131,7 +131,7 @@
         "tags": [
           "Admin"
         ],
-        "summary": "Register admin user",
+        "summary": "Register an admin",
         "description": "register a new admin user",
         "consumes": [
           "application/json",
