@@ -12,9 +12,11 @@ https://docs.google.com/spreadsheets/d/1aNd-d2mQIOHOYnCLvG1wHn7pYS2XqHnmDSzABABQ
 - [x] Get API key after Email Verification
 - [x] Register/Login your App users with API key
 - [x] Email Verification for your App users on Registration
+- [ ] Recover Password
+- [ ] Change Password
 - [ ] Social Authentication
 - [ ] Get all your app users 
-- [ ] Get all active/online users 
+- [ ] Get all active/online users
 
 ## Prerequisites:
 - Node v~12.16.0
