@@ -1,5 +1,5 @@
 # Auth-Micro API
-Auth-Micro API allows for easy integration of authentication services into applications. 
+Auth-Micro API allows for easy integration of authentication services into applications. The process flow is simple: an adminUser plugs this auth service into their app by firstly registering an account; whereby a confirmation email will be sent to them. On confirmation, an API_KEY is given to them - this API_KEY will be signed with their unique ID which will be used to identify all requests to auth-microapi made from their app. Examples of requests made from their app to auth-microapi are registration and login of a new user on their app platform; these resgistration and login requests will be authorized and granted authentication if they are sent with the adminUser's API_KEY, thereby creating a guestUser on their app which is stored in the adminUser's database collection.
 ---
 ## Usage 
 [Go to support website](auth.microapi.dev) 🎈
@@ -14,8 +14,10 @@ Auth-Micro API allows for easy integration of authentication services into appli
 ---
 ### ::start server, run in terminal:
 - `cd auth-microapi`
+- `cp sample.env .env`
+- Input your MongoDB URI in .env
 - `npm install`
-- `npm start`
+- `npm run dev`
 
 ### To Contribute:
 Please always follow the right format in making pull request
