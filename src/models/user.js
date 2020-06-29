@@ -29,16 +29,22 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Please enter a phone number'],
     min: 10,
   },
-  // role: {
-  //   type: String,
-  //   required: true,
-  //   enum: ['guest', 'admin'],
-  // },
+  /*
+  role: {
+    type: String,
+    required: true,
+    enum: ['user', 'admin'],
+  },
+  */
   resetPasswordToken: String,
   resetPasswordExpire: Date,
   createdAt: {
     type: Date,
     default: Date.now,
+  },
+  isEmailVerified: {
+    type: Boolean,
+    default: false
   }
 });
 

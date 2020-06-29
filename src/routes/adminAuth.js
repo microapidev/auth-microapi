@@ -4,14 +4,14 @@
 const adminRouter = require('express').Router();
 // const connectDB = require('../controllers/db');
 const { registerValidation, loginValidation } = require('../utils/validation/joiValidation');
-const Admin = require('../models/admin');
-
+const Admin = require('../models/admin'); 
+const {createVerificationLink} = require('../utils/EmailVerification');
 
 adminRouter.post('/register', registerValidation(), async (request, response) => {
   // Adds a new admin to Auth-MicroApi DB 
   let user = await Admin.findOne({ email: request.body.email });
   if (user) {
-    response.status(403).json({
+    return response.status(403).json({
       success: false,
       message: 'Email address already in use',
     });
@@ -19,7 +19,12 @@ adminRouter.post('/register', registerValidation(), async (request, response) =>
   user = new Admin(request.body);
   user = await user.save();
 
-  response.status(201).json({
+  // Send a confirmation link to email
+  const mailStatus = await createVerificationLink(user, request);
+  console.log('===MailStatus===');
+  console.log(mailStatus);
+
+  return response.status(201).json({
     success: true,
     message: 'Verify your email to proceed'
   });
