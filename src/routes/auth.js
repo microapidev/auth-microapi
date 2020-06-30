@@ -110,6 +110,34 @@ userRouter.post('/login', loginValidation(), async (request, response) => {
   });
 });
 
+// Change Password 
+
+  userRouter.post('/change_password', auth, (req, res,next) =>{
+  const userId = req.user._id;
+  const { oldPassword, newPassword } = req.body;  
+  
+  User.findById(userId).then( user => {
+    user.comparePassword(oldPassword, (err, isMatch) => {
+      if (!isMatch) {
+        return res.json({ success: false, message: 'Wrong password' });
+      }else{
+        user.password = newPassword;
+        user.save().then( saved=> {
+          return res.status(200).json({
+            success: true,
+            data: saved
+          })
+        }).catch(err => {
+          return res.json({ success: false, err });
+        })
+      }
+    })
+    
+  }).catch( err => {
+    return res.json({ success: false, err });
+  })
+});
+  
 userRouter.get('/logout', async (request, response) => {
   const query = {
     id: request.body.id
