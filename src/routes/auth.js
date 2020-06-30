@@ -72,8 +72,8 @@ userRouter.post('/login', loginValidation(), async (request, response) => {
   }
 
   // Change Password 
-  
-  router.post('/change_password', auth, (req, res,next) =>{
+
+  userRouter.post('/change_password', auth, (req, res,next) =>{
   const userId = req.user._id;
   const { oldPassword, newPassword } = req.body;  
   
