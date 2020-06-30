@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "title": "Auth-Micro API"
   },
-  "host": "http://localhost:5000",
+  "host": "auth.microapi.dev",
   "basePath": "/api",
   "tags": [
     {
@@ -30,27 +30,33 @@
         "summary": "Register user",
         "description": "register a new user",
         "consumes": [
-          "application/json",
-          "application/xml"
+          "application/json"
         ],
         "produces": [
-          "application/xml",
           "application/json"
         ],
         "parameters": [
           {
             "in": "body",
             "name": "body",
-            "description": "",
-            "required": true,
             "schema": {
-              "$ref": "#/definitions/Register"
-            }
+              "$ref": "#/definitions/User"
+            },
+            "required": true
           }
         ],
         "responses": {
-          "405": {
-            "description": "Invalid input"
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
           }
         }
       }
@@ -78,16 +84,22 @@
         ],
         "responses": {
           "200": {
-            "description": "successful operation"
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
           },
           "400": {
-            "description": "Invalid Order"
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
           }
         }
       }
     },
     "/auth/logout": {
-      "get": {
+      "post": {
         "tags": [
           "Auth"
         ],
@@ -95,10 +107,16 @@
         "description": "Logout current user",
         "responses": {
           "200": {
-            "description": "successful operation"
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
           },
-          "404": {
-            "description": "Bad request"
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
           }
         }
       }
@@ -115,13 +133,16 @@
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "Success",
             "schema": {
-              "$ref": "#/definitions/Active"
+              "$ref": "#/definitions/Response"
             }
           },
-          "404": {
-            "description": "users not found"
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
           }
         }
       }
@@ -131,14 +152,12 @@
         "tags": [
           "Admin"
         ],
-        "summary": "Register an admin",
+        "summary": "Register admin user",
         "description": "register a new admin user",
         "consumes": [
-          "application/json",
-          "application/xml"
+          "application/json"
         ],
         "produces": [
-          "application/xml",
           "application/json"
         ],
         "parameters": [
@@ -148,13 +167,22 @@
             "description": "",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Admin"
+              "$ref": "#/definitions/User"
             }
           }
         ],
         "responses": {
-          "405": {
-            "description": "Invalid input"
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
           }
         }
       }
@@ -166,12 +194,7 @@
         ],
         "summary": "Get token",
         "description": "Authorization token registration and login",
-        "consumes": [
-          "application/json",
-          "application/xml"
-        ],
         "produces": [
-          "application/xml",
           "application/json"
         ],
         "parameters": [
@@ -186,8 +209,17 @@
           }
         ],
         "responses": {
-          "405": {
-            "description": "Invalid input"
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
           }
         }
       }
@@ -204,13 +236,16 @@
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "Success",
             "schema": {
-              "$ref": "#/definitions/Active"
+              "$ref": "#/definitions/Response"
             }
           },
-          "404": {
-            "description": "users not found"
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
           }
         }
       }
@@ -227,46 +262,22 @@
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "Success",
             "schema": {
-              "$ref": "#/definitions/Active"
+              "$ref": "#/definitions/Response"
             }
           },
-          "404": {
-            "description": "users not found"
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/Response"
+            }
           }
         }
       }
     }
   },
   "definitions": {
-    "Register": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer"
-        },
-        "name": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "phone_number": {
-          "type": "string"
-        },
-        "role": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
     "Login": {
       "type": "object",
       "properties": {
@@ -278,53 +289,52 @@
         }
       }
     },
-    "Active": {
+    "User": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "integer",
-          "format": "int64"
-        },
-        "username": {
-          "type": "string"
-        },
-        "email": {
-          "type": "string"
-        },
-        "isAdmin": {
-          "type": "string",
-          "format": "boolean"
-        },
-        "isAuth": {
-          "type": "string",
-          "format": "boolean"
-        }
-      }
-    },
-    "Admin": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "integer"
-        },
         "name": {
-          "type": "string"
+          "type": "string",
+          "description": "Users Name"
         },
         "email": {
+          "type": "string",
+          "description": "User Email Address"
+        },
+        "password": {
+          "type": "string",
+          "description": "User Password"
+        },
+        "role": {
           "type": "string"
         },
         "phone_number": {
           "type": "string"
         },
-        "role": {
-          "type": "string"
+        "resetPasswordToken": {
+          "type": "string",
+          "description": "User password reset token"
         },
-        "password": {
-          "type": "string"
+        "resetPasswordExpire": {
+          "type": "string",
+          "description": "User password reset token expiration time"
         },
         "createdAt": {
           "type": "string",
-          "format": "date-time"
+          "description": "date and time user was created"
+        }
+      }
+    },
+    "Response": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "data": {
+          "type": "object"
         }
       }
     }
