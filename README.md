@@ -8,15 +8,14 @@ A microapi to allow easy integration of authentication into your service
 https://docs.google.com/spreadsheets/d/1aNd-d2mQIOHOYnCLvG1wHn7pYS2XqHnmDSzABABQTBI/edit?usp=sharing
 
 ## Features
-- [x] Register to use Auth Service
-- [x] Get API key after Email Verification
-- [x] Register/Login your App users with API key
-- [x] Email Verification for your App users on Registration
-- [ ] Recover Password
-- [ ] Change Password
-- [ ] Social Authentication
-- [ ] Get all your app users 
-- [ ] Get all active/online users
+- [x] Login/logout/register + session expiry
+- [x] Secure routing
+- [x] Email verification
+- [ ] Password recovery
+- [ ] Password reset
+- [ ] Social authentication
+- [ ] Rate limiting
+- [ ] Persistent login
 
 ## Prerequisites:
 - Node v~12.16.0
@@ -43,7 +42,10 @@ Use Postman to test endpoints
 | GET    | api/admin/auth/email/resend/verification |                   -                     |             -                                 |
 | POST   | api/admin/auth/getkey                    | email, password                         | application/json                              |
 | *POST  | api/auth/register                        | email, username, password, phone_number | application/json, Authorization: Bearer token |
+| POST   | api/auth/email/verification:token        |               -                         | application/json, Authorization: Bearer token |
+| GET    | api/auth/email/resend/verification       |                   -                     | application/json, Authorization: Bearer token |
 | *POST  | api/auth/login                           | email, password                         | application/json, Authorization: Bearer token |
+| *GET   | api/auth/logout                          |                -                        |             Authorization: Bearer token       |
 * *(get Authorization token from api/admin/auth/getkey)
 
 ## Contribution Guide:
