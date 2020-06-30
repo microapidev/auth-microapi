@@ -9,6 +9,7 @@ const { connectDB, DB } = require('./controllers/db');
 const { authorizeUser, errorHandler, unknownRoutes } = require('./utils/middleware');
 const swaggerDocs = require('./swagger.json');
 const swaggerUi = require('swagger-ui-express');
+const passport = require('passport');
 const openApiDocumentation = require('./swagger/openApiDocumentation');
 require('express-async-errors');
 require('dotenv').config();
@@ -17,6 +18,8 @@ connectDB();
 
 app.use(cors());
 app.use(cookieParser());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.json());
 app.use(
   express.urlencoded({

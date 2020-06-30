@@ -3,11 +3,14 @@
 
 const User = require('../models/user');
 const userRouter = require('express').Router();
+const passport = require('passport');
+
 const FacebookStrategy = require('passport-facebook').Strategy;
 const findOrCreate = require('mongoose-findorcreate');
 const { registerValidation, loginValidation } = require('../utils/validation/joiValidation');
 // const { auth } = require('../utils/middleware');
 const {createVerificationLink} = require('../utils/EmailVerification');
+
 
 
 // guestRouter.get('/active', auth, (req, res) => {
@@ -113,10 +116,10 @@ passport.use(new FacebookStrategy({
     });
   }
 ));
-app.get('/auth/facebook',
+userRouter.get('/auth/facebook',
 passport.authenticate('facebook'));
 
-app.get('/auth/facebook/swagger',
+userRouter.get('/auth/facebook/swagger',
 passport.authenticate('facebook', { failureRedirect: '/login' }),
 function(req, res) {
   // Successful authentication, redirect home.
