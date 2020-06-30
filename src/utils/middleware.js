@@ -23,22 +23,50 @@ const authorizeUser = async (request, response, next) => {
 
 const auth = async (request, response, next) => {
   // This middleware will check if client's cookie is still saved in user agent
-  const token = request.cookies.w_auth;
+  // const token = request.cookies.w_auth;
 
-  const user = await User.findByToken(token);
+  // console.log(token)
 
-  if (user instanceof Error) {
-    next(error);
-  }
+  // const user = await User.findByToken(token);
 
-  request.token = token;
-  request.user = user;
+  // if (!user) {
+  //   return response.status(301).json({
+  //     sucess: false,
+  //     msg: "UnAuthorised"
+  //   })
+  // }
 
-  if (request.cookies.user_sid && !request.session.user && !request.session.isAdmin) {
-    response.clearCookie('user_sid');
-  }
+  // console.log("middleware token", user)
 
-  next();
+  // request.token = token;
+  // request.user = user;
+
+  // if (request.cookies.user_sid && !request.session.user && !request.session.isAdmin) {
+  //   response.clearCookie('user_sid');
+  // }
+
+  // next();
+  let token = request.cookies.w_auth;
+
+ // console.log("token middleware", token)
+
+const user = await User.findByToken(token)
+console.log("findByToken", user)
+
+  User.findByToken(token, (err, user) => {
+    if (err) throw err;
+    if (!user)
+      return response.json({
+        isAuth: false,
+        error: true,
+        msg: "UnAuthorised/Invalid token"
+      });
+     console.log("users middleware", user)
+
+    request.token = token;
+    request.user = user;
+    next();
+  });
 };
 
 const unknownRoutes = (request, response, next) => {
