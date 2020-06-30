@@ -7,7 +7,7 @@ const adminRouter = require('./routes/adminAuth');
 const emailVerificationRouter = require('./routes/EmailVerification');
 const { connectDB, DB } = require('./controllers/db');
 const { authorizeUser, errorHandler, unknownRoutes } = require('./utils/middleware');
-const swaggerDocs = require('./swagger.json');
+// const swaggerDocs = require('./swagger.json');
 const swaggerUi = require('swagger-ui-express');
 const openApiDocumentation = require('./swagger/openApiDocumentation');
 require('express-async-errors');
@@ -39,7 +39,7 @@ app.use('/api/admin/auth/email', emailVerificationRouter());
 
 
 app.use('/', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
-app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+// app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(unknownRoutes);
 app.use(errorHandler);

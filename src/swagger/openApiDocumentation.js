@@ -18,21 +18,30 @@ const openApiDocumentation = {
     {
       name: 'Authentication',
     },
-    {
-      name: 'CRUD Operations ',
-    }
   ],
   security: {
     bearerAuth: {},
   },
   //input api paths in here
   paths: {
-    '/api/auth/active': {
-      get: {
-        tags: ['Active User'],
-        description: 'gets active user',
-        operationId: 'getactiveuser',
+    '/api/admin/auth/register': {
+      post: {
+        tags: ['Register Admin'],
+        description: 'Registers admin',
+        operationId: 'registeradmin',
         security: [ {bearerAuth: {}}],
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                // usename: String,
+                // emial: String,
+                // password: String
+              },
+            },
+          },
+          required: true,
+        },
         parameters: [],
         responses: {
           '200': {
@@ -58,11 +67,97 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/register': {
+    '/api/admin/auth/email/verification': {
+      get: {
+        tags: ['Email verification'],
+        description: 'email varification',
+        operationId: 'veryfyuseremail',
+        security: [ {bearerAuth: {}}],
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                // usename: String,
+                // emial: String,
+                // password: String
+              },
+            },
+          },
+          required: true,
+        },
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/admin/auth/resend/verification': {
+      get: {
+        tags: ['Email resend verification'],
+        description: 'email resend varification',
+        operationId: 'veryfyuseremail',
+        security: [ {bearerAuth: {}}],
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                // usename: String,
+                // emial: String,
+                // password: String
+              },
+            },
+          },
+          required: true,
+        },
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/admin/auth/getAPIKEY': {
       post: {
-        tags: ['Register User','User Authentication','CRUD Operations'],
-        description: 'Registers user',
-        operationId: 'registeruser',
+        tags: ['Get APIKEY'],
+        description: 'login user',
+        operationId: 'loginuser',
         security: [ {bearerAuth: {}}],
         requestBody: {
           content: {
@@ -99,9 +194,52 @@ const openApiDocumentation = {
         },
       },
     },
+     '/api/auth/register': {
+      post: {
+        tags: ['Register User'],
+        description: 'Registers user',
+        operationId: 'registeruser',
+        security: [ {bearerAuth: {}}],
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                // usename: String,
+                // emial: String,
+                // password: String
+              },
+            },
+          },
+          required: true,
+        },
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     '/api/auth/login': {
       post: {
-        tags: ['Login User','User Authentication','CRUD Operations'],
+        tags: ['Login User'],
         description: 'login user',
         operationId: 'loginuser',
         security: [ {bearerAuth: {}}],
@@ -141,8 +279,8 @@ const openApiDocumentation = {
       },
     },
     '/api/auth/logout': {
-      post: {
-        tags: ['Logout User','User Authentication','CRUD Operations'],
+      get: {
+        tags: ['Logout User'],
         description: 'logout user',
         operationId: 'logoutuser',
         security: [ {bearerAuth: {}}],
@@ -181,15 +319,13 @@ const openApiDocumentation = {
         },
       },
     }
-
   },
-
   components: {
     schemas: {
       User: {
         type: 'object',
         properties: {
-          name: {
+          username: {
             type: 'string',
             description: 'User\'s Name',
           },
@@ -201,9 +337,9 @@ const openApiDocumentation = {
             type: 'string',
             description: 'User Password',
           },
-          role: {
+          phone_number: {
             type: 'String',
-            enum: ['User'],
+             description: 'User phone number',
           },
           resetPasswordToken: {
             type: 'string',
