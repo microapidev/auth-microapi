@@ -1,30 +1,60 @@
 # Auth-Micro API
-Auth-Micro API allows for easy integration of authentication services into applications. The process flow is simple: an adminUser plugs this auth service into their app by firstly registering an account; whereby a confirmation email will be sent to them. On confirmation, an API_KEY is given to them - this API_KEY will be signed with their unique ID which will be used to identify all requests to auth-microapi made from their app. Examples of requests made from their app to auth-microapi are registration and login of a new user on their app platform; these resgistration and login requests will be authorized and granted authentication if they are sent with the adminUser's API_KEY, thereby creating a guestUser on their app which is stored in the adminUser's database collection.
----
-## Usage 
-[Go to support website](auth.microapi.dev) 🎈
+A microapi to allow easy integration of authentication into your service
 
-## Installation:
+## Usage 
+[Go to support website](https://auth.microapi.dev) 🎈
+
+## Contributions
+https://docs.google.com/spreadsheets/d/1aNd-d2mQIOHOYnCLvG1wHn7pYS2XqHnmDSzABABQTBI/edit?usp=sharing
+
+## Features
+- [x] Login/logout/register + session expiry
+- [x] Secure routing
+- [x] Email verification
+- [ ] Password recovery
+- [ ] Password reset
+- [ ] Social authentication
+- [ ] Rate limiting
+- [ ] Persistent login
+
+## Prerequisites:
 - Node v~12.16.0
 - npm v~6.14.5
-- Create MongoDB Cluster and get its URI
+- MongoDB Atlas URI
+- Sendgrid APIKEY
 - Clone repo
 
-## How to:
----
-### ::start server, run in terminal:
+## Setup:
 - `cd auth-microapi`
+- `cp sample.env .env`
+- `add MongoDB URI, and Sengrid APIkey in .env`
 - `npm install`
-- `npm start`
+- `npm run dev`
 
-### To Contribute:
-Please always follow the right format in making pull request
+## Test
+Use Postman to test endpoints
+
+## API
+| Method | URI                                      | PARAMS                                  | HEADERS                                       |
+| :---   | :----                                    | :----:                                  | :----:                                        | 
+| POST   | api/admin/auth/reigster                  | email, username, password, phone_number | application/json                              |
+| GET    | api/admin/auth/email/verification:token  |                   -                     |             -                                 |
+| GET    | api/admin/auth/email/resend/verification |                   -                     |             -                                 |
+| POST   | api/admin/auth/getkey                    | email, password                         | application/json                              |
+| *POST  | api/auth/register                        | email, username, password, phone_number | application/json, Authorization: Bearer token |
+| POST   | api/auth/email/verification:token        |               -                         | application/json, Authorization: Bearer token |
+| GET    | api/auth/email/resend/verification       |                   -                     | application/json, Authorization: Bearer token |
+| *POST  | api/auth/login                           | email, password                         | application/json, Authorization: Bearer token |
+| *GET   | api/auth/logout                          |                -                        |             Authorization: Bearer token       |
+* *(get Authorization token from api/admin/auth/getkey)
+
+## Contribution Guide:
+Please always follow the right format before making pull request
 
 * Fork this repository into your remote repository
 * Clone the code from your remote repository into your local machine `git clone <url>`
 * Create a branch with the feature name you wish to work on `git checkout -b <name_of_feature>`
 * Add any changes
-* Add tests with jest and make sure they pass `npm run test`
 * Create an upstream on your local machine to pull the latest code from the develop branch of this repository `git remote add upstream develop` and `git pull upstream develop`
 * Push to the remote branch which you forked `git add .` | `git commit -m "cool feature"` | `git push origin <name_of_feature>`
 * Make a pull request to the develop branch of this repository

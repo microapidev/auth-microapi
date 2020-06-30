@@ -1,0 +1,10 @@
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlZjhjMjMxYzkzYzExMzMwODE2YjBkOCIsImVtYWlsIjoib21lZ2Fsb3NhbXVsYUBnbWFpbC5jb20iLCJpYXQiOjE1OTMzNjEwOTd9.qSZ5TWetTyLWW-1jKLJC8NYOG-RfRyQiXiWgxS53xls
+
+{
+    "email": "olulul@gmail.com",
+    "username": "oluwa",
+    "password": "secret12",
+    "phone_number": "8965489990"
+  }
