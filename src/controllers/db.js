@@ -4,7 +4,6 @@ mongoose.set('debug', true);
 
 const connectDB = () => {
   console.log('Connecting to database...');
-
   mongoose.connect(
     AUTH_API_DB,
     {

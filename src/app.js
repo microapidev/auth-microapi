@@ -10,6 +10,7 @@ const { authorizeUser, errorHandler, unknownRoutes } = require('./utils/middlewa
 const swaggerDocs = require('./swagger.json');
 const swaggerUi = require('swagger-ui-express');
 const openApiDocumentation = require('./swagger/openApiDocumentation');
+const session = require('express-session');
 require('express-async-errors');
 require('dotenv').config();
 
@@ -23,13 +24,13 @@ app.use(
     extended: true,
   }),
 );
-// initialize express-session to allow us track the logged-in user.
-// app.use(session({
-//   key: 'user_sid',
-//   secret: 'somerandonstuffsjl',
-//   resave: false,
-//   saveUninitialized: false,
-// }));
+ //initialize express-session to allow us track the logged-in user.
+ app.use(session({
+   key: 'user_sid',
+   secret: 'somerandonstuffsjl',
+   resave: false,
+   saveUninitialized: false,
+}));
 
 // auth routes
 app.use('/api/admin/auth', adminRouter);

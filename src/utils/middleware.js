@@ -35,7 +35,7 @@ const auth = async (request, response, next) => {
   request.user = user;
 
   if (request.cookies.user_sid && !request.session.user && !request.session.isAdmin) {
-    response.clearCookie('user_sid');
+    response.clearCookie('w_auth', user.token);
   }
 
   next();

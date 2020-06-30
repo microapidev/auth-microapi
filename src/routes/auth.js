@@ -1,10 +1,13 @@
 const router = require('express').Router();
 const { User } = require('../models/user');
-const validation = require('../validation/authValidation');
-const { auth } = require('../middleware/auth');
-const session = require('express-session')
+//const validation = require('../validation/authValidation');
+const { auth } = require('../utils/middleware');
+const cookie = require('cookie');
+const cookieParser = require('cookie-parser');
+
 
 router.get('/active', auth, (req, res) => {
+  res.cookie('w_auth', user.token);
   res.status(200).json({
     _id: req.user._id,
     isAdmin: req.user.isAdmin,
@@ -16,7 +19,7 @@ router.get('/active', auth, (req, res) => {
 /* -------- 🎃 Any client accessing this route is implicitly a guest,-----
 -------- hence eliminating the need for user role 🎃 --------- */
 
-const User = require('../models/user');
+//const User = require('../models/user');
 const userRouter = require('express').Router();
 const { registerValidation, loginValidation } = require('../utils/validation/joiValidation');
 // const { auth } = require('../utils/middleware');
@@ -37,6 +40,8 @@ const {createVerificationLink} = require('../utils/EmailVerification');
 userRouter.post('/register', registerValidation(), async (request, response) => {
   // Register as guest
   const { email } = request.body;
+  res.cookie('w_auth', user.token);
+  req.session.user = req.body;
 
   // Check if user email is taken in DB
   let user = await User.findOne({ email });
@@ -50,7 +55,7 @@ userRouter.post('/register', registerValidation(), async (request, response) => 
 
   user = new User({ ...request.body });
   user = await user.save(
-    req.session.user = new User,
+    req.session.user = user,
 		req.flash('success'),
 		res.redirect('/'),
   );
@@ -69,6 +74,8 @@ userRouter.post('/register', registerValidation(), async (request, response) => 
 userRouter.post('/login', loginValidation(), async (request, response) => {
   // Login as guest
   const { email, password } = request.body;
+  res.cookie('w_auth', user.token);
+  req.session.user = req.body;
 
   // check if user exists in DB
   let user = await User.findOne({ email });
@@ -113,10 +120,10 @@ userRouter.get('/logout', async (request, response) => {
     token: '',
     tokenExp: ''
   };
-
+ 
   await User.findOneAndUpdate(query, update) 
-  req.logout();
-  res.clearCookie('user_sid');
+  req.logout()
+  res.clearCookie('w_auth');
   req.session.destroy();
   req.session.user = null;
   req.flash('success');
