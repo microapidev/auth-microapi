@@ -45,7 +45,7 @@ Use Postman to test endpoints
 | POST   | api/auth/email/verification:token        |               -                         | application/json, Authorization: Bearer token |
 | GET    | api/auth/email/resend/verification       |                   -                     | application/json, Authorization: Bearer token |
 | *POST  | api/auth/login                           | email, password                         | application/json, Authorization: Bearer token |
-| *GET   | api/auth/login                           | email, password                         | application/json, Authorization: Bearer token |
+| *GET   | api/auth/logout                          |                -                        |             Authorization: Bearer token       |
 * *(get Authorization token from api/admin/auth/getkey)
 
 ## Contribution Guide:
