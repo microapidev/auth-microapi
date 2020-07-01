@@ -72,6 +72,7 @@ const auth = async (request, response, next) => {
     req.user = user;
     next();
   });
+}
 };
 
 const unknownRoutes = (request, response, next) => {
