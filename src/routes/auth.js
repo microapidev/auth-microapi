@@ -7,7 +7,7 @@ const cookieParser = require('cookie-parser');
 
 
 router.get('/active', auth, (req, res) => {
-  res.cookie('w_auth', user.token);
+  res.cookie('w_auth', client.token);
   res.status(200).json({
     _id: req.user._id,
     isAdmin: req.user.isAdmin,
@@ -22,14 +22,13 @@ router.get('/active', auth, (req, res) => {
 //const User = require('../models/user');
 const userRouter = require('express').Router();
 const { registerValidation, loginValidation } = require('../utils/validation/joiValidation');
-// const { auth } = require('../utils/middleware');
 const {createVerificationLink} = require('../utils/EmailVerification');
 
 
-// guestRouter.get('/active', auth, (req, res) => {
+// userRouter.get('/active', auth, (req, res) => {
 //   res.status(200).json({
-//     _id: req.user._id,
-//     isAdmin: req.user.isAdmin,
+//     _id: req.user.id,
+//     isAdmin: req.user.isEmailVerified,
 //     isAuth: true,
 //     email: req.user.email,
 //     username: req.user.username,
@@ -40,7 +39,7 @@ const {createVerificationLink} = require('../utils/EmailVerification');
 userRouter.post('/register', registerValidation(), async (request, response) => {
   // Register as guest
   const { email } = request.body;
-  res.cookie('w_auth', user.token);
+  res.cookie('w_auth', client.token);
   req.session.user = req.body;
 
   // Check if user email is taken in DB
@@ -74,7 +73,7 @@ userRouter.post('/register', registerValidation(), async (request, response) => 
 userRouter.post('/login', loginValidation(), async (request, response) => {
   // Login as guest
   const { email, password } = request.body;
-  res.cookie('w_auth', user.token);
+  res.cookie('w_auth', client.token);
   req.session.user = req.body;
 
   // check if user exists in DB
@@ -88,23 +87,27 @@ userRouter.post('/login', loginValidation(), async (request, response) => {
   }
 
   // check if password provided by user matches user password in DB
-  const isMatch = user.matchPasswords(password);
+  const isMatch = await user.matchPasswords(password);
+  // console.log(" isMatch", isMatch)
 
   if (!isMatch) {
     return response.status(401).json({
       success: false,
-      message: 'Invalid email or password',
+      message: 'Invalid email or passwords',
     });
   }
 
-  // Send token in response cookie for user session
-  user = user.generateToken();
+  // console.log(" isMatch", isMatch)
 
-  response.cookie('w_authExp', user.tokenExp);
-  response.cookie('w_auth', user.token).status(200).json({
+  // Send token in response cookie for user session
+  let client = await user.generateToken();
+  // console.log("User", client)
+
+  response.cookie('w_authExp', client.tokenExp);
+  response.cookie('w_auth', client.token).status(200).json({
     success: true,
-    userId: user.id,
-    // token: user.token
+    userId: client.id,
+    token: client.token
   });
   req.session.user = new User;
   req.flash('success');

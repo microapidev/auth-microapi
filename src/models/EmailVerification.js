@@ -18,7 +18,7 @@ const emailVerificationSchema = new mongoose.Schema({
     type: Date, 
     required: true, 
     default: Date.now, 
-    expires: 120
+    expires: 1000
   },
 
   _userId: {
