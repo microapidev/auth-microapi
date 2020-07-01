@@ -69,88 +69,6 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/admin/auth/email/verification': {
-      get: {
-        tags: ['Email verification'],
-        description: 'email varification',
-        operationId: 'veryfyuseremail',
-        security: [ {bearerAuth: {}}],
-        requestBody: {
-          content: {
-            'application/json': {
-              schema: {
-                // $ref: '#/components/schemas/User',
-              },
-            },
-          },
-          required: true,
-        },
-        parameters: [],
-        responses: {
-          '200': {
-            description: 'Success',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Response',
-                },
-              },
-            },
-          },
-          '400': {
-            description: 'Bad Request',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Response',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    '/api/admin/auth/resend/verification': {
-      get: {
-        tags: ['Email resend verification'],
-        description: 'email resend varification',
-        operationId: 'veryfyuseremail',
-        security: [ {bearerAuth: {}}],
-        requestBody: {
-          content: {
-            'application/json': {
-              schema: {
-                // $ref: '#/components/schemas/User',
-              },
-            },
-          },
-          required: true,
-        },
-        parameters: [],
-        responses: {
-          '200': {
-            description: 'Success',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Response',
-                },
-              },
-            },
-          },
-          '400': {
-            description: 'Bad Request',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Response',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
     '/api/admin/auth/getkey': {
       post: {
         tags: ['Get APIKEY'],
@@ -192,7 +110,7 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/register': {
+     '/api/auth/register': {
       post: {
         tags: ['Register User'],
         description: 'Registers user',
@@ -203,6 +121,88 @@ const openApiDocumentation = {
             'application/json': {
               schema: {
                 $ref: '#/components/schemas/User',
+              },
+            },
+          },
+          required: true,
+        },
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/auth/email/verification/:token': {
+      post: {
+        tags: ['Email verification'],
+        description: 'email varification',
+        operationId: 'veryfyuseremail',
+        security: [ {bearerAuth: {}}],
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                // $ref: '#/components/schemas/User',
+              },
+            },
+          },
+          required: true,
+        },
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/auth/resend/verification': {
+      get: {
+        tags: ['Email resend verification'],
+        description: 'email resend varification',
+        operationId: 'veryfyuseremail',
+        security: [ {bearerAuth: {}}],
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                // $ref: '#/components/schemas/User',
               },
             },
           },
@@ -394,6 +394,11 @@ const openApiDocumentation = {
           },
         },
       },
+    },
+    responses: {
+       UnauthorizedError: {
+        description: 'Access token is missing or invalid'
+      }
     },
     securitySchemes: {
       bearerAuth: {
