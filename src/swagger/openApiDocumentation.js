@@ -345,10 +345,10 @@ const openApiDocumentation = {
           //   type: 'Date object',
           //   description: 'User password reset token expiration time',
           // },
-          // createdAt:{
-          //   type: 'string',
-          //   description: 'date and time user was created',
-          // }
+          createdAt:{
+            type: 'string',
+            description: 'date and time user was created',
+          }
         },
       },
       Response: {

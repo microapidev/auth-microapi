@@ -21,8 +21,6 @@ const authorizeUser = async (request, response, next) => {
   next();
 };
 
-const auth = (req, res, next) => {
-  let token = req.cookies.w_auth;
 const auth = async (request, response, next) => {
   // This middleware will check if client's cookie is still saved in user agent
   // const token = request.cookies.w_auth;
@@ -58,18 +56,15 @@ const auth = async (request, response, next) => {
   User.findByToken(token, (err, user) => {
     if (err) {throw err;}
     if (!user)
-      return res.json({
-        isAuth: false,
-        error: true
-      });
     {return response.json({
       isAuth: false,
       error: true,
       msg: 'UnAuthorised/Invalid token'
     });}
     console.log('users middleware', user);
-    req.token = token;
-    req.user = user;
+
+    request.token = token;
+    request.user = user;
     next();
   });
 };
@@ -80,13 +75,25 @@ const unknownRoutes = (request, response, next) => {
 
 };
 
-const errorHandler = (error, req, res, next) => {
-    return res.status(error.status || 500).json({
-        error: {
-            message: error.message || "Oops Something wrong!"
-        }
-    })
-}
+const errorHandler = (error, request, response, next) => {
+  // This middleware handles errors responses sent to client
+  if (error.name === 'CastError') {
+    return response.status(400).send({
+      error: 'malformatted id'
+    });
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({
+      error: error.message,
+      name: error.name
+    });
+  } else if (error.name === 'JsonWebTokenError') {
+    return response.status(401).json({
+      error: 'invalid token'
+    });
+  }
+
+  next(error);
+};
 
 module.exports = {
   auth,
