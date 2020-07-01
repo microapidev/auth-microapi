@@ -29,13 +29,6 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Please enter a phone number'],
     min: 10,
   },
-  /*
-  role: {
-    type: String,
-    required: true,
-    enum: ['user', 'admin'],
-  },
-  */
   resetPasswordToken: String,
   resetPasswordExpire: Date,
   createdAt: {
@@ -77,27 +70,39 @@ userSchema.pre('save', function () {
 userSchema.methods.generateToken = async function () {
   // Generate token for user session, and save to user schema in DB
   let user = this;
-  const token = jwt.sign(user.id.toHexString(), JWT_SECRET);
+  const token = jwt.sign(user.id, JWT_SECRET);
 
   user.tokenExp = JWT_EXPIRE;
   user.token = token;
   return await user.save(); 
 };
 
-userSchema.statics.findByToken = function (token, cb) {
-  const user = this;
+// userSchema.statics.findByToken = function (token, cb) {
+//   const user = this;
 
-  jwt.verify(token, JWT_SECRET, (err, decode) => {
-    if (err) {
-      return cb(err);
-    };
-    user.findOne({ id: decode, token }, (err, user) => {
-      if (err) {
-        return cb(err);
-      }
-      cb(null, user);
-    });
-  });
-};
+//   jwt.verify(token, JWT_SECRET, (err, decode) => {
+//     if (err) {
+//       return cb(err);
+//     };
+//     console.log("Schema token", token)
+//     user.findOne({ id: decode, token }, (err, user) => {
+//       if (err) {
+//         return cb(err);
+//       }
+//       cb(null, user);
+//     });
+//   });
+// };
+
+userSchema.statics.findByToken = function (token, cb) {
+    var user = this;
+
+    jwt.verify(token,'secret',function(err, decode){
+        user.findOne({"_id":decode, "token":token}, function(err, user){
+            if(err) return cb(err);
+            cb(null, user);
+        })
+    })
+}
 
 module.exports = mongoose.model('User', userSchema);

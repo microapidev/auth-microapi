@@ -4,14 +4,13 @@
 const User = require('../models/user');
 const userRouter = require('express').Router();
 const { registerValidation, loginValidation } = require('../utils/validation/joiValidation');
-// const { auth } = require('../utils/middleware');
 const {createVerificationLink} = require('../utils/EmailVerification');
 
 
-// guestRouter.get('/active', auth, (req, res) => {
+// userRouter.get('/active', auth, (req, res) => {
 //   res.status(200).json({
-//     _id: req.user._id,
-//     isAdmin: req.user.isAdmin,
+//     _id: req.user.id,
+//     isAdmin: req.user.isEmailVerified,
 //     isAuth: true,
 //     email: req.user.email,
 //     username: req.user.username,
@@ -62,23 +61,27 @@ userRouter.post('/login', loginValidation(), async (request, response) => {
   }
 
   // check if password provided by user matches user password in DB
-  const isMatch = user.matchPasswords(password);
+  const isMatch = await user.matchPasswords(password);
+  // console.log(" isMatch", isMatch)
 
   if (!isMatch) {
     return response.status(401).json({
       success: false,
-      message: 'Invalid email or password',
+      message: 'Invalid email or passwords',
     });
   }
 
-  // Send token in response cookie for user session
-  user = user.generateToken();
+  // console.log(" isMatch", isMatch)
 
-  response.cookie('w_authExp', user.tokenExp);
-  response.cookie('w_auth', user.token).status(200).json({
+  // Send token in response cookie for user session
+  let client = await user.generateToken();
+  // console.log("User", client)
+
+  response.cookie('w_authExp', client.tokenExp);
+  response.cookie('w_auth', client.token).status(200).json({
     success: true,
-    userId: user.id
-    // token: user.token
+    userId: client.id,
+    token: client.token
   });
 });
 
