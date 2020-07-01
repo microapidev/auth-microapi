@@ -43,6 +43,31 @@ module.exports = {
 
     // return await sendGrid.send(msg);
 
+  },
+
+  sendForgotPasswordMail: (emailAddress, username, passwordLink) => {
+    const msg = {
+      to: emailAddress,
+      from: 'AUTH API <no-reply@authapi.com>',
+      subject: 'PASSWORD RESET',
+      html: `
+        <div style="text-align: center;"><span style="font-family:verdana,geneva,sans-serif;">
+          <p>Hello ${username}, </p>
+          <p>There was a request to reset your password</p>
+          <p>Please click on the button below to get a new password</p>
+          <a href='${passwordLink}'><button>Reset Password</button></a>
+          <br>
+          <p>If you did not make this request, just ignore this mail as nothing has changed.</p>
+          <br>
+          <br>
+          <p>Best Regards, <b><span style="color: red;">Auth-Api</span></b>Team</p>
+        `
+    };
+    console.log('===Sending Password reset link now...');
+    return new Promise((resolve, reject)=>{
+      sendGrid.send(msg).then(resolve).catch(reject);
+    }).catch(err=>{console.log('Error in the mail code: '+err.message);});
+
   }
 };
  

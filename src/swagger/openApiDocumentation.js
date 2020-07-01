@@ -20,8 +20,8 @@ const openApiDocumentation = {
     },
   ],
   schemes: [
-    "HTTP",
-    "HTTPS"
+    'HTTP',
+    'HTTPS'
   ],
   security: {
     bearerAuth: {},
@@ -192,7 +192,7 @@ const openApiDocumentation = {
         },
       },
     },
-     '/api/auth/register': {
+    '/api/auth/register': {
       post: {
         tags: ['Register User'],
         description: 'Registers user',
@@ -202,7 +202,7 @@ const openApiDocumentation = {
           content: {
             'application/json': {
               schema: {
-               $ref: '#/components/schemas/User',
+                $ref: '#/components/schemas/User',
               },
             },
           },
@@ -345,10 +345,10 @@ const openApiDocumentation = {
           //   type: 'Date object',
           //   description: 'User password reset token expiration time',
           // },
-          createdAt:{
-            type: 'string',
-            description: 'date and time user was created',
-          }
+          // createdAt:{
+          //   type: 'string',
+          //   description: 'date and time user was created',
+          // }
         },
       },
       Response: {
