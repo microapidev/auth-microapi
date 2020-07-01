@@ -7,7 +7,7 @@
 
 const EmailVerification = require('../models/EmailVerification');
 const User = require('../models/user');
-const AdminUser = require('../models/admin');
+// const AdminUser = require('../models/admin');
 const CustomError = require('../utils/CustomError');
 
 class EmailVerificationService{
@@ -27,11 +27,12 @@ class EmailVerificationService{
       userData = await User.findByIdAndUpdate(token._userId, 
         {$set: {isEmailVerified: true}}, 
         {new: true});
-    }else{
-      userData = await AdminUser.findByIdAndUpdate(token._userId, 
-        {$set: {isEmailVerified: true}}, 
-        {new: true});
     }
+    // else{
+    //   userData = await AdminUser.findByIdAndUpdate(token._userId, 
+    //     {$set: {isEmailVerified: true}}, 
+    //     {new: true});
+    // }
 
     this.logger(userData);
     if(!userData)

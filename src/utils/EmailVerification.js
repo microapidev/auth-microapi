@@ -48,6 +48,7 @@ class EmailVerificationUtil{
       
     // this.logger('SUCCESS', 'Sending mail...');
     return{
+      verificationUrl,
       message: 'Check Your Mailbox for Link',
       status: 'success',
       code: 200

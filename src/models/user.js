@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 // const moment = require('moment');
 const saltRounds = 10;
-const { JWT_EXPIRE, JWT_SECRET, JWT_ADMIN_SECRET, APP_DB } = require('../utils/config');
+const { JWT_EXPIRE, JWT_SECRET } = require('../utils/config');
 
 // Modified user model
 const userSchema = new mongoose.Schema({
@@ -76,23 +76,6 @@ userSchema.methods.generateToken = async function () {
   user.token = token;
   return await user.save(); 
 };
-
-// userSchema.statics.findByToken = function (token, cb) {
-//   const user = this;
-
-//   jwt.verify(token, JWT_SECRET, (err, decode) => {
-//     if (err) {
-//       return cb(err);
-//     };
-//     console.log("Schema token", token)
-//     user.findOne({ id: decode, token }, (err, user) => {
-//       if (err) {
-//         return cb(err);
-//       }
-//       cb(null, user);
-//     });
-//   });
-// };
 
 userSchema.statics.findByToken = function (token, cb) {
   let user = this;

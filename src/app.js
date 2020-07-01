@@ -5,8 +5,8 @@ const cookieParser = require('cookie-parser');
 const userRouter = require('./routes/auth');
 const adminRouter = require('./routes/adminAuth');
 const emailVerificationRouter = require('./routes/EmailVerification');
-const { connectDB, DB } = require('./controllers/db');
-const { authorizeUser, errorHandler, unknownRoutes, auth } = require('./utils/middleware');
+const { connectDB } = require('./controllers/db');
+const { authorizeUser, errorHandler, unknownRoutes } = require('./utils/middleware');
 // const swaggerDocs = require('./swagger.json');
 const swaggerUi = require('swagger-ui-express');
 const openApiDocumentation = require('./swagger/openApiDocumentation');
@@ -24,21 +24,11 @@ app.use(
   }),
 );
 
-app.get('/api/auth/user/active', auth, (req, res) => {
-  res.status(200).json({
-    _id: req.user.id,
-    isAdmin: req.user.isEmailVerified,
-    isAuth: true,
-    email: req.user.email,
-    username: req.user.username,
-  });
-});
-
 // auth routes
 app.use('/api/admin/auth', adminRouter);
 app.use('/api/auth/email', emailVerificationRouter());
 app.use('/api/auth', authorizeUser, userRouter);
-app.use('/api/admin/auth/email', emailVerificationRouter());
+// app.use('/api/admin/auth/email', emailVerificationRouter());
 
 
 app.use('/', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
