@@ -9,7 +9,6 @@ const { connectDB, DB } = require('./controllers/db');
 const { authorizeUser, errorHandler, unknownRoutes, auth } = require('./utils/middleware');
 const swaggerUi = require('swagger-ui-express');
 const openApiDocumentation = require('./swagger/openApiDocumentation');
-const session = require('express-session');
 require('express-async-errors');
 require('dotenv').config();
 
