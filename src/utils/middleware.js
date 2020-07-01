@@ -21,50 +21,19 @@ const authorizeUser = async (request, response, next) => {
   next();
 };
 
-const auth = async (request, response, next) => {
-  // This middleware will check if client's cookie is still saved in user agent
-  // const token = request.cookies.w_auth;
-
-  // console.log(token)
-
-  // const user = await User.findByToken(token);
-
-  // if (!user) {
-  //   return response.status(301).json({
-  //     sucess: false,
-  //     msg: "UnAuthorised"
-  //   })
-  // }
-
-  // console.log("middleware token", user)
-
-  // request.token = token;
-  // request.user = user;
-
-  // if (request.cookies.user_sid && !request.session.user && !request.session.isAdmin) {
-  //   response.clearCookie('user_sid');
-  // }
-
-  // next();
-  let token = request.cookies.w_auth;
-
- // console.log("token middleware", token)
-
-const user = await User.findByToken(token)
-console.log("findByToken", user)
+const auth = (req, res, next) => {
+  let token = req.cookies.w_auth;
 
   User.findByToken(token, (err, user) => {
     if (err) throw err;
     if (!user)
-      return response.json({
+      return res.json({
         isAuth: false,
-        error: true,
-        msg: "UnAuthorised/Invalid token"
+        error: true
       });
-     console.log("users middleware", user)
 
-    request.token = token;
-    request.user = user;
+    req.token = token;
+    req.user = user;
     next();
   });
 };
@@ -75,25 +44,13 @@ const unknownRoutes = (request, response, next) => {
 
 };
 
-const errorHandler = (error, request, response, next) => {
-  // This middleware handles errors responses sent to client
-  if (error.name === 'CastError') {
-    return response.status(400).send({
-      error: 'malformatted id'
-    });
-  } else if (error.name === 'ValidationError') {
-    return response.status(400).json({
-      error: error.message,
-      name: error.name
-    });
-  } else if (error.name === 'JsonWebTokenError') {
-    return response.status(401).json({
-      error: 'invalid token'
-    });
-  }
-
-  next(error);
-};
+const errorHandler = (error, req, res, next) => {
+    return res.status(error.status || 500).json({
+        error: {
+            message: error.message || "Oops Something wrong!"
+        }
+    })
+}
 
 module.exports = {
   auth,
