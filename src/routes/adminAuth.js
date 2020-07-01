@@ -3,9 +3,15 @@
 
 const adminRouter = require('express').Router();
 // const connectDB = require('../controllers/db');
-const { registerValidation, loginValidation } = require('../utils/validation/joiValidation');
+const { 
+  registerValidation, 
+  loginValidation, 
+  forgotValidation, 
+  resetPasswordValidation 
+} = require('../utils/validation/joiValidation');
 const Admin = require('../models/admin'); 
-const {createVerificationLink} = require('../utils/EmailVerification');
+const { createVerificationLink } = require('../utils/EmailVerification');
+const { adminForgotPassword, adminResetPassword } = require('../controllers/admin');
 
 adminRouter.post('/register', registerValidation(), async (request, response) => {
   // Adds a new admin to Auth-MicroApi DB 
@@ -50,5 +56,9 @@ adminRouter.post('/getkey', loginValidation(), async (request, response) => {
     API_KEY: user.generateAPIKEY(),
   });
 });
+
+adminRouter.post('/forgot-password', forgotValidation(), adminForgotPassword);
+
+adminRouter.patch('/reset-password/:token', resetPasswordValidation(), adminResetPassword);
 
 module.exports = adminRouter;
