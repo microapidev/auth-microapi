@@ -108,7 +108,7 @@ userRouter.get('/logout', async (request, response) => {
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: "https://auth.microapi.dev/auth/facebook/swagger"
+    callbackURL: "http://localhost:5000/auth/facebook/"
   },
   function(accessToken, refreshToken, profile, cb) {
     User.findOrCreate({ facebookId: profile.id }, function (err, user) {
@@ -116,12 +116,12 @@ passport.use(new FacebookStrategy({
     });
   }
 ));
-userRouter.get('/auth/facebook',
-passport.authenticate('facebook'));
+userRouter.get('/auth/facebook', passport.authenticate('facebook'));
 
-userRouter.get('/auth/facebook/swagger',
+userRouter.get('/auth/facebook/',
 passport.authenticate('facebook', { failureRedirect: '/login' }),
 function(req, res) {
+  console.log('fb route');
   // Successful authentication, redirect home.
   return response.status(200).json({
     success: True,
