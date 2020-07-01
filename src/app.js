@@ -7,6 +7,8 @@ const adminRouter = require('./routes/adminAuth');
 const emailVerificationRouter = require('./routes/EmailVerification');
 const { connectDB } = require('./controllers/db');
 const { authorizeUser, errorHandler, unknownRoutes } = require('./utils/middleware');
+const passport = require('passport');
+
 // const swaggerDocs = require('./swagger.json');
 const swaggerUi = require('swagger-ui-express');
 const openApiDocumentation = require('./swagger/openApiDocumentation');
@@ -32,9 +34,22 @@ app.use('/api/auth', authorizeUser, userRouter);
 
 
 app.use('/', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
+
 // app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(unknownRoutes);
 app.use(errorHandler);
+
+passport.use(new TwitterStrategy({
+  consumerKey: process.env.TWITTER_CONSUMER_KEY,
+  consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+  callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
+},
+function(token, tokenSecret, profile, cb) {
+  User.findOrCreate({ twitterId: profile.id }, function (err, user) {
+    return cb(err, user);
+  });
+}
+));
 
 module.exports = app;

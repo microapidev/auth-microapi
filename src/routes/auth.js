@@ -1,17 +1,19 @@
-const User = require('../models/user');
-const userRouter = require('express').Router();
-const { 
-  registerValidation, 
-  loginValidation, 
-  forgotValidation, 
-  resetPasswordValidation 
-} = require('../utils/validation/joiValidation');
-const { auth } = require('../utils/middleware');
-const { createVerificationLink } = require('../utils/EmailVerification');
-const { userForgotPassword, userResetPassword } = require('../controllers/auth');
+const User = require("../models/user");
+const userRouter = require("express").Router();
+const {
+  registerValidation,
+  loginValidation,
+  forgotValidation,
+  resetPasswordValidation,
+} = require("../utils/validation/joiValidation");
+const { auth } = require("../utils/middleware");
+const { createVerificationLink } = require("../utils/EmailVerification");
+const {
+  userForgotPassword,
+  userResetPassword,
+} = require("../controllers/auth");
 
-
-userRouter.get('/user/active', auth, (req, res) => {
+userRouter.get("/user/active", auth, (req, res) => {
   res.status(200).json({
     _id: req.user.id,
     isAdmin: req.user.isEmailVerified,
@@ -21,43 +23,56 @@ userRouter.get('/user/active', auth, (req, res) => {
   });
 });
 
+userRouter.get("/twitter", passport.authenticate("twitter"));
 
-userRouter.post('/register', registerValidation(), async (request, response) => {
-  // Register as guest
-  const { email } = request.body;
+userRouter.get(
+  "/twitter/callback",
+  passport.authenticate("twitter", { failureRedirect: "/login" }),
+  function (req, res) {
+    // Successful authentication, redirect home.
+    res.redirect("/");
+  }
+);
 
-  // Check if user email is taken in DB
-  let user = await User.findOne({ email });
+userRouter.post(
+  "/register",
+  registerValidation(),
+  async (request, response) => {
+    // Register as guest
+    const { email } = request.body;
 
-  if (user) {
-    return response.status(403).json({
-      success: false,
-      message: 'Email address already in use',
+    // Check if user email is taken in DB
+    let user = await User.findOne({ email });
+
+    if (user) {
+      return response.status(403).json({
+        success: false,
+        message: "Email address already in use",
+      });
+    }
+
+    user = new User({ ...request.body });
+    user = await user.save();
+
+    // Send a confirmation link to email
+    const mailStatus = await createVerificationLink(user, request);
+    console.log(mailStatus);
+    const { verificationUrl } = mailStatus;
+
+    return response.status(201).json({
+      success: true,
+      verificationUrl,
+      message: "Account created successfully",
+      data: { ...user.toJSON() },
     });
   }
+);
 
-  user = new User({ ...request.body });
-  user = await user.save();
-
-  // Send a confirmation link to email
-  const mailStatus = await createVerificationLink(user, request);
-  console.log(mailStatus);
-  const { verificationUrl } = mailStatus;
-
-  return response.status(201).json({
-    success: true,
-    verificationUrl,
-    message: 'Account created successfully',
-    data: { ...user.toJSON() },
-  });
-});
-
-userRouter.post('/login', loginValidation(), async (request, response) => {
+userRouter.post("/login", loginValidation(), async (request, response) => {
   // Login as guest
   const { email, password } = request.body;
 
   // check if user has verified email
-  
 
   // check if user exists in DB
   let user = await User.findOne({ email });
@@ -65,7 +80,7 @@ userRouter.post('/login', loginValidation(), async (request, response) => {
   if (!user) {
     return response.status(401).json({
       success: false,
-      message: 'Invalid email or password',
+      message: "Invalid email or password",
     });
   }
 
@@ -76,7 +91,7 @@ userRouter.post('/login', loginValidation(), async (request, response) => {
   if (!isMatch) {
     return response.status(401).json({
       success: false,
-      message: 'Invalid email or password',
+      message: "Invalid email or password",
     });
   }
 
@@ -85,22 +100,22 @@ userRouter.post('/login', loginValidation(), async (request, response) => {
   // Send token in response cookie for user session
   let client = await user.generateToken();
 
-  response.cookie('w_authExp', client.tokenExp);
-  response.cookie('w_auth', client.token).status(200).json({
+  response.cookie("w_authExp", client.tokenExp);
+  response.cookie("w_auth", client.token).status(200).json({
     success: true,
     userId: client.id,
-    token: client.token
+    token: client.token,
   });
 });
 
-userRouter.get('/logout', async (request, response) => {
+userRouter.get("/logout", async (request, response) => {
   const query = {
-    id: request.body.id
+    id: request.body.id,
   };
 
   const update = {
-    token: '',
-    tokenExp: ''
+    token: "",
+    tokenExp: "",
   };
 
   await User.findOneAndUpdate(query, update);
@@ -110,8 +125,12 @@ userRouter.get('/logout', async (request, response) => {
   });
 });
 
-userRouter.post('/forgot-password', forgotValidation(), userForgotPassword);
+userRouter.post("/forgot-password", forgotValidation(), userForgotPassword);
 
-userRouter.patch('/reset-password/:token', resetPasswordValidation(), userResetPassword);
+userRouter.patch(
+  "/reset-password/:token",
+  resetPasswordValidation(),
+  userResetPassword
+);
 
 module.exports = userRouter;
