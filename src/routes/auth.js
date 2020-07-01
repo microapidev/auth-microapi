@@ -1,9 +1,29 @@
+const router = require('express').Router();
+const { User } = require('../models/user');
+//const validation = require('../validation/authValidation');
+const { auth } = require('../utils/middleware');
+const cookie = require('cookie');
+const cookieParser = require('cookie-parser');
+
+
+router.get('/active', auth, (req, res) => {
+  res.cookie('w_auth', client.token);
+  res.status(200).json({
+    _id: req.user._id,
+    isAdmin: req.user.isAdmin,
+    isAuth: true,
+    email: req.user.email,
+    username: req.user.username,
+  });
+});
 /* -------- 🎃 Any client accessing this route is implicitly a guest,-----
 -------- hence eliminating the need for user role 🎃 --------- */
 
-const User = require('../models/user');
+//const User = require('../models/user');
 const userRouter = require('express').Router();
-const { authorizeUser, auth } = require('../utils/middleware');
+//const { registerValidation, loginValidation } = require('../utils/validation/joiValidation');
+//const {createVerificationLink} = require('../utils/EmailVerification');
+const { authorizeUser } = require('../utils/middleware');
 const { 
   registerValidation, 
   loginValidation, 
@@ -92,6 +112,10 @@ userRouter.get("/logout", auth, (req, res) => {
             message: "successfully logged you out"
         });
     });
+    req.logout()
+    res.clearCookie('w_auth');
+    req.session.destroy();
+    req.session.user = null;
 });
 
 userRouter.post('/forgot-password', forgotValidation(), userForgotPassword);
