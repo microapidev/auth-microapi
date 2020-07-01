@@ -1,11 +1,8 @@
-/* -------- 🎃 Any client accessing this route is implicitly an admin,-----
--------- hence eliminating the need for user role 🎃 --------- */
-
 const adminRouter = require('express').Router();
 // const connectDB = require('../controllers/db');
 const { registerValidation, loginValidation } = require('../utils/validation/joiValidation');
 const Admin = require('../models/admin'); 
-const {createVerificationLink} = require('../utils/EmailVerification');
+// const {createVerificationLink} = require('../utils/EmailVerification');
 
 adminRouter.post('/register', registerValidation(), async (request, response) => {
   // Adds a new admin to Auth-MicroApi DB 
@@ -19,14 +16,15 @@ adminRouter.post('/register', registerValidation(), async (request, response) =>
   user = new Admin(request.body);
   user = await user.save();
 
+  // DON'T DELETE: Admin acc. verification
   // Send a confirmation link to email
-  const mailStatus = await createVerificationLink(user, request);
-  console.log('===MailStatus===');
-  console.log(mailStatus);
+  // const mailStatus = await createVerificationLink(user, request);
+  // console.log('===MailStatus===');
+  // console.log(mailStatus);
 
   return response.status(201).json({
     success: true,
-    message: 'Verify your email to proceed'
+    message: user.toJSON()
   });
 });
 

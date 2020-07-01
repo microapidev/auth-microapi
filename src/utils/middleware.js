@@ -48,20 +48,20 @@ const auth = async (request, response, next) => {
   // next();
   let token = request.cookies.w_auth;
 
- // console.log("token middleware", token)
+  // console.log("token middleware", token)
 
-const user = await User.findByToken(token)
-console.log("findByToken", user)
+  const user = await User.findByToken(token);
+  console.log('findByToken', user);
 
   User.findByToken(token, (err, user) => {
-    if (err) throw err;
+    if (err) {throw err;}
     if (!user)
-      return response.json({
-        isAuth: false,
-        error: true,
-        msg: "UnAuthorised/Invalid token"
-      });
-     console.log("users middleware", user)
+    {return response.json({
+      isAuth: false,
+      error: true,
+      msg: 'UnAuthorised/Invalid token'
+    });}
+    console.log('users middleware', user);
 
     request.token = token;
     request.user = user;

@@ -29,16 +29,16 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Please enter a phone number'],
     min: 10,
   },
-  isEmailVerified:{
-    type: Boolean,
-    default: false
-  },
+  // isEmailVerified:{
+  //   type: Boolean,
+  //   default: false
+  // },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
   createdAt: {
     type: Date,
     default: Date.now,
-  }
+  },
 });
 
 userSchema.plugin(mongodbErrorHandler);
