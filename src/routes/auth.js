@@ -3,8 +3,14 @@
 
 const User = require('../models/user');
 const userRouter = require('express').Router();
-const { registerValidation, loginValidation } = require('../utils/validation/joiValidation');
-const {createVerificationLink} = require('../utils/EmailVerification');
+const { 
+  registerValidation, 
+  loginValidation, 
+  forgotValidation, 
+  resetPasswordValidation 
+} = require('../utils/validation/joiValidation');
+const { createVerificationLink } = require('../utils/EmailVerification');
+const { userForgotPassword, userResetPassword } = require('../controllers/auth');
 
 
 // userRouter.get('/active', auth, (req, res) => {
@@ -101,5 +107,9 @@ userRouter.get('/logout', async (request, response) => {
     success: true,
   });
 });
+
+userRouter.post('/forgot-password', forgotValidation(), userForgotPassword);
+
+userRouter.patch('/reset-password/:token', resetPasswordValidation(), userResetPassword);
 
 module.exports = userRouter;
