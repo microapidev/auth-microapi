@@ -1,7 +1,7 @@
 # Auth-Micro API
 A microapi to allow easy integration of authentication into your service
 
-## Usage 
+## Usage
 [Go to support website](https://auth.microapi.dev) 🎈
 
 ## Contributions
@@ -36,7 +36,7 @@ Use Postman to test endpoints
 
 ## API
 | Method | URI                                      | PARAMS                                  | HEADERS                                       |
-| :---   | :----                                    | :----:                                  | :----:                                        | 
+| :---   | :----                                    | :----:                                  | :----:                                        |
 | POST   | api/admin/auth/reigster                  | email, username, password, phone_number | application/json                              |
 | GET    | api/admin/auth/email/verification:token  |                   -                     |             -                                 |
 | GET    | api/admin/auth/email/resend/verification |                   -                     |             -                                 |
@@ -46,6 +46,7 @@ Use Postman to test endpoints
 | GET    | api/auth/email/resend/verification       |                   -                     | application/json, Authorization: Bearer token |
 | *POST  | api/auth/login                           | email, password                         | application/json, Authorization: Bearer token |
 | *GET   | api/auth/logout                          |                -                        |             Authorization: Bearer token       |
+| Get    | api/fbauth/auth/facebook                 |      ------                             |                                               |
 * *(get Authorization token from api/admin/auth/getkey)
 
 ## Contribution Guide:

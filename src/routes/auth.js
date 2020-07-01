@@ -104,30 +104,6 @@ userRouter.get('/logout', async (request, response) => {
   });
 });
 
-// facebook Auth
-passport.use(new FacebookStrategy({
-    clientID: process.env.FACEBOOK_APP_ID,
-    clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: "http://localhost:5000/auth/facebook/"
-  },
-  function(accessToken, refreshToken, profile, cb) {
-    User.findOrCreate({ facebookId: profile.id }, function (err, user) {
-      return cb(err, user);
-    });
-  }
-));
-userRouter.get('/auth/facebook', passport.authenticate('facebook'));
 
-userRouter.get('/auth/facebook/',
-passport.authenticate('facebook', { failureRedirect: '/login' }),
-function(req, res) {
-  console.log('fb route');
-  // Successful authentication, redirect home.
-  return response.status(200).json({
-    success: True,
-    message: 'Sucessfully logged in',
-    data: user.toJSON()
-  });
-});
 
 module.exports = userRouter;

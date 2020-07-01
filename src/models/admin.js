@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const mongodbErrorHandler = require('mongoose-mongodb-errors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const findOrCreate = require('mongoose-findorcreate');
 // const moment = require('moment');
 const saltRounds = 10;
 const { JWT_EXPIRE, JWT_SECRET, JWT_ADMIN_SECRET, APP_DB } = require('../utils/config');
@@ -39,13 +40,14 @@ const userSchema = new mongoose.Schema({
   //   enum: ['guest', 'admin'],
   // },
   resetPasswordToken: String,
+  facebookId: String,
   resetPasswordExpire: Date,
   createdAt: {
     type: Date,
     default: Date.now,
   }
 });
-
+userSchema.plugin(findOrCreate);
 userSchema.plugin(mongodbErrorHandler);
 
 // remove password, _id and return id instead whenever user is retrieved from db
