@@ -19,6 +19,10 @@ const openApiDocumentation = {
       name: 'Authentication',
     },
   ],
+  schemes: [
+    "HTTP",
+    "HTTPS"
+  ],
   security: {
     bearerAuth: {},
   },
@@ -28,15 +32,13 @@ const openApiDocumentation = {
       post: {
         tags: ['Register Admin'],
         description: 'Registers admin',
-        operationId: 'registeradmin',
+        operationId: 'register',
         security: [ {bearerAuth: {}}],
         requestBody: {
           content: {
             'application/json': {
               schema: {
-                // usename: String,
-                // emial: String,
-                // password: String
+                $ref: '#/components/schemas/User',
               },
             },
           },
@@ -77,9 +79,7 @@ const openApiDocumentation = {
           content: {
             'application/json': {
               schema: {
-                // usename: String,
-                // emial: String,
-                // password: String
+                $ref: '#/components/schemas/User',
               },
             },
           },
@@ -120,9 +120,7 @@ const openApiDocumentation = {
           content: {
             'application/json': {
               schema: {
-                // usename: String,
-                // emial: String,
-                // password: String
+                $ref: '#/components/schemas/User',
               },
             },
           },
@@ -153,17 +151,17 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/admin/auth/getAPIKEY': {
+    '/api/admin/auth/getkey': {
       post: {
         tags: ['Get APIKEY'],
         description: 'login user',
-        operationId: 'loginuser',
+        operationId: 'getkey',
         security: [ {bearerAuth: {}}],
         requestBody: {
           content: {
             'application/json': {
               schema: {
-
+                $ref: '#/components/schemas/User',
               },
             },
           },
@@ -204,9 +202,7 @@ const openApiDocumentation = {
           content: {
             'application/json': {
               schema: {
-                // usename: String,
-                // emial: String,
-                // password: String
+               $ref: '#/components/schemas/User',
               },
             },
           },
@@ -247,7 +243,7 @@ const openApiDocumentation = {
           content: {
             'application/json': {
               schema: {
-
+                $ref: '#/components/schemas/User',
               },
             },
           },
@@ -288,7 +284,7 @@ const openApiDocumentation = {
           content: {
             'application/json': {
               schema: {
-
+                $ref: '#/components/schemas/User',
               },
             },
           },
@@ -368,19 +364,19 @@ const openApiDocumentation = {
             description: 'User Password',
           },
           phone_number: {
-            type: 'String',
-             description: 'User phone number',
-          },
-          resetPasswordToken: {
             type: 'string',
-            description: 'User password reset token',
+            Sdescription: 'User phone number',
           },
-          resetPasswordExpire: {
-            type: 'Date object',
-            description: 'User password reset token expiration time',
-          },
+          // resetPasswordToken: {
+          //   type: 'string',
+          //   description: 'User password reset token',
+          // },
+          // resetPasswordExpire: {
+          //   type: 'Date object',
+          //   description: 'User password reset token expiration time',
+          // },
           createdAt:{
-            type: 'Date object',
+            type: 'string',
             description: 'date and time user was created',
           }
         },

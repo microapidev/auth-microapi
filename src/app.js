@@ -8,7 +8,7 @@ const fbRouter = require('./routes/fbauth');
 
 const emailVerificationRouter = require('./routes/EmailVerification');
 const { connectDB, DB } = require('./controllers/db');
-const { authorizeUser, errorHandler, unknownRoutes } = require('./utils/middleware');
+const { authorizeUser, errorHandler, unknownRoutes, auth } = require('./utils/middleware');
 // const swaggerDocs = require('./swagger.json');
 const swaggerUi = require('swagger-ui-express');
 const passport = require('passport');

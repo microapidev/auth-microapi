@@ -34,11 +34,6 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  // role: {
-  //   type: String,
-  //   required: true,
-  //   enum: ['guest', 'admin'],
-  // },
   resetPasswordToken: String,
   facebookId: String,
   resetPasswordExpire: Date,
