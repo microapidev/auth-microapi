@@ -28,7 +28,7 @@ const openApiDocumentation = {
   },
   //input api paths in here
   paths: {
-     '/api/admin/auth/register': {
+    '/api/admin/auth/register': {
       post: {
         tags: ['Register Admin'],
         description: 'Registers admin',
@@ -274,47 +274,6 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/active': {
-      get: {
-        tags: ['Get Active User'],
-        description: 'Active user',
-        operationId: 'activeuser',
-        security: [ {bearerAuth: {}}],
-        requestBody: {
-          content: {
-            'application/json': {
-              schema: {
-                // $ref: '#/components/schemas/User',
-              },
-            },
-          },
-          required: true,
-        },
-        parameters: [],
-        responses: {
-          '200': {
-            description: 'Success',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Response',
-                },
-              },
-            },
-          },
-          '400': {
-            description: 'Bad Request',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Response',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
     '/api/auth/logout': {
       get: {
         tags: ['Logout User'],
@@ -325,7 +284,7 @@ const openApiDocumentation = {
           content: {
             'application/json': {
               schema: {
-                // $ref: '#/components/schemas/User',
+                $ref: '#/components/schemas/User',
               },
             },
           },
@@ -378,6 +337,18 @@ const openApiDocumentation = {
             type: 'string',
             Sdescription: 'User phone number',
           },
+          // resetPasswordToken: {
+          //   type: 'string',
+          //   description: 'User password reset token',
+          // },
+          // resetPasswordExpire: {
+          //   type: 'Date object',
+          //   description: 'User password reset token expiration time',
+          // },
+          createdAt:{
+            type: 'string',
+            description: 'date and time user was created',
+          }
         },
       },
       Response: {
