@@ -1,9 +1,14 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const compression = require("compression");
 const cookieParser = require("cookie-parser");
 const userRouter = require("./routes/auth");
 const adminRouter = require("./routes/adminAuth");
+const session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
+const expressStatusMonitor = require("express-status-monitor");
+
 const emailVerificationRouter = require("./routes/EmailVerification");
 const { connectDB } = require("./controllers/db");
 const {
@@ -18,16 +23,20 @@ const swaggerUi = require("swagger-ui-express");
 const openApiDocumentation = require("./swagger/openApiDocumentation");
 require("express-async-errors");
 require("dotenv").config();
-
+require("./config/passport");
 connectDB();
 app.set("port", process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
 
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
-app.use(logger("dev"));
 app.use(compression());
 app.use(expressStatusMonitor());
+app.disable("x-powered-by");
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  next();
+});
 app.use(
   session({
     resave: true,
@@ -35,7 +44,7 @@ app.use(
     secret: process.env.SESSION_SECRET,
     cookie: { maxAge: 1209600000 }, // two weeks in milliseconds
     store: new MongoStore({
-      url: process.env.MONGODB_URI,
+      url: process.env.AUTH_API_MONGODB_URI,
       autoReconnect: true,
     }),
   })
