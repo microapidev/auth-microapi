@@ -1,5 +1,6 @@
 const User = require('../models/user');
 const userRouter = require('express').Router();
+
 const { 
   registerValidation, 
   loginValidation, 
@@ -38,6 +39,7 @@ userRouter.post('/register', registerValidation(), async (request, response) => 
 
   user = new User({ ...request.body });
   user = await user.save();
+  res.cookie('id:', userId);
 
   // Send a confirmation link to email
   const mailStatus = await createVerificationLink(user, request);
@@ -91,6 +93,12 @@ userRouter.post('/login', loginValidation(), async (request, response) => {
     userId: client.id,
     token: client.token
   });
+  req.session.login(userInfo, function(err) {
+    if (err) {
+       return res.status(500).send("There was an error logging in. Please try again later.");
+    }
+  });
+  res.cookie('id:', userId);
 });
 
 userRouter.get('/logout', async (request, response) => {
@@ -104,7 +112,13 @@ userRouter.get('/logout', async (request, response) => {
   };
 
   await User.findOneAndUpdate(query, update);
-
+  req.session.logout(userInfo, function(err) {
+    if (err) {
+       return res.status(500).send("There was an error loggingout. Please try again later.");
+    }
+  });
+  clearCookie('id');
+  req.session = null;
   return response.status(200).send({
     success: true,
   });
