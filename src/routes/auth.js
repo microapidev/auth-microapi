@@ -1,3 +1,6 @@
+const passport = require("passport");
+const TwitterStrategy = require("passport-twitter").Strategy;
+
 const User = require("../models/user");
 const userRouter = require("express").Router();
 const {
@@ -12,6 +15,37 @@ const {
   userForgotPassword,
   userResetPassword,
 } = require("../controllers/auth");
+const trustProxy = false;
+if (process.env.DYNO) {
+  // Apps on heroku are behind a trusted proxy
+  trustProxy = true;
+}
+
+passport.serializeUser(function (user, cb) {
+  cb(null, user);
+});
+
+passport.deserializeUser(function (obj, cb) {
+  cb(null, obj);
+});
+
+console.log(process.env);
+
+passport.use(
+  new TwitterStrategy(
+    {
+      consumerKey: process.env.TWITTER_CONSUMER_KEY,
+      consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+      callbackURL: "http://localhost:5000/api/auth/twitter/callback",
+      proxy: trustProxy,
+    },
+    function (token, tokenSecret, profile, cb) {
+      User.findOrCreate({ twitterId: profile.id }, function (err, user) {
+        return cb(err, user);
+      });
+    }
+  )
+);
 
 userRouter.get("/user/active", auth, (req, res) => {
   res.status(200).json({

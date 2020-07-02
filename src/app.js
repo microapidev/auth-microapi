@@ -1,55 +1,82 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
-const userRouter = require('./routes/auth');
-const adminRouter = require('./routes/adminAuth');
-const emailVerificationRouter = require('./routes/EmailVerification');
-const { connectDB } = require('./controllers/db');
-const { authorizeUser, errorHandler, unknownRoutes } = require('./utils/middleware');
-const passport = require('passport');
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const userRouter = require("./routes/auth");
+const adminRouter = require("./routes/adminAuth");
+const emailVerificationRouter = require("./routes/EmailVerification");
+const { connectDB } = require("./controllers/db");
+const {
+  authorizeUser,
+  errorHandler,
+  unknownRoutes,
+} = require("./utils/middleware");
+const passport = require("passport");
 
 // const swaggerDocs = require('./swagger.json');
-const swaggerUi = require('swagger-ui-express');
-const openApiDocumentation = require('./swagger/openApiDocumentation');
-require('express-async-errors');
-require('dotenv').config();
+const swaggerUi = require("swagger-ui-express");
+const openApiDocumentation = require("./swagger/openApiDocumentation");
+require("express-async-errors");
+require("dotenv").config();
 
 connectDB();
+app.set("port", process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
 
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
+app.use(logger("dev"));
+app.use(compression());
+app.use(expressStatusMonitor());
+app.use(
+  session({
+    resave: true,
+    saveUninitialized: true,
+    secret: process.env.SESSION_SECRET,
+    cookie: { maxAge: 1209600000 }, // two weeks in milliseconds
+    store: new MongoStore({
+      url: process.env.MONGODB_URI,
+      autoReconnect: true,
+    }),
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(
   express.urlencoded({
     extended: true,
-  }),
+  })
 );
 
 // auth routes
-app.use('/api/admin/auth', adminRouter);
-app.use('/api/auth/email', emailVerificationRouter());
-app.use('/api/auth', authorizeUser, userRouter);
+app.use("/api/admin/auth", adminRouter);
+app.use("/api/auth/email", emailVerificationRouter());
+app.use("/api/auth", authorizeUser, userRouter);
 // app.use('/api/admin/auth/email', emailVerificationRouter());
 
-
-app.use('/', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
+app.use("/", swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
 
 // app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
-app.use(unknownRoutes);
-app.use(errorHandler);
+/**
+ * Error Handler.
+ */
+if (process.env.NODE_ENV === "development") {
+  // only use in development
 
-passport.use(new TwitterStrategy({
-  consumerKey: process.env.TWITTER_CONSUMER_KEY,
-  consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-  callbackURL: "http://127.0.0.1:3000/auth/twitter/callback"
-},
-function(token, tokenSecret, profile, cb) {
-  User.findOrCreate({ twitterId: profile.id }, function (err, user) {
-    return cb(err, user);
+  app.use(unknownRoutes);
+  app.use(errorHandler);
+} else {
+  app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(500).send("Server Error");
   });
 }
-));
+
+// Initialize Passport and restore authentication state, if any, from the
+// session.
+app.use(passport.initialize());
+app.use(passport.session());
 
 module.exports = app;
