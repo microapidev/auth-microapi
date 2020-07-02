@@ -344,6 +344,36 @@ const openApiDocumentation = {
           },
         },
       },
+    },
+    '/api/gitauth/auth/github': {
+      get: {
+        tags: ['Github AUTH'],
+        description: 'Creates or logs in User through GitHub',
+        operationId: 'GithubAuth',
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
     }
   },
   components: {

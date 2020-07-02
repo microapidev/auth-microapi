@@ -47,6 +47,7 @@ Use Postman to test endpoints
 | *POST  | api/auth/login                           | email, password                         | application/json, Authorization: Bearer token |
 | *GET   | api/auth/logout                          |                -                        |             Authorization: Bearer token       |
 | Get    | api/fbauth/auth/facebook                 |      ------                             |                                               |
+| Get    | api/gitauth/auth/github                  |      ------                             |                                               |
 * *(get Authorization token from api/admin/auth/getkey)
 ## Contribution Guide:
 Please always follow the right format before making pull request
