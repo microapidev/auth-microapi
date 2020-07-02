@@ -1,8 +1,6 @@
-/* -------- 🎃 Any client accessing this route is implicitly a guest,-----
--------- hence eliminating the need for user role 🎃 --------- */
-
 const User = require('../models/user');
 const userRouter = require('express').Router();
+
 const passport = require('passport');
 
 const FacebookStrategy = require('passport-facebook').Strategy;
@@ -21,6 +19,27 @@ const {createVerificationLink} = require('../utils/EmailVerification');
 //     username: req.user.username,
 //   });
 // });
+
+const { 
+  registerValidation, 
+  loginValidation, 
+  forgotValidation, 
+  resetPasswordValidation 
+} = require('../utils/validation/joiValidation');
+const { auth } = require('../utils/middleware');
+const { createVerificationLink } = require('../utils/EmailVerification');
+const { userForgotPassword, userResetPassword } = require('../controllers/auth');
+
+
+userRouter.get('/user/active', auth, (req, res) => {
+  res.status(200).json({
+    _id: req.user.id,
+    isAdmin: req.user.isEmailVerified,
+    isAuth: true,
+    email: req.user.email,
+    username: req.user.username,
+  });
+});
 
 
 userRouter.post('/register', registerValidation(), async (request, response) => {
@@ -43,9 +62,11 @@ userRouter.post('/register', registerValidation(), async (request, response) => 
   // Send a confirmation link to email
   const mailStatus = await createVerificationLink(user, request);
   console.log(mailStatus);
+  const { verificationUrl } = mailStatus;
 
   return response.status(201).json({
     success: true,
+    verificationUrl,
     message: 'Account created successfully',
     data: { ...user.toJSON() },
   });
@@ -54,6 +75,9 @@ userRouter.post('/register', registerValidation(), async (request, response) => 
 userRouter.post('/login', loginValidation(), async (request, response) => {
   // Login as guest
   const { email, password } = request.body;
+
+  // check if user has verified email
+  
 
   // check if user exists in DB
   let user = await User.findOne({ email });
@@ -72,7 +96,7 @@ userRouter.post('/login', loginValidation(), async (request, response) => {
   if (!isMatch) {
     return response.status(401).json({
       success: false,
-      message: 'Invalid email or passwords',
+      message: 'Invalid email or password',
     });
   }
 
@@ -80,7 +104,6 @@ userRouter.post('/login', loginValidation(), async (request, response) => {
 
   // Send token in response cookie for user session
   let client = await user.generateToken();
-  // console.log("User", client)
 
   response.cookie('w_authExp', client.tokenExp);
   response.cookie('w_auth', client.token).status(200).json({
@@ -107,6 +130,10 @@ userRouter.get('/logout', async (request, response) => {
   });
 });
 
+
+userRouter.post('/forgot-password', forgotValidation(), userForgotPassword);
+
+userRouter.patch('/reset-password/:token', resetPasswordValidation(), userResetPassword);
 
 
 module.exports = userRouter;

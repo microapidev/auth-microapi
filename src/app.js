@@ -7,8 +7,8 @@ const adminRouter = require('./routes/adminAuth');
 const fbRouter = require('./routes/fbauth');
 
 const emailVerificationRouter = require('./routes/EmailVerification');
-const { connectDB, DB } = require('./controllers/db');
-const { authorizeUser, errorHandler, unknownRoutes, auth } = require('./utils/middleware');
+const { connectDB } = require('./controllers/db');
+const { authorizeUser, errorHandler, unknownRoutes } = require('./utils/middleware');
 // const swaggerDocs = require('./swagger.json');
 const swaggerUi = require('swagger-ui-express');
 const passport = require('passport');
@@ -32,6 +32,7 @@ app.use(
 );
 
 
+
 //passport middleware
 app.use(session({
     secret: 'facebook-login-app',
@@ -50,12 +51,16 @@ app.use(passport.session());
 // }));
 
 
+
 // auth routes
 app.use('/api/admin/auth', adminRouter);
 app.use('/api/auth/email', emailVerificationRouter());
 app.use('/api/auth', authorizeUser, userRouter);
 app.use('/api/admin/auth/email', emailVerificationRouter());
 app.use('/api/fbauth', fbRouter);
+
+
+// app.use('/api/admin/auth/email', emailVerificationRouter());
 
 
 
