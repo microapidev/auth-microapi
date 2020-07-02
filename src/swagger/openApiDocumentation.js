@@ -337,14 +337,6 @@ const openApiDocumentation = {
             type: 'string',
             Sdescription: 'User phone number',
           },
-          // resetPasswordToken: {
-          //   type: 'string',
-          //   description: 'User password reset token',
-          // },
-          // resetPasswordExpire: {
-          //   type: 'Date object',
-          //   description: 'User password reset token expiration time',
-          // },
           createdAt:{
             type: 'string',
             description: 'date and time user was created',
