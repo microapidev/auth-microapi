@@ -33,6 +33,7 @@ const userSchema = new mongoose.Schema({
   resetPasswordToken: String,
   resetPasswordExpire: Date,
   facebookId: String,
+  githubId: String,
   createdAt: {
     type: Date,
     default: Date.now,

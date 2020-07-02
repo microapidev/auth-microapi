@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const userRouter = require('./routes/auth');
 const adminRouter = require('./routes/adminAuth');
 const fbRouter = require('./routes/fbauth');
-
+const gitRouter = require('./routes/gitauth');
 const emailVerificationRouter = require('./routes/EmailVerification');
 const { connectDB, DB } = require('./controllers/db');
 const { authorizeUser, errorHandler, unknownRoutes, auth } = require('./utils/middleware');
@@ -17,6 +17,7 @@ const session = require('express-session');
 const openApiDocumentation = require('./swagger/openApiDocumentation');
 require('express-async-errors');
 require('dotenv').config();
+
 
 connectDB();
 
@@ -56,7 +57,7 @@ app.use('/api/auth/email', emailVerificationRouter());
 app.use('/api/auth', authorizeUser, userRouter);
 app.use('/api/admin/auth/email', emailVerificationRouter());
 app.use('/api/fbauth', fbRouter);
-
+app.use('/api/gitauth', gitRouter);
 
 
 app.use('/', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
@@ -64,5 +65,7 @@ app.use('/', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
 
 app.use(unknownRoutes);
 app.use(errorHandler);
+
+
 
 module.exports = app;
