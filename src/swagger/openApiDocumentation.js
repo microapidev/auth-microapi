@@ -284,7 +284,7 @@ const openApiDocumentation = {
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/User',
+                // $ref: '#/components/schemas/User',
               },
             },
           },
@@ -325,7 +325,7 @@ const openApiDocumentation = {
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/User',
+                // $ref: '#/components/schemas/User',
               },
             },
           },
@@ -366,7 +366,7 @@ const openApiDocumentation = {
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/User',
+                // $ref: '#/components/schemas/User',
               },
             },
           },
@@ -419,10 +419,6 @@ const openApiDocumentation = {
             type: 'string',
             Sdescription: 'User phone number',
           },
-          createdAt:{
-            type: 'string',
-            description: 'date and time user was created',
-          }
         },
       },
       Response: {
