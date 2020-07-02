@@ -1,12 +1,15 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.1",
   "info": {
+    "title": "Auth-Micro API",
     "description": "This is an authentication micro-api allows for easy integration of authentication services into applications.",
-    "version": "1.0.0",
-    "title": "Auth-Micro API"
+    "version": "1.0.0"
   },
-  "host": "auth.microapi.dev",
-  "basePath": "/api",
+  "servers": [
+    {
+      "url": "http://localhost:5000/api"
+    }
+  ],
   "tags": [
     {
       "name": "Auth",
@@ -17,10 +20,6 @@
       "description": "All active users"
     }
   ],
-  "schemes": [
-    "https",
-    "http"
-  ],
   "paths": {
     "/auth/register": {
       "post": {
@@ -29,36 +28,35 @@
         ],
         "summary": "Register user",
         "description": "register a new user",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "schema": {
-              "$ref": "#/definitions/User"
-            },
-            "required": true
-          }
-        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          },
+          "required": true
+        },
+        "parameters": [],
         "responses": {
           "200": {
             "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/Response"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Response"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "x-codegen-request-body-name": "body"
       }
     },
     "/auth/login": {
@@ -68,54 +66,109 @@
         ],
         "summary": "Login user",
         "description": "login existing user",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
+        "security": [
           {
-            "in": "body",
-            "name": "body",
-            "description": "",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Login"
-            }
+            "Auth": []
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/Response"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Response"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
             }
           }
-        }
+        },
+        "x-codegen-request-body-name": "body"
       }
     },
     "/auth/logout": {
-      "post": {
+      "get": {
         "tags": [
           "Auth"
         ],
         "summary": "Logout user",
         "description": "Logout current user",
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/Response"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Response"
+          }
+        }
+      }
+    },
+    "/auth/email/verification/:token": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Email verification",
+        "description": "sends verification email",
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/email/resend/verification": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Resend Verification",
+        "description": "resends verification email",
+        "security": [
+          {
+            "Auth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
             }
           }
         }
@@ -128,20 +181,20 @@
         ],
         "summary": "View active users",
         "description": "Returns list of active users",
-        "produces": [
-          "application/json"
+        "security": [
+          {
+            "Auth": []
+          }
         ],
         "responses": {
           "200": {
             "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/Response"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Response"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
             }
           }
         }
@@ -154,37 +207,34 @@
         ],
         "summary": "Register admin user",
         "description": "register a new admin user",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
+        "security": [
           {
-            "in": "body",
-            "name": "body",
-            "description": "",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/User"
-            }
+            "Auth": []
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/Response"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Response"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
             }
           }
-        }
+        },
+        "x-codegen-request-body-name": "body"
       }
     },
     "/admin/auth/getKey": {
@@ -194,34 +244,34 @@
         ],
         "summary": "Get token",
         "description": "Authorization token registration and login",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
+        "security": [
           {
-            "in": "body",
-            "name": "body",
-            "description": "",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Login"
-            }
+            "Auth": []
           }
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/Response"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Response"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
             }
           }
-        }
+        },
+        "x-codegen-request-body-name": "body"
       }
     },
     "/admin/auth/email/verification/:token": {
@@ -231,20 +281,20 @@
         ],
         "summary": "Email verification",
         "description": "sends verification email",
-        "produces": [
-          "application/json"
+        "security": [
+          {
+            "Auth": []
+          }
         ],
         "responses": {
           "200": {
             "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/Response"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Response"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
             }
           }
         }
@@ -257,85 +307,80 @@
         ],
         "summary": "Resend Verification",
         "description": "resends verification email",
-        "produces": [
-          "application/json"
+        "security": [
+          {
+            "Auth": []
+          }
         ],
         "responses": {
           "200": {
             "description": "Success",
-            "schema": {
-              "$ref": "#/definitions/Response"
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "schema": {
-              "$ref": "#/definitions/Response"
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
             }
           }
         }
       }
     }
   },
-  "definitions": {
-    "Login": {
-      "type": "object",
-      "properties": {
-        "email": {
-          "type": "string"
-        },
-        "password": {
-          "type": "string"
+  "components": {
+    "schemas": {
+      "Login": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Users Name"
+          },
+          "email": {
+            "type": "string",
+            "description": "User Email Address"
+          },
+          "password": {
+            "type": "string",
+            "description": "User Password"
+          },
+          "phone_number": {
+            "type": "string"
+          }
+        }
+      },
+      "Response": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object",
+            "properties": {}
+          }
         }
       }
     },
-    "User": {
-      "type": "object",
-      "properties": {
-        "name": {
-          "type": "string",
-          "description": "Users Name"
-        },
-        "email": {
-          "type": "string",
-          "description": "User Email Address"
-        },
-        "password": {
-          "type": "string",
-          "description": "User Password"
-        },
-        "role": {
-          "type": "string"
-        },
-        "phone_number": {
-          "type": "string"
-        },
-        "resetPasswordToken": {
-          "type": "string",
-          "description": "User password reset token"
-        },
-        "resetPasswordExpire": {
-          "type": "string",
-          "description": "User password reset token expiration time"
-        },
-        "createdAt": {
-          "type": "string",
-          "description": "date and time user was created"
-        }
-      }
-    },
-    "Response": {
-      "type": "object",
-      "properties": {
-        "status": {
-          "type": "string"
-        },
-        "message": {
-          "type": "string"
-        },
-        "data": {
-          "type": "object"
-        }
+    "securitySchemes": {
+      "Auth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }
