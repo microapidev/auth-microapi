@@ -274,6 +274,88 @@ const openApiDocumentation = {
         },
       },
     },
+    '/api/auth/forgot-password': {
+      post: {
+        tags: ['forgot-password'],
+        description: 'Enter your email to reset your password',
+        operationId: 'forgot-password',
+        security: [ {bearerAuth: {}}],
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/User',
+              },
+            },
+          },
+          required: true,
+        },
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/auth/reset-password/:token': {
+      post: {
+        tags: ['reset-password'],
+        description: 'Enter your previous password to reset another password',
+        operationId: 'reset-password',
+        security: [ {bearerAuth: {}}],
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/User',
+              },
+            },
+          },
+          required: true,
+        },
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     '/api/auth/logout': {
       get: {
         tags: ['Logout User'],
