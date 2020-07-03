@@ -34,7 +34,8 @@ passport.deserializeUser(function(id, done) {
 passport.use(new FacebookStrategy({
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: "http://localhost:5000/auth/facebook/callback"
+    callbackURL:
+    "https://auth-microapi.herokuapp.com/callback"
   },
   function(accessToken, refreshToken, profile, cb) {
     if (Admin){
@@ -54,12 +55,8 @@ fbRouter.get('/auth/facebook/callback',
 passport.authenticate('facebook', { failureRedirect: '/login' }),
 function(req, res) {
   // Successful authentication, redirect home.
-  // res.redirect('/');
-  return res.status(200).json({
-    success: True,
-    message: 'Sucessfully logged in',
-    data: user.toJSON()
-  });
+  res.redirect('/');
+  
 });
 
 
