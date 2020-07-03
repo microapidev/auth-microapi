@@ -16,8 +16,7 @@ const connectDB = () => {
       poolSize: 10
     }
   )
-    .then(database => {
-      global.DB = database;
+    .then(() => {
       console.log('Connected to Auth-MicroAPI database!');
     })
     .catch(error => {

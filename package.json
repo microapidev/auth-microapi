@@ -10,9 +10,8 @@
     "test:ci": "cross-env NODE_ENV=test jest --coverage && cat ./coverage/lcov.info | coveralls",
     "lint": "eslint \"src/**/*.js\"",
     "lint:fix": "eslint --fix \"src/**/*.js\"",
-    "build": "babel src --out-dir dist --delete-dir-on-start --copy-files --ignore src/**/temp_models",
     "dev": "cross-env DEBUG=log NODE_ENV=development nodemon --exec babel-node ./src/index.js",
-    "start": "cross-env DEBUG=log NODE_ENV=production node ./dist/index.js"
+    "start": "cross-env DEBUG=log NODE_ENV=production node ./src/index.js"
   },
   "repository": {
     "type": "git",
@@ -34,6 +33,7 @@
     "@sendgrid/mail": "^7.2.1",
     "bcrypt": "^5.0.0",
     "config": "^3.3.1",
+    "connect-mongo": "^3.2.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "cross-env": "^7.0.2",
