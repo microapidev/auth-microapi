@@ -84,8 +84,8 @@ userRouter.route('/login')
 
     user = user.toJSON();
 
-    // check if user has verified email
-    if (user.isEmailVerified) {
+    // check if user has unverified email
+    if (!user.isEmailVerified) {
       return response.status(401).json({
         success: false,
         message: 'Please verify your email to proceed'
