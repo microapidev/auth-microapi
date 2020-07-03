@@ -49,12 +49,8 @@ passport.use(new GitHubStrategy({
     passport.authenticate('github', { failureRedirect: '/login' }),
     function(req, res) {
       // Successful authentication, redirect home.
-      // res.redirect('/');
-      return res.status(200).json({
-        success: True,
-        message: 'Sucessfully logged in',
-        data: user.toJSON()
-        });
+      res.redirect('/');
+      
     });
 
 

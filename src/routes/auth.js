@@ -1,7 +1,6 @@
 const User = require('../models/user');
 const userRouter = require('express').Router();
 
-
 const passport = require('passport');
 
 const FacebookStrategy = require('passport-facebook').Strategy;
@@ -21,31 +20,15 @@ const {createVerificationLink} = require('../utils/EmailVerification');
 //   });
 // });
 
-<<<<<<< HEAD
 const {
   registerValidation,
   loginValidation,
   forgotValidation,
   resetPasswordValidation
-||||||| merged common ancestors
-const { 
-  registerValidation, 
-  loginValidation, 
-  forgotValidation, 
-  resetPasswordValidation 
-=======
-
-const {
-  registerValidation,
-  loginValidation,
-  forgotValidation,
-  resetPasswordValidation
->>>>>>> a6d3812fdcaf1877c43d91b195609e1625c53f89
 } = require('../utils/validation/joiValidation');
 const { auth } = require('../utils/middleware');
 
 const { userForgotPassword, userResetPassword } = require('../controllers/auth');
-const SessionMgt = require('../services/SessionManagement');
 
 
 userRouter.get('/user/active', auth, (req, res) => {
@@ -58,40 +41,35 @@ userRouter.get('/user/active', auth, (req, res) => {
   });
 });
 
-userRouter.route('/register')
-  .get(SessionMgt.checkSession, (request, response) => {
-    response.redirect('/');
-  })
-  .post(registerValidation(), async (request, response) => {
-    // Register as guest
-    const { email } = request.body;
 
-    // Check if user email is taken in DB
-    let user = await User.findOne({ email });
+userRouter.post('/register', registerValidation(), async (request, response) => {
+  // Register as guest
+  const { email } = request.body;
 
-    if (user) {
-      return response.status(403).json({
-        success: false,
-        message: 'Email address already in use',
-      });
-    }
+  // Check if user email is taken in DB
+  let user = await User.findOne({ email });
 
-    user = new User({ ...request.body });
-    user = await user.save();
-
-    // Send a confirmation link to email
-    const mailStatus = await createVerificationLink(user, request);
-    // console.log(mailStatus);
-    const { verificationUrl } = mailStatus;
-
-    return response.status(201).json({
-      success: true,
-      // verificationUrl,
-      message: 'Account created successfully. We sent you mail to confirm your email address',
-      data: { ...user.toJSON() },
+  if (user) {
+    return response.status(403).json({
+      success: false,
+      message: 'Email address already in use',
     });
+  }
+
+  user = new User({ ...request.body });
+  user = await user.save();
+
+  // Send a confirmation link to email
+  const mailStatus = await createVerificationLink(user, request);
+  console.log(mailStatus);
+  const { verificationUrl } = mailStatus;
+
+  return response.status(201).json({
+    success: true,
+    verificationUrl,
+    message: 'Account created successfully',
+    data: { ...user.toJSON() },
   });
-<<<<<<< HEAD
 });
 
 userRouter.post('/login', loginValidation(), async (request, response) => {
@@ -100,68 +78,54 @@ userRouter.post('/login', loginValidation(), async (request, response) => {
 
   // check if user has verified email
 
-||||||| merged common ancestors
-});
 
-userRouter.post('/login', loginValidation(), async (request, response) => {
-  // Login as guest
-  const { email, password } = request.body;
+  // check if user exists in DB
+  let user = await User.findOne({ email });
 
-  // check if user has verified email
-  
-=======
->>>>>>> a6d3812fdcaf1877c43d91b195609e1625c53f89
-
-userRouter.route('/login')
-  .get(SessionMgt.checkSession, (request, response) => {  
-    response.redirect('/');
-  })
-  .post(loginValidation(), async (request, response) => {
-    // Login as guest
-    const { email, password } = request.body;
-
-    // check if user exists in DB
-    let user = await User.findOne({ email });
-
-    if (!user) {
-      return response.status(401).json({
-        success: false,
-        message: 'Invalid email or password',
-      });
-    }
-
-    // check if password provided by user matches user password in DB
-    if (!await user.matchPasswords(password)) {
-      return response.status(401).json({
-        success: false,
-        message: 'Invalid email or password',
-      });
-    }
-
-    user = user.toJSON();
-
-    // check if user has unverified email
-    if (!user.isEmailVerified) {
-      return response.status(401).json({
-        success: false,
-        message: 'Please verify your email to proceed'
-      });
-    }
-
-    await SessionMgt.login(request, user);
-
-    response.status(200).json({
-      success: true,
-      user: user.id,
-      mesage: 'Login successful'
+  if (!user) {
+    return response.status(401).json({
+      success: false,
+      message: 'Invalid email or password',
     });
+  }
+
+  // check if password provided by user matches user password in DB
+  const isMatch = await user.matchPasswords(password);
+  // console.log(" isMatch", isMatch)
+
+  if (!isMatch) {
+    return response.status(401).json({
+      success: false,
+      message: 'Invalid email or password',
+    });
+  }
+
+  // console.log(" isMatch", isMatch)
+
+  // Send token in response cookie for user session
+  let client = await user.generateToken();
+
+  response.cookie('w_authExp', client.tokenExp);
+  response.cookie('w_auth', client.token).status(200).json({
+    success: true,
+    userId: client.id,
+    token: client.token
   });
+});
 
 userRouter.get('/logout', async (request, response) => {
-  response.clearCookie('user_sid');
+  const query = {
+    id: request.body.id
+  };
 
-  // response.redirect('/');
-  response.status(200).send({
+  const update = {
+    token: '',
+    tokenExp: ''
+  };
+
+  await User.findOneAndUpdate(query, update);
+
+  return response.status(200).send({
     success: true,
   });
 });
