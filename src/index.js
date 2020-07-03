@@ -1,31 +1,15 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const PORT = process.env.PORT || 5000;
-const authRoute = require('./routes/auth');
+const app = require('./app'); // the actual Express application
+const http = require('http');
+const { PORT, AUTH_API_DB } = require('./utils/config');
 
-const app = express();
+//use config module to get the app uri, if no app uri set, end the application
+if (!AUTH_API_DB) {
+  console.error('FATAL ERROR: YOUR_APP_MONGODB_URI is not defined in .env.');
+  process.exit(1);
+}
 
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({
-    extended: true
-}));
+const server = http.createServer(app);
 
-app.use('/api/v1/auth', authRoute);
-
-app.get('/', (req, res) => {
-    res.json({
-        message: "Welcome to micro-auth-api"
-    })
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
-
-
-// app.use((req, res, next) => {
-//     let err = new Error("Not Found");
-//     err.status = 404;
-//     next(err);
-// });
-
-
-app.listen(PORT, () => console.log(`App started @${PORT}`))

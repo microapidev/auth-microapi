@@ -1,13 +1,29 @@
 module.exports = {
   env: {
+    browser: true,
+    commonjs: true,
     es2020: true,
-    node: true,
-    jest: true,
   },
-  extends: ["eslint:recommended", "plugin:prettier/recommended"],
+  // extends: ['airbnb-base'],
   parserOptions: {
     ecmaVersion: 11,
-    sourceType: "module",
   },
-  rules: {},
+  rules: {
+    indent: ['error', 2, { SwitchCase: 1 }],
+    'linebreak-style': ['error', 'unix'],
+    quotes: ['error', 'single'],
+    semi: ['error', 'always'],
+    'no-console': [
+      'warn',
+      { allow: ['clear', 'info', 'error', 'dir', 'trace', 'log'] },
+    ],
+    curly: 'error',
+    'no-else-return': 'error',
+    'no-unneeded-ternary': 'error',
+    'no-useless-return': 'error',
+    'no-var': 'error',
+    'one-var': ['error', 'never'],
+    'prefer-arrow-callback': 'error',
+    yoda: ['error', 'never', { exceptRange: true }],
+  },
 };

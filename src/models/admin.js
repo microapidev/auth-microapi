@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 // const moment = require('moment');
 const saltRounds = 10;
-const { JWT_EXPIRE, JWT_SECRET } = require('../utils/config');
+const { JWT_EXPIRE, JWT_SECRET, JWT_ADMIN_SECRET, APP_DB } = require('../utils/config');
 
 // Modified user model
 const userSchema = new mongoose.Schema({
@@ -29,16 +29,16 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Please enter a phone number'],
     min: 10,
   },
+  // isEmailVerified:{
+  //   type: Boolean,
+  //   default: false
+  // },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
   createdAt: {
     type: Date,
     default: Date.now,
   },
-  isEmailVerified: {
-    type: Boolean,
-    default: false
-  }
 });
 
 userSchema.plugin(mongodbErrorHandler);
@@ -67,25 +67,33 @@ userSchema.pre('save', function () {
   }
 });
 
-userSchema.methods.generateToken = async function () {
-  // Generate token for user session, and save to user schema in DB
-  let user = this;
-  const token = jwt.sign(user.id, JWT_SECRET);
-
-  user.tokenExp = JWT_EXPIRE;
-  user.token = token;
-  return await user.save(); 
+userSchema.methods.generateAPIKEY = function () {
+  // Generate signed API KEY for admin
+  const admin = this;
+  return jwt.sign(
+    {
+      id: admin.id,
+      email: admin.email,
+      DBURI: APP_DB
+    },
+    JWT_ADMIN_SECRET
+  );
 };
 
 userSchema.statics.findByToken = function (token, cb) {
-  let user = this;
+  const user = this;
 
-  jwt.verify(token,'secret',(err, decode) => {
-    user.findOne({'_id':decode, 'token':token}, (err, user) => {
-      if(err) {return cb(err);}
+  jwt.verify(token, JWT_SECRET, (err, decode) => {
+    if (err) {
+      return cb(err);
+    };
+    user.findOne({ id: decode, token }, (err, user) => {
+      if (err) {
+        return cb(err);
+      }
       cb(null, user);
     });
   });
 };
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('adminUser', userSchema);
