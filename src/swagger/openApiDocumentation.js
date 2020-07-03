@@ -110,7 +110,7 @@ const openApiDocumentation = {
         },
       },
     },
-     '/api/auth/register': {
+    '/api/auth/register': {
       post: {
         tags: ['Register User'],
         description: 'Registers user',
@@ -359,7 +359,7 @@ const openApiDocumentation = {
       },
     },
     responses: {
-       UnauthorizedError: {
+      UnauthorizedError: {
         description: 'Access token is missing or invalid'
       }
     },
