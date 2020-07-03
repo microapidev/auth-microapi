@@ -5,7 +5,7 @@ const passport = require('passport');
 
 const FacebookStrategy = require('passport-facebook').Strategy;
 const findOrCreate = require('mongoose-findorcreate');
-const { registerValidation, loginValidation } = require('../utils/validation/joiValidation');
+
 const {createVerificationLink} = require('../utils/EmailVerification');
 
 
@@ -20,14 +20,14 @@ const {createVerificationLink} = require('../utils/EmailVerification');
 //   });
 // });
 
-const { 
-  registerValidation, 
-  loginValidation, 
-  forgotValidation, 
-  resetPasswordValidation 
+const {
+  registerValidation,
+  loginValidation,
+  forgotValidation,
+  resetPasswordValidation
 } = require('../utils/validation/joiValidation');
 const { auth } = require('../utils/middleware');
-const { createVerificationLink } = require('../utils/EmailVerification');
+
 const { userForgotPassword, userResetPassword } = require('../controllers/auth');
 
 
@@ -77,7 +77,7 @@ userRouter.post('/login', loginValidation(), async (request, response) => {
   const { email, password } = request.body;
 
   // check if user has verified email
-  
+
 
   // check if user exists in DB
   let user = await User.findOne({ email });
