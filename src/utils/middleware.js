@@ -2,24 +2,6 @@ const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const { JWT_ADMIN_SECRET } = require('../utils/config');
 
-const authorizeUser = async (request, response, next) => {
-  // This middleware authorizes users by checking if valid API_KEY is sent with the request
-
-  const authorization = request.get('authorization');
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    const token = authorization.substring(7);
-    const decodedUser = jwt.verify(token, JWT_ADMIN_SECRET);
-
-    if (!decodedUser.id) {
-      return response.status(403).json({ error: 'Invalid API_KEY' });
-    }
-    // request.adminUser = decodedUser;
-  } else {
-    return response.status(401).send('Access denied. No token provided.');
-  }
-
-  next();
-};
 
 const auth = async (request, response, next) => {
   // This middleware will check if client's cookie is still saved in user agent
@@ -54,13 +36,14 @@ const auth = async (request, response, next) => {
   console.log('findByToken', user);
 
   User.findByToken(token, (err, user) => {
-    if (err) {throw err;}
-    if (!user)
-    {return response.json({
-      isAuth: false,
-      error: true,
-      msg: 'UnAuthorised/Invalid token'
-    });}
+    if (err) { throw err; }
+    if (!user) {
+      return response.json({
+        isAuth: false,
+        error: true,
+        msg: 'UnAuthorised/Invalid token'
+      });
+    }
     console.log('users middleware', user);
 
     request.token = token;
@@ -97,7 +80,6 @@ const errorHandler = (error, request, response, next) => {
 
 module.exports = {
   auth,
-  authorizeUser,
   errorHandler,
   unknownRoutes
 };

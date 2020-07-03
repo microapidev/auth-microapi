@@ -1,3 +1,5 @@
+require('express-async-errors');
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -6,14 +8,14 @@ const userRouter = require('./routes/auth');
 const adminRouter = require('./routes/adminAuth');
 const emailVerificationRouter = require('./routes/EmailVerification');
 const { connectDB } = require('./controllers/db');
-const { authorizeUser, errorHandler, unknownRoutes } = require('./utils/middleware');
+const { errorHandler, unknownRoutes } = require('./utils/middleware');
+const { authorizeUser } = require('./controllers/auth');
 // const swaggerDocs = require('./swagger.json');
 const swaggerUi = require('swagger-ui-express');
 const openApiDocumentation = require('./swagger/openApiDocumentation');
-require('express-async-errors');
-require('dotenv').config();
-
 connectDB();
+const SessionMgt = require('./services/SessionManagement');
+
 
 app.use(cors());
 app.use(cookieParser());
@@ -24,10 +26,14 @@ app.use(
   }),
 );
 
+// configure user session
+SessionMgt.config(app);
+
 // auth routes
 app.use('/api/admin/auth', adminRouter);
 app.use('/api/auth/email', emailVerificationRouter());
 app.use('/api/auth', authorizeUser, userRouter);
+// DON'T DELETE: Admin acc. verification
 // app.use('/api/admin/auth/email', emailVerificationRouter());
 
 

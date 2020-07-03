@@ -41,7 +41,7 @@ class EmailVerificationUtil{
 
     let verificationUrl = 'http:\/\/' + req.headers.host + req.baseUrl + '\/email\/verification\/' + data.token;
     console.log('URL', verificationUrl);
-    //Now send the mail to the user (expires after 2mins)
+    //Now send the mail to the user (expires after 1hr)
     if(!await sendVerificationMail(user.email, verificationUrl)){
       throw new CustomError('Email Could not be Sent. Try Again.');
     }    
