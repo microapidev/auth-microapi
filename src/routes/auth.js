@@ -24,7 +24,7 @@ userRouter.get('/user/active', auth, (req, res) => {
 
 userRouter.route('/register')
   .get(SessionMgt.checkSession, (request, response) => {
-    // send signup page
+    response.redirect('/');
   })
   .post(registerValidation(), async (request, response) => {
     // Register as guest
@@ -57,8 +57,8 @@ userRouter.route('/register')
   });
 
 userRouter.route('/login')
-  .get(SessionMgt.checkSession, (request, response) => {
-    // send signin page
+  .get(SessionMgt.checkSession, (request, response) => {  
+    response.redirect('/');
   })
   .post(loginValidation(), async (request, response) => {
     // Login as guest
@@ -84,8 +84,8 @@ userRouter.route('/login')
 
     user = user.toJSON();
 
-    // check if user has verified email
-    if (user.isEmailVerified) {
+    // check if user has unverified email
+    if (!user.isEmailVerified) {
       return response.status(401).json({
         success: false,
         message: 'Please verify your email to proceed'
