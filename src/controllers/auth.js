@@ -9,7 +9,10 @@ const User = require('../models/user');
 const crypto = require('crypto');
 const CustomError = require('../utils/CustomError');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { JWT_ADMIN_SECRET } = require('../utils/config');
 const { sendForgotPasswordMail } = require('../EmailFactory/index');
+
 
 exports.userForgotPassword = async (req, res) => {
   try {
@@ -90,4 +93,26 @@ exports.userResetPassword = async (req, res) => {
       message: 'Something went wrong. Please Try again.',
     });
   }
+};
+
+exports.authorizeUser = async (request, response, next) => {
+  // This middleware authorizes users by checking if valid API_KEY is sent with the request
+
+  const authorization = request.get('authorization');
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    const token = authorization.substring(7);
+    const decodedUser = jwt.verify(token, JWT_ADMIN_SECRET);
+
+    if (!decodedUser.id) {
+      return response.status(403).json({ error: 'Invalid API_KEY' });
+    }
+    // TODO: link users using admin access token, use kaseem's auth middleware
+    // TODO: if user has unverified email refer them to email verificaton; use sessions maybe
+    // request.adminUser = decodedUser;
+
+  } else {
+    return response.status(401).send('Access denied. No token provided.');
+  }
+
+  next();
 };
