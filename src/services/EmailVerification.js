@@ -27,12 +27,11 @@ class EmailVerificationService{
       userData = await User.findByIdAndUpdate(token._userId, 
         {$set: {isEmailVerified: true}}, 
         {new: true});
+    } else {
+      userData = await AdminUser.findByIdAndUpdate(token._userId, 
+        {$set: {isEmailVerified: true}}, 
+        {new: true});
     }
-    // else{
-    //   userData = await AdminUser.findByIdAndUpdate(token._userId, 
-    //     {$set: {isEmailVerified: true}}, 
-    //     {new: true});
-    // }
 
     this.logger(userData);
     if(!userData)

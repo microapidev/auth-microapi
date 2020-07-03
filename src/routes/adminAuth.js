@@ -7,7 +7,7 @@ const {
   resetPasswordValidation 
 } = require('../utils/validation/joiValidation');
 const Admin = require('../models/admin'); 
-const { createVerificationLink } = require('../utils/EmailVerification');
+// const { createVerificationLink } = require('../utils/EmailVerification');
 const { adminForgotPassword, adminResetPassword } = require('../controllers/admin');
 
 adminRouter.post('/register', registerValidation(), async (request, response) => {
@@ -49,7 +49,7 @@ adminRouter.post('/getkey', loginValidation(), async (request, response) => {
     return response.status(401).json({ loginSuccess: false, message: 'Wrong password' });
   }
 
-  response.status(200).json({
+  return response.status(200).json({
     message: 'API_KEY should be set in authorization header as - Bearer <token> - for subsequent user requests',
     API_KEY: user.generateAPIKEY(),
   });

@@ -11,11 +11,11 @@ https://docs.google.com/spreadsheets/d/1aNd-d2mQIOHOYnCLvG1wHn7pYS2XqHnmDSzABABQ
 - [x] Login/logout/register + session expiry
 - [x] Secure routing
 - [x] Email verification
-- [x] Password recovery
-- [ ] Password reset
+- [x] Password recovery ("forgot password")
+- [ ] Password reset ("update password")
 - [ ] Social authentication
 - [ ] Rate limiting
-- [ ] Persistent login
+- [x] Persistent login
 
 ## Prerequisites:
 - Node v~12.16.0
@@ -38,8 +38,8 @@ Use Postman to test endpoints
 | Method | URI                                      | PARAMS                                  | HEADERS                                       |
 | :---   | :----                                    | :----:                                  | :----:                                        |
 | POST   | api/admin/auth/reigster                  | email, username, password, phone_number | application/json                              |
-|     |   |                   -                     |             -                                 |
-|     |  |                   -                     |             -                                 |
+| POST   | api/admin/auth/forgot-password           |                  email                  |             application/json                  |
+| PATCH  | api/admin/auth/reset-password/:token     |                 password                |             application/json                  |
 | POST   | api/admin/auth/getkey                    | email, password                         | application/json                              |
 | *POST  | api/auth/register                        | email, username, password, phone_number | application/json, Authorization: Bearer token |
 | POST   | api/auth/email/verification:token        |               -                         | application/json, Authorization: Bearer token |
@@ -48,7 +48,12 @@ Use Postman to test endpoints
 | *GET   | api/auth/logout                          |                -                        |             Authorization: Bearer token       |
 | Get    | api/fbauth/auth/facebook                 |      ------                             |                                               |
 | Get    | api/gitauth/auth/github                  |      ------                             |                                               |
+| POST   | api/auth/forgot-password                 |                  email                  | application/json, Authorization: Bearer token |
+| PATCH  | api/auth/reset-password/:token           |                 password                | application/json, Authorization: Bearer token |
+
 * *(get Authorization token from api/admin/auth/getkey)
+
+
 ## Contribution Guide:
 Please always follow the right format before making pull request
 
