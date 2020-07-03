@@ -11,8 +11,8 @@ https://docs.google.com/spreadsheets/d/1aNd-d2mQIOHOYnCLvG1wHn7pYS2XqHnmDSzABABQ
 - [x] Login/logout/register + session expiry
 - [x] Secure routing
 - [x] Email verification
-- [x] Password recovery
-- [ ] Password reset
+- [x] Password recovery ("forgot password")
+- [ ] Password reset ("update password")
 - [ ] Social authentication
 - [ ] Rate limiting
 - [x] Persistent login
