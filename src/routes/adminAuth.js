@@ -7,7 +7,7 @@ const {
   resetPasswordValidation 
 } = require('../utils/validation/joiValidation');
 const Admin = require('../models/admin'); 
-const { createVerificationLink } = require('../utils/EmailVerification');
+// const { createVerificationLink } = require('../utils/EmailVerification');
 const { adminForgotPassword, adminResetPassword } = require('../controllers/admin');
 
 adminRouter.post('/register', registerValidation(), async (request, response) => {

@@ -1,14 +1,15 @@
 const User = require('../models/user');
 const userRouter = require('express').Router();
-const { 
-  registerValidation, 
-  loginValidation, 
-  forgotValidation, 
-  resetPasswordValidation 
+const {
+  registerValidation,
+  loginValidation,
+  forgotValidation,
+  resetPasswordValidation
 } = require('../utils/validation/joiValidation');
 const { auth } = require('../utils/middleware');
 const { createVerificationLink } = require('../utils/EmailVerification');
 const { userForgotPassword, userResetPassword } = require('../controllers/auth');
+const SessionMgt = require('../services/SessionManagement');
 
 
 userRouter.get('/user/active', auth, (req, res) => {
@@ -21,91 +22,90 @@ userRouter.get('/user/active', auth, (req, res) => {
   });
 });
 
+userRouter.route('/register')
+  .get(SessionMgt.checkSession, (request, response) => {
+    // send signup page
+  })
+  .post(registerValidation(), async (request, response) => {
+    // Register as guest
+    const { email } = request.body;
 
-userRouter.post('/register', registerValidation(), async (request, response) => {
-  // Register as guest
-  const { email } = request.body;
+    // Check if user email is taken in DB
+    let user = await User.findOne({ email });
 
-  // Check if user email is taken in DB
-  let user = await User.findOne({ email });
+    if (user) {
+      return response.status(403).json({
+        success: false,
+        message: 'Email address already in use',
+      });
+    }
 
-  if (user) {
-    return response.status(403).json({
-      success: false,
-      message: 'Email address already in use',
+    user = new User({ ...request.body });
+    user = await user.save();
+
+    // Send a confirmation link to email
+    const mailStatus = await createVerificationLink(user, request);
+    // console.log(mailStatus);
+    const { verificationUrl } = mailStatus;
+
+    return response.status(201).json({
+      success: true,
+      // verificationUrl,
+      message: 'Account created successfully. We sent you mail to confirm your email address',
+      data: { ...user.toJSON() },
     });
-  }
-
-  user = new User({ ...request.body });
-  user = await user.save();
-
-  // Send a confirmation link to email
-  const mailStatus = await createVerificationLink(user, request);
-  console.log(mailStatus);
-  const { verificationUrl } = mailStatus;
-
-  return response.status(201).json({
-    success: true,
-    verificationUrl,
-    message: 'Account created successfully',
-    data: { ...user.toJSON() },
   });
-});
 
-userRouter.post('/login', loginValidation(), async (request, response) => {
-  // Login as guest
-  const { email, password } = request.body;
+userRouter.route('/login')
+  .get(SessionMgt.checkSession, (request, response) => {
+    // send signin page
+  })
+  .post(loginValidation(), async (request, response) => {
+    // Login as guest
+    const { email, password } = request.body;
 
-  // check if user has verified email
-  
+    // check if user exists in DB
+    let user = await User.findOne({ email });
 
-  // check if user exists in DB
-  let user = await User.findOne({ email });
+    if (!user) {
+      return response.status(401).json({
+        success: false,
+        message: 'Invalid email or password',
+      });
+    }
 
-  if (!user) {
-    return response.status(401).json({
-      success: false,
-      message: 'Invalid email or password',
+    // check if password provided by user matches user password in DB
+    if (!await user.matchPasswords(password)) {
+      return response.status(401).json({
+        success: false,
+        message: 'Invalid email or password',
+      });
+    }
+
+    user = user.toJSON();
+
+    // check if user has verified email
+    if (user.isEmailVerified) {
+      return response.status(401).json({
+        success: false,
+        message: 'Please verify your email to proceed'
+      });
+    }
+
+    await SessionMgt.login(request, user);
+
+    response.status(200).json({
+      success: true,
+      user: user.id,
+      mesage: 'Login successful'
     });
-  }
-
-  // check if password provided by user matches user password in DB
-  const isMatch = await user.matchPasswords(password);
-  // console.log(" isMatch", isMatch)
-
-  if (!isMatch) {
-    return response.status(401).json({
-      success: false,
-      message: 'Invalid email or password',
-    });
-  }
-
-  // console.log(" isMatch", isMatch)
-
-  // Send token in response cookie for user session
-  let client = await user.generateToken();
-
-  response.cookie('w_authExp', client.tokenExp);
-  response.cookie('w_auth', client.token).status(200).json({
-    success: true,
-    userId: client.id,
-    token: client.token
   });
-});
 
 userRouter.get('/logout', async (request, response) => {
-  const query = {
-    id: request.body.id
-  };
+  response.clearCookie('user_sid');
 
-  const update = {
-    token: '',
-    tokenExp: ''
-  };
-
-  await User.findOneAndUpdate(query, update);
-
-  return response.status(200).send({
+  // response.redirect('/');
+  response.status(200).send({
     success: true,
   });
 });
