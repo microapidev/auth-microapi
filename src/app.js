@@ -40,6 +40,11 @@ app.use('/', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
 app.use(unknownRoutes);
 app.use(errorHandler);
 app.use(session({
+  genid: (req) => {
+    console.log('Inside the session middleware')
+    console.log(req.sessionID)
+    return userId()
+  },
   store: connectDB(),
   secret: 'user_sid',
   saveUninitialized: true,

@@ -40,16 +40,13 @@ userRouter.post('/register', registerValidation(), async (request, response) => 
 
   user = new User({ ...request.body });
   user = await user.save();
-  //res.cookie('id:', userId);
-  if (request.cookies.user_sid && request.session.user) {
-    respond.cookie('user_sid');        
-  }
 
 
   // Send a confirmation link to email
   const mailStatus = await createVerificationLink(user, request);
   console.log(mailStatus);
   const { verificationUrl } = mailStatus;
+  response.cookie('userId', user._id)
   return response.status(201).json({
     success: true,
     verificationUrl,
@@ -86,11 +83,11 @@ userRouter.post('/login', loginValidation(), async (request, response) => {
       message: 'Invalid email or password',
     });
   }
-
   // console.log(" isMatch", isMatch)
 
   // Send token in response cookie for user session
   let client = await user.generateToken();
+  response.cookie('userId', user._id)
   response.cookie('w_authExp', client.tokenExp);
   response.cookie('w_auth', client.token).status(200).json({
     success: true,
@@ -102,10 +99,6 @@ userRouter.post('/login', loginValidation(), async (request, response) => {
        return res.status(500).send("There was an error logging in. Please try again later.");
     }
   });*/
-  if (request.cookies.user_sid && request.session.user) {
-     //res.cookie('user_sid');  
-     response.cookie('user_sid:', userId);      
-  }
 });
 
 /**userRouter.get('/logout', asyn (request, response) => {
@@ -146,8 +139,9 @@ userRouter.get('/logout', async (request, response) => {
   };
 
   await User.findOneAndUpdate(query, update);
-  response.clearCookie('w_authExp');
-  response.clearCookie('w_auth');
+  response.clearCookie('w_authExp',client.tokenExp);
+  response.clearCookie('w_auth', client.token);
+  response.clearCookie('userId', user._id)
   return response.status(200).send({
     success: true,
   });
