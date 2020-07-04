@@ -35,9 +35,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new GoogleStrategy(
   {
-    clientID: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: 'http://localhost:5000/api/auth/google/callback'
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    callbackURL: `${process.env.REMOTE_HOST}/api/auth/google/callback`
   },
   (accessToken, refreshToken, profile, done) => {
     GoogleUser.findOne({email: profile.emails[0].value}, (err, user) => {
@@ -56,13 +56,12 @@ passport.use(new GoogleStrategy(
 
         newUser.save((err) => {
           if(err) {console.log(err);}
-
           console.log('===New=Google=Profile===');
           return done(err, newUser);
         });
       }else{
         console.log('===Existing=Google=Profile===');
-        console.log(user);
+        // console.log(user);
         return done(err, user);
       }
 
