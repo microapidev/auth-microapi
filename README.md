@@ -1,7 +1,7 @@
 # Auth-Micro API
 A microapi to allow easy integration of authentication into your service
 
-## Usage 
+## Usage
 [Go to support website](https://auth.microapi.dev) 🎈
 
 ## Contributions
@@ -36,7 +36,7 @@ Use Postman to test endpoints
 
 ## API
 | Method | URI                                      | PARAMS                                  | HEADERS                                       |
-| :---   | :----                                    | :----:                                  | :----:                                        | 
+| :---   | :----                                    | :----:                                  | :----:                                        |
 | POST   | api/admin/auth/reigster                  | email, username, password, phone_number | application/json                              |
 | POST   | api/admin/auth/forgot-password           |                  email                  |             application/json                  |
 | PATCH  | api/admin/auth/reset-password/:token     |                 password                |             application/json                  |
@@ -46,10 +46,13 @@ Use Postman to test endpoints
 | GET    | api/auth/email/resend/verification       |                   -                     | application/json, Authorization: Bearer token |
 | *POST  | api/auth/login                           | email, password                         | application/json, Authorization: Bearer token |
 | *GET   | api/auth/logout                          |                -                        |             Authorization: Bearer token       |
+| Get    | api/fbauth/auth/facebook                 |      ------                             |                                               |
+| Get    | api/gitauth/auth/github                  |      ------                             |                                               |
 | POST   | api/auth/forgot-password                 |                  email                  | application/json, Authorization: Bearer token |
 | PATCH  | api/auth/reset-password/:token           |                 password                | application/json, Authorization: Bearer token |
 
 * *(get Authorization token from api/admin/auth/getkey)
+
 
 ## Contribution Guide:
 Please always follow the right format before making pull request

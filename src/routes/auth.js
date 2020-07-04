@@ -1,13 +1,36 @@
 const User = require('../models/user');
 const userRouter = require('express').Router();
+
+
+const passport = require('passport');
+
+const FacebookStrategy = require('passport-facebook').Strategy;
+const findOrCreate = require('mongoose-findorcreate');
+
+const {createVerificationLink} = require('../utils/EmailVerification');
+
+
+
+// guestRouter.get('/active', auth, (req, res) => {
+//   res.status(200).json({
+//     _id: req.user.id,
+//     isAdmin: req.user.isEmailVerified,
+//     isAuth: true,
+//     email: req.user.email,
+//     username: req.user.username,
+//   });
+// });
+
+
 const {
   registerValidation,
   loginValidation,
   forgotValidation,
-  resetPasswordValidation
-} = require('../utils/validation/joiValidation');
+  resetPasswordValidation} = require('../utils/validation/joiValidation');
+
+
 const { auth } = require('../utils/middleware');
-const { createVerificationLink } = require('../utils/EmailVerification');
+
 const { userForgotPassword, userResetPassword } = require('../controllers/auth');
 const SessionMgt = require('../services/SessionManagement');
 
@@ -57,7 +80,7 @@ userRouter.route('/register')
   });
 
 userRouter.route('/login')
-  .get(SessionMgt.checkSession, (request, response) => {  
+  .get(SessionMgt.checkSession, (request, response) => {
     response.redirect('/');
   })
   .post(loginValidation(), async (request, response) => {
@@ -101,6 +124,7 @@ userRouter.route('/login')
     });
   });
 
+
 userRouter.get('/logout', async (request, response) => {
   response.clearCookie('user_sid');
 
@@ -110,8 +134,10 @@ userRouter.get('/logout', async (request, response) => {
   });
 });
 
+
 userRouter.post('/forgot-password', forgotValidation(), userForgotPassword);
 
 userRouter.patch('/reset-password/:token', resetPasswordValidation(), userResetPassword);
+
 
 module.exports = userRouter;

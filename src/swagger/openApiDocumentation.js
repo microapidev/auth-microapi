@@ -396,6 +396,66 @@ const openApiDocumentation = {
           },
         },
       },
+    },
+    '/api/fbauth/auth/facebook': {
+      get: {
+        tags: ['Facebook AUTH'],
+        description: 'Creates or logs in User through Facebook',
+        operationId: 'FacebookAuth',
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/gitauth/auth/github': {
+      get: {
+        tags: ['Github AUTH'],
+        description: 'Creates or logs in User through GitHub',
+        operationId: 'GithubAuth',
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
     }
   },
   components: {
