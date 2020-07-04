@@ -16,15 +16,11 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function(id, done) {
 
-  if(Admin){
-    Admin.findById(id, function(err, user) {
-      done(err, user);
-    });
-  }else{
+
     User.findById(id, function(err, user) {
       done(err, user);
     });
-  }
+  
 
 
 });
@@ -38,15 +34,10 @@ passport.use(new FacebookStrategy({
     "https://auth-microapi.herokuapp.com/callback"
   },
   function(accessToken, refreshToken, profile, cb) {
-    if (Admin){
-      Admin.findOrCreate({ facebookId: profile.id }, function (err, user) {
+        User.findOrCreate({ facebookId: profile.id }, function (err, user) {
         return cb(err, user);
       });
-    }else{
-      User.findOrCreate({ facebookId: profile.id }, function (err, user) {
-        return cb(err, user);
-      });
-    }
+    
   }
 ));
 fbRouter.get('/auth/facebook', passport.authenticate('facebook'));
