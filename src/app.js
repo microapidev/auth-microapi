@@ -67,7 +67,7 @@ app.use('/api/admin/auth', adminRouter);
 app.use('/api/auth/email', emailVerificationRouter());
 app.use('/api/auth', authorizeUser, userRouter);
 
-app.use('/api/admin/auth/email', emailVerificationRouter());
+// app.use('/api/admin/auth/email', emailVerificationRouter());
 app.use('/api/fbauth', fbRouter);
 app.use('/api/gitauth', gitRouter);
 
