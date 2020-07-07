@@ -12,7 +12,6 @@ const emailVerificationRouter = require('./routes/EmailVerification');
 const { connectDB } = require('./controllers/db');
 const { errorHandler, unknownRoutes } = require('./utils/middleware');
 const { authorizeUser } = require('./controllers/auth');
-// const swaggerDocs = require('./swagger.json');
 const swaggerUi = require('swagger-ui-express');
 const passport = require('passport');
 const session = require('express-session');
@@ -25,9 +24,6 @@ require('dotenv').config();
 
 connectDB();
 const SessionMgt = require('./services/SessionManagement');
-
-
-
 
 app.use(cors());
 app.use(cookieParser());
@@ -49,15 +45,6 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-// initialize express-session to allow us track the logged-in user.
-// app.use(session({
-//   key: 'user_sid',
-//   secret: 'somerandonstuffsjl',
-//   resave: false,
-//   saveUninitialized: false,
-// }));
-
-
 
 // configure user session
 SessionMgt.config(app);
@@ -78,7 +65,6 @@ app.use('/api/gitauth', gitRouter);
 
 
 app.use('/', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
-// app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(unknownRoutes);
 app.use(errorHandler);
