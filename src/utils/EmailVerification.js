@@ -9,7 +9,7 @@ const RandomString = require('randomstring');
 const User = require('../models/user');
 const EmailVerification = require('../models/EmailVerification');
 const EmailFactory = require('../EmailFactory');
-const CustomError = require('../utils/CustomError');
+const { CustomError } = require('../utils/CustomError');
 
 const {sendVerificationMail} = EmailFactory;
 
@@ -39,7 +39,7 @@ class EmailVerificationUtil{
       throw new CustomError('Failed to generate token. Try signup again', 403);
     }
 
-    let verificationUrl = 'http:\/\/' + req.headers.host + req.baseUrl + '\/email\/verification\/' + data.token;
+    let verificationUrl = 'http:\/\/' + req.headers.host + req.baseUrl + '\/email-verification\/' + data.token;
     console.log('URL', verificationUrl);
     //Now send the mail to the user (expires after 1hr)
     if(!await sendVerificationMail(user.email, verificationUrl)){
@@ -47,10 +47,10 @@ class EmailVerificationUtil{
     }    
       
     // this.logger('SUCCESS', 'Sending mail...');
-    return{
+    return {
       verificationUrl,
-      message: 'Check Your Mailbox for Link',
-      status: 'success',
+      message: 'Account created successfully. We sent you mail to confirm your email address',
+      success: true,
       code: 200
     };
   }

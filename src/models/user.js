@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const mongodbErrorHandler = require('mongoose-mongodb-errors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const findOrCreate = require('mongoose-findorcreate');
 // const moment = require('moment');
 const saltRounds = 10;
 const { JWT_EXPIRE, JWT_SECRET } = require('../utils/config');
@@ -31,6 +32,8 @@ const userSchema = new mongoose.Schema({
   },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
+  facebookId: String,
+  githubId: String,
   createdAt: {
     type: Date,
     default: Date.now,
@@ -42,7 +45,7 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.plugin(mongodbErrorHandler);
-
+userSchema.plugin(findOrCreate);
 // remove password, _id and return id instead whenever user is retrieved from db
 userSchema.set('toJSON', {
   virtuals: true,
@@ -62,7 +65,9 @@ userSchema.pre('save', function () {
   // Check if password is present and is modified, then hash
   const user = this;
 
-  if (user.password && user.isModified('password')) {
+  // commented to allow hashing of password on password reset 
+  // if (user.password && user.isModified('password')) {
+  if (user.password) {
     user.password = bcrypt.hashSync(user.password, saltRounds);
   }
 });
@@ -74,7 +79,7 @@ userSchema.methods.generateToken = async function () {
 
   user.tokenExp = JWT_EXPIRE;
   user.token = token;
-  return await user.save(); 
+  return await user.save();
 };
 
 userSchema.statics.findByToken = function (token, cb) {

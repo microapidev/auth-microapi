@@ -54,6 +54,7 @@ exports.forgotValidation = () => (req, res, next) => {
 exports.resetPasswordValidation = () => (req, res, next) => {
   const schema = Joi.object().keys({
     password: Joi.string().min(8).max(20).required(),
+    password_confirmation: Joi.any().valid(Joi.ref('password')).required()
   });
   return validator(schema, req.body, res, next);
 };

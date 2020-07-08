@@ -8,7 +8,7 @@
 const EmailVerification = require('../models/EmailVerification');
 const User = require('../models/user');
 // const AdminUser = require('../models/admin');
-const CustomError = require('../utils/CustomError');
+const { CustomError } = require('../utils/CustomError');
 
 class EmailVerificationService{
 
