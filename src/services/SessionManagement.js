@@ -6,26 +6,30 @@
  */
 
 require('express-async-errors');
-const CustomError = require('../utils/CustomError');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const mongoStoreFactory = require('connect-mongo')(session);
+const { v4: uuidv4 } = require('uuid');
 
+
+// persistence store of our session
+const sessionStore = new mongoStoreFactory({
+  mongooseConnection: mongoose.connection,
+  ttl: (1 * 60 * 60),
+  collection: 'session'
+});
 
 class SessionManagement {
   async config(app) {
-    // persistence store of our session
-    const sessionStore = new mongoStoreFactory({
-      mongooseConnection: mongoose.connection,
-      ttl: (1 * 60 * 60),
-      collection: 'session'
-    });
-
     app.use(session({
       store: sessionStore,
+      genid: function(request) {
+        return uuidv4();; // use UUIDs for session IDs
+      },
       secret: 'canyoukeepasecret',
       saveUninitialized: true,
       resave: false,
+      rolling: true,
       cookie: {
         path: '/',
         sameSite: true,
@@ -38,33 +42,33 @@ class SessionManagement {
   }
 
   async checkSession(request, response, next) {
-    if (request.cookies.user_sid && !request.session.user) {
+    if (request.cookies.connect.sid && !request.session.user) {
       // expired session but unexpired cookie
       response.clearCookie('user_sid');
+
       next();
 
-    } else if (request.session.user && request.cookies.user_sid) {
+    } else if (request.session.user && request.cookies.connect.sid) {
       // valid cookie and session
-      const { id } = request.session.user;
+      await request.session.regenerate();
 
-      response.status(200).json({
-        success: true,
-        userId: id,
-        message: 'User is already logged in'
-      });
+      return response.status(200).json(CustomResponse('User is already logged in'));
       // response.redirect('/dashboard');
-    } else {
-      next();
     }
+
+    next();
   }
 
   // create new session for user on login
-  async login(request, user) {
+  login(request, user) {
     request.session.user = user;
-
-    let session = await request.session.regenerate();
+    // sessionStore.set(genid(request), request.session)
+    //   .then((ret) => console.log(ret))
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
     // eslint-disable-next-line curly
-    if (!session) throw new CustomError('Couldn\'t refresh user session. Try again');
+    // if (!session) throw new CustomError('Couldn\'t refresh user session. Try again');
   }
 }
 
