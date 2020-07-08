@@ -282,10 +282,10 @@ const openApiDocumentation = {
         },
         parameters: [
           {
-            name: "token",
-            in: "query",
+            name: 'token',
+            in: 'query',
             schema: {
-              type: "string",
+              type: 'string',
             },
             required: true,
           },
@@ -430,7 +430,7 @@ const openApiDocumentation = {
         },
       },
       Login: {
-         type: 'object',
+        type: 'object',
         properties: {
           email: {
             type: 'string',
@@ -443,7 +443,7 @@ const openApiDocumentation = {
         },
       },
       Forgot: {
-         type: 'object',
+        type: 'object',
         properties: {
           email: {
             type: 'string',
@@ -452,7 +452,7 @@ const openApiDocumentation = {
         },
       },
       Reset: {
-         type: 'object',
+        type: 'object',
         properties: {
           password: {
             type: 'string',
