@@ -92,7 +92,7 @@ exports.userForgotPassword = async (request, response) => {
   const resetUrl = `http:\/\/${request.headers.host}\/api\/auth\/user\/password\/${token}`;
   sendForgotPasswordMail(user.email, user.username, resetUrl);
 
-  return response.status(200).json(CustomResponse(`A password reset link has been sent to ${user.email}`, resetUrl));
+  return response.status(200).json(CustomResponse(`A password reset link has been sent to ${user.email}`));
 };
 
 exports.userResetPassword = async (request, response) => {
