@@ -13,7 +13,6 @@ const resetPasswordRouter = require('./routes/resetPassword');
 const { connectDB } = require('./controllers/db');
 const { errorHandler, unknownRoutes } = require('./utils/middleware');
 const { authorizeUser } = require('./controllers/auth');
-// const swaggerDocs = require('./swagger.json');
 const swaggerUi = require('swagger-ui-express');
 const passport = require('passport');
 const session = require('express-session');
@@ -26,9 +25,6 @@ require('dotenv').config();
 
 connectDB();
 const SessionMgt = require('./services/SessionManagement');
-
-
-
 
 app.use(cors());
 app.use(cookieParser());
