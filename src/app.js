@@ -9,10 +9,10 @@ const adminRouter = require('./routes/adminAuth');
 const fbRouter = require('./routes/fbauth');
 const gitRouter = require('./routes/gitauth');
 const emailVerificationRouter = require('./routes/EmailVerification');
+const resetPasswordRouter = require('./routes/resetPassword');
 const { connectDB } = require('./controllers/db');
 const { errorHandler, unknownRoutes } = require('./utils/middleware');
 const { authorizeUser } = require('./controllers/auth');
-// const swaggerDocs = require('./swagger.json');
 const swaggerUi = require('swagger-ui-express');
 const passport = require('passport');
 const session = require('express-session');
@@ -25,9 +25,6 @@ require('dotenv').config();
 
 connectDB();
 const SessionMgt = require('./services/SessionManagement');
-
-
-
 
 app.use(cors());
 app.use(cookieParser());
@@ -42,20 +39,13 @@ app.use(
 
 //passport middleware
 app.use(session({
-    secret: 'facebook-login-app',
-    resave: true,
-    saveUninitialized: true
+  secret: 'facebook-login-app',
+  resave: true,
+  saveUninitialized: true
 }));
 
 app.use(passport.initialize());
 app.use(passport.session());
-// initialize express-session to allow us track the logged-in user.
-// app.use(session({
-//   key: 'user_sid',
-//   secret: 'somerandonstuffsjl',
-//   resave: false,
-//   saveUninitialized: false,
-// }));
 
 
 
@@ -63,13 +53,12 @@ app.use(passport.session());
 SessionMgt.config(app);
 
 // auth routes
-app.use('/api/admin/auth', adminRouter);
-app.use('/api/auth/email', emailVerificationRouter());
-app.use('/api/auth', authorizeUser, userRouter);
-
-// app.use('/api/admin/auth/email', emailVerificationRouter());
-app.use('/api/fbauth', fbRouter);
-app.use('/api/gitauth', gitRouter);
+app.use('/api/auth/admin', adminRouter);
+app.use('/api/auth/user/email-verification', emailVerificationRouter());
+app.use('/api/auth/user/password', resetPasswordRouter);
+app.use('/api/auth/user', authorizeUser, userRouter);
+app.use('/api/fb-auth/user', fbRouter);
+app.use('/api/git-auth/user', gitRouter);
 
 // DON'T DELETE: Admin acc. verification
 
@@ -77,7 +66,7 @@ app.use('/api/gitauth', gitRouter);
 
 
 
-app.use('/', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
+app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
 // app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(unknownRoutes);
