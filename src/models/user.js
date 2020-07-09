@@ -41,6 +41,13 @@ const userSchema = new mongoose.Schema({
   isEmailVerified: {
     type: Boolean,
     default: false
+  },
+  active: {
+    type: Number,
+    // 1 for active and 0 for not active
+    enum: [0,1],
+    required: true,
+    default: 1
   }
 });
 
