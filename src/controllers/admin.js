@@ -16,10 +16,15 @@ const mongoose = require('mongoose');
 
 exports.adminRegister = async (request, response) => {
   // Adds a new admin to Auth-MicroApi DB 
+
   let user = await Admin.findOne({ email: request.body.email });
   if (user) {
     throw new CustomError('Email address already in use', 403);
   }
+  // const myDB = mongoose.connection.useDb();
+
+  // const UserInfo = myDB.model('userInfo', userInfoSchema);
+
   user = new Admin(request.body);
   user = await user.save();
 
@@ -53,8 +58,10 @@ exports.adminGetKey = async (request, response) => {
 
 exports.adminForgotPassword = async (request, response) => {
   const { email } = request.body;
-  const buffer = crypto.randomBytes(32);
-  const token = buffer.toString();
+  // const buffer = crypto.randomBytes(32);
+  // const token = buffer.toString();
+  const RandomString = require('randomstring');
+  const token = RandomString.generate(64);
   const expirationTime = Date.now() + 3600000; // 1 hour
   const admin = await Admin.findOneAndUpdate(
     {
@@ -76,7 +83,7 @@ exports.adminForgotPassword = async (request, response) => {
     );
   }
 
-  const resetUrl = `http:\/\/${request.headers.host}\/api\/admin\/auth\/reset-password\/${token}`;
+  const resetUrl = `http:\/\/${request.headers.host}\/api\/auth\/admin\/reset-password\/${token}`;
   sendForgotPasswordMail(admin.email, admin.username, resetUrl);
 
   return response.status(200).json(CustomResponse(`A password reset link has been sent to ${admin.email}`));
@@ -139,6 +146,6 @@ exports.deactivateUser = async (req,res) => {
     res.status(500).send({
       status: 'error',
       message: 'Something went wrong.'
-    })
+    });
   }
-}
+};

@@ -1,8 +1,8 @@
-const passport = require("passport");
-const refresh = require("passport-oauth2-refresh");
-const { Strategy: TwitterStrategy } = require("passport-twitter");
+const passport = require('passport');
+const refresh = require('passport-oauth2-refresh');
+const { Strategy: TwitterStrategy } = require('passport-twitter');
 
-const User = require("../models/user");
+const User = require('../models/user');
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -39,7 +39,7 @@ passport.use(
                 return done(err);
               }
               user.twitter = profile.id;
-              user.tokens.push({ kind: "twitter", accessToken, tokenSecret });
+              user.tokens.push({ kind: 'twitter', accessToken, tokenSecret });
               user.profile.name = user.profile.name || profile.displayName;
               user.profile.location =
                 user.profile.location || profile._json.location;
@@ -70,7 +70,7 @@ passport.use(
           // so we can "fake" a twitter email address as follows:
           user.email = `${profile.username}@twitter.com`;
           user.twitter = profile.id;
-          user.tokens.push({ kind: "twitter", accessToken, tokenSecret });
+          user.tokens.push({ kind: 'twitter', accessToken, tokenSecret });
           user.profile.name = profile.displayName;
           user.username = profile.displayName;
           user.profile.location = profile._json.location;
@@ -91,14 +91,14 @@ exports.isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect("/login");
+  res.redirect('/login');
 };
 
 /**
  * Authorization Required middleware.
  */
 exports.isAuthorized = (req, res, next) => {
-  const provider = req.path.split("/")[2];
+  const provider = req.path.split('/')[2];
   const token = req.user.tokens.find((token) => token.kind === provider);
   if (token) {
     // Is there an access token expiration and access token expired?
@@ -110,13 +110,13 @@ exports.isAuthorized = (req, res, next) => {
     // No: we are good, go to next():
     if (
       token.accessTokenExpires &&
-      moment(token.accessTokenExpires).isBefore(moment().subtract(1, "minutes"))
+      moment(token.accessTokenExpires).isBefore(moment().subtract(1, 'minutes'))
     ) {
       if (token.refreshToken) {
         if (
           token.refreshTokenExpires &&
           moment(token.refreshTokenExpires).isBefore(
-            moment().subtract(1, "minutes")
+            moment().subtract(1, 'minutes')
           )
         ) {
           res.redirect(`/auth/${provider}`);
@@ -130,17 +130,17 @@ exports.isAuthorized = (req, res, next) => {
                   if (tokenObject.kind === provider) {
                     tokenObject.accessToken = accessToken;
                     if (params.expires_in)
-                      tokenObject.accessTokenExpires = moment()
-                        .add(params.expires_in, "seconds")
-                        .format();
+                    {tokenObject.accessTokenExpires = moment()
+                      .add(params.expires_in, 'seconds')
+                      .format();}
                     return true;
                   }
                   return false;
                 });
                 req.user = user;
-                user.markModified("tokens");
+                user.markModified('tokens');
                 user.save((err) => {
-                  if (err) console.log(err);
+                  if (err) {console.log(err);}
                   next();
                 });
               });
