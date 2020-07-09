@@ -39,6 +39,7 @@ Use Postman to test endpoints
 | POST   |  api/auth/admin/getkey                   |               email, password           |             application/json                  |
 | POST   | api/auth/admin/reset-password            |       email                             |             application/json                  |
 | PATCH  | api/auth/admin/reset-password/:token     |      password, password_confirmation    | application/json                              |
+| PATCH  | api/admin/deactivate/:userId             |     ------                              | Authorization: Bearer token                   |
 | POST   | api/auth/user/register                   | email, username, password, phone_number | application/json, Authorization: Bearer token |
 | GET    | api/auth/user/email-verification/:token  |               -                         | application/json, Authorization: Bearer token |
 | GET    | api/auth/user/email-verification/resend  |                   -                     | application/json, Authorization: Bearer token |
