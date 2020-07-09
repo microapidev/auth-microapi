@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const findOrCreate = require('mongoose-findorcreate');
 // const moment = require('moment');
 const saltRounds = 10;
-const { JWT_EXPIRE, JWT_SECRET, JWT_ADMIN_SECRET } = require('../utils/config');
+const { JWT_EXPIRE, JWT_SECRET, JWT_ADMIN_SECRET, AUTH_API_DB } = require('../utils/config');
 
 // Modified user model
 const userSchema = new mongoose.Schema({
@@ -77,7 +77,7 @@ userSchema.methods.generateAPIKEY = function () {
     {
       id: admin.id,
       email: admin.email,
-      DBURI: APP_DB
+      DBURI: AUTH_API_DB
     },
     JWT_ADMIN_SECRET
   );
