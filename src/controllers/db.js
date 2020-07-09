@@ -4,9 +4,9 @@ mongoose.set('debug', true);
 
 const connectDB = () => {
   console.log('Connecting to database...');
-  const URL = 'mongodb://localhost:27017/auth-stuff'
+
   mongoose.connect(
-    URL,
+    AUTH_API_DB,
     {
       keepAlive: true,
       useNewUrlParser: true,
