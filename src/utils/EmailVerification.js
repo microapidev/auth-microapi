@@ -51,8 +51,7 @@ class EmailVerificationUtil {
     // this.logger('SUCCESS', 'Sending mail...');
     return {
       verificationUrl,
-      message:
-        'Account created successfully. We sent you mail to confirm your email address',
+      message: 'We sent you mail to confirm your email address',
       success: true,
       code: 200,
     };

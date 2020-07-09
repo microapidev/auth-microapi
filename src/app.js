@@ -33,6 +33,27 @@ app.use(
     extended: true,
   })
 );
+// Persist the user
+passport.serializeUser(GoogleUser.serializeUser());
+passport.deserializeUser(GoogleUser.deserializeUser());
+
+
+//passport middleware
+app.use(session({
+  secret: 'facebook-login-app',
+  resave: true,
+  saveUninitialized: true
+}));
+
+// initialize express-session to allow us track the logged-in user.
+// app.use(session({
+//   key: 'user_sid',
+//   secret: 'somerandonstuffsjl',
+//   resave: false,
+//   saveUninitialized: false,
+// }));
+
+
 
 //passport middleware
 app.use(
