@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const findOrCreate = require('mongoose-findorcreate');
 // const moment = require('moment');
 const saltRounds = 10;
-const { JWT_EXPIRE, JWT_SECRET, JWT_ADMIN_SECRET, APP_DB } = require('../utils/config');
+const { JWT_EXPIRE, JWT_SECRET, JWT_ADMIN_SECRET } = require('../utils/config');
 
 // Modified user model
 const userSchema = new mongoose.Schema({
@@ -59,7 +59,9 @@ userSchema.pre('save', function () {
   // Check if password is present and is modified, then hash
   const user = this;
 
-  if (user.password && user.isModified('password')) {
+  // commented to allow hashing of password on password reset
+  // if (user.password && user.isModified('password')) {
+  if (user.password) {
     user.password = bcrypt.hashSync(user.password, saltRounds);
   }
 });

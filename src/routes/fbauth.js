@@ -45,6 +45,9 @@ fbRouter.get('/auth/facebook/callback',
   passport.authenticate('facebook', { failureRedirect: '/login' }),
   (req, res) => {
   // Successful authentication, redirect home.
+    res.status(200).json({
+      success: true
+    });
     res.redirect('/');
   
   });
