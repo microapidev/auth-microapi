@@ -7,10 +7,12 @@
 
 const Admin = require('../models/admin');
 const crypto = require('crypto');
+const User = require('../models/user');
 const { CustomError } = require('../utils/CustomError');
 const bcrypt = require('bcrypt');
 const { sendForgotPasswordMail } = require('../EmailFactory/index');
 const CustomResponse = require('../utils/response');
+const mongoose = require('mongoose');
 
 exports.adminRegister = async (request, response) => {
   // Adds a new admin to Auth-MicroApi DB 
@@ -108,3 +110,35 @@ exports.adminResetPassword = async (request, response) => {
 
   return response.status(200).json(CustomResponse('Password updated successfully. You may login'));
 };
+
+
+exports.deactivateUser = async (req,res) => {
+  const userId = req.params.userId;
+
+  if(!mongoose.Types.ObjectId.isValid(userId)){
+    return res.status(400).send({
+      status: 'error',
+      message: 'Invalid user id'
+    });
+  }
+
+  try {
+    const result = await User.updateOne({_id: userId},{$set: {active : 0}});
+    if(!result.n){
+      return res.status(404).send({
+        status: 'error',
+        message: 'User not found.'
+      });
+    }
+    res.send({
+      status: 'success',
+      message: 'User deactivated'
+    });
+  }
+  catch(err){
+    res.status(500).send({
+      status: 'error',
+      message: 'Something went wrong.'
+    })
+  }
+}
