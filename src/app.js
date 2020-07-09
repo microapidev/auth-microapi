@@ -6,6 +6,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const userRouter = require('./routes/auth');
 const adminRouter = require('./routes/adminAuth');
+const adminFunctionRouter = require('./routes/admin');
 const GoogleUser = require('./models/googleUser');
 const googleLoginRouter = require('./routes/googleLogin');
 const passport = require('passport');
@@ -111,6 +112,9 @@ app.use(passport.session());
 
 // configure user session
 SessionMgt.config(app);
+
+// admin function routes
+app.use('/api/admin',adminFunctionRouter);
 
 // auth routes
 app.use('/api/auth/admin', adminRouter);
