@@ -50,6 +50,9 @@ exports.userLogin = async (request, response) => {
     throw new CustomError('Invalid email or password', 401);
   }
 
+  if(user.active === 0){
+    throw new CustomError('This account has been deactivated. Contact an admin', 401);
+  }
   user = user.toJSON();
 
   // check if user has unverified email
