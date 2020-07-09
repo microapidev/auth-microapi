@@ -35,7 +35,7 @@ Use Postman to test endpoints
 ## API
 | Method | URI                                      | PARAMS                                  | HEADERS                                       |
 | :---   | :----                                    | :----:                                  | :----:                                        |
-| POST   | api/auth/admin/reigster                  | email, username, password, phone_number | application/json                              |
+| POST   | api/auth/admin/register                  | email, username, password, phone_number | application/json                              |
 | POST   |  api/auth/admin/getkey                   |               email, password           |             application/json                  |
 | POST   | api/auth/admin/reset-password            |       email                             |             application/json                  |
 | PATCH  | api/auth/admin/reset-password/:token     |      password, password_confirmation    | application/json                              |
@@ -47,10 +47,10 @@ Use Postman to test endpoints
 | POST   | api/auth/user/password/reset             | email                                   | application/json, Authorization: Bearer token |
 | PATCH  | api/auth/user/password/:token            | password, password_confirmation         | application/json, Authorization: Bearer token |
 | GET    | api/auth/user/logout                     |                -                        |             Authorization: Bearer token       |
-| GET    | api/fb-auth/user/auth/facebook           | ------                                  | Authorization: Bearer token                   |
-| GET    | api/twitter-auth/user/auth/twitter       |  ------                                 | Authorization: Bearer token                   |
-| GET    | api/git-auth/user/auth/github            |      ------                             | Authorization: Bearer token                   |
-| GET    | api/api/auth/google                      |      ------                             | Authorization: Bearer token                   |
+| GET    | api/auth/facebook                        | ------                                  | Authorization: Bearer token                   |
+| GET    | api/auth/twitter                         |  ------                                 | Authorization: Bearer token                   |
+| GET    | api/auth/github                          |      ------                             | Authorization: Bearer token                   |
+| GET    | api/auth/google                          |      ------                             | Authorization: Bearer token                   |
 
 * *(get Authorization token from api/admin/auth/getkey)
 
