@@ -79,7 +79,7 @@ const openApiDocumentation = {
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/User',
+                $ref: '#/components/schemas/Login',
               },
             },
           },
@@ -151,63 +151,12 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/email/verification/:token': {
-      post: {
-        tags: ['Email verification'],
-        description: 'email varification',
-        operationId: 'veryfyuseremail',
-        security: [ {bearerAuth: {}}],
-        requestBody: {
-          content: {
-            'application/json': {
-              schema: {
-                // $ref: '#/components/schemas/User',
-              },
-            },
-          },
-          required: true,
-        },
-        parameters: [],
-        responses: {
-          '200': {
-            description: 'Success',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Response',
-                },
-              },
-            },
-          },
-          '400': {
-            description: 'Bad Request',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Response',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
     '/api/auth/resend/verification': {
       get: {
         tags: ['Email resend verification'],
         description: 'email resend varification',
         operationId: 'veryfyuseremail',
         security: [ {bearerAuth: {}}],
-        requestBody: {
-          content: {
-            'application/json': {
-              schema: {
-                // $ref: '#/components/schemas/User',
-              },
-            },
-          },
-          required: true,
-        },
         parameters: [],
         responses: {
           '200': {
@@ -243,7 +192,7 @@ const openApiDocumentation = {
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/User',
+                $ref: '#/components/schemas/Login',
               },
             },
           },
@@ -284,7 +233,7 @@ const openApiDocumentation = {
           content: {
             'application/json': {
               schema: {
-                // $ref: '#/components/schemas/User',
+                $ref: '#/components/schemas/Forgot',
               },
             },
           },
@@ -316,7 +265,7 @@ const openApiDocumentation = {
       },
     },
     '/api/auth/reset-password/:token': {
-      post: {
+      patch: {
         tags: ['reset-password'],
         description: 'Enter your previous password to reset another password',
         operationId: 'reset-password',
@@ -325,13 +274,22 @@ const openApiDocumentation = {
           content: {
             'application/json': {
               schema: {
-                // $ref: '#/components/schemas/User',
+                $ref: '#/components/schemas/Reset',
               },
             },
           },
           required: true,
         },
-        parameters: [],
+        parameters: [
+          {
+            name: 'token',
+            in: 'query',
+            schema: {
+              type: 'string',
+            },
+            required: true,
+          },
+        ],
         responses: {
           '200': {
             description: 'Success',
@@ -362,16 +320,6 @@ const openApiDocumentation = {
         description: 'logout user',
         operationId: 'logoutuser',
         security: [ {bearerAuth: {}}],
-        requestBody: {
-          content: {
-            'application/json': {
-              schema: {
-                // $ref: '#/components/schemas/User',
-              },
-            },
-          },
-          required: true,
-        },
         parameters: [],
         responses: {
           '200': {
@@ -399,7 +347,7 @@ const openApiDocumentation = {
     },
     '/api/fbauth/auth/facebook': {
       get: {
-        tags: ['Facebook AUTH'],
+        tags: ['Facebook Auth'],
         description: 'Creates or logs in User through Facebook',
         operationId: 'FacebookAuth',
         parameters: [],
@@ -429,7 +377,7 @@ const openApiDocumentation = {
     },
     '/api/gitauth/auth/github': {
       get: {
-        tags: ['Github AUTH'],
+        tags: ['Github Auth'],
         description: 'Creates or logs in User through GitHub',
         operationId: 'GithubAuth',
         parameters: [],
@@ -478,6 +426,37 @@ const openApiDocumentation = {
           phone_number: {
             type: 'string',
             Sdescription: 'User phone number',
+          },
+        },
+      },
+      Login: {
+        type: 'object',
+        properties: {
+          email: {
+            type: 'string',
+            description: 'User Email Address',
+          },
+          password: {
+            type: 'string',
+            description: 'User Password',
+          },
+        },
+      },
+      Forgot: {
+        type: 'object',
+        properties: {
+          email: {
+            type: 'string',
+            description: 'User Email Address',
+          },
+        },
+      },
+      Reset: {
+        type: 'object',
+        properties: {
+          password: {
+            type: 'string',
+            description: 'User Password',
           },
         },
       },
