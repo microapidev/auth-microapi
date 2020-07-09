@@ -110,6 +110,97 @@ const openApiDocumentation = {
         },
       },
     },
+    '/api/auth/admin/reset-password/': {
+      patch: {
+        tags: ['reset-password'],
+        description: 'Enter your previous password to reset another password',
+        operationId: 'reset-password',
+        security: [ {bearerAuth: {}}],
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Forgot',
+              },
+            },
+          },
+          required: true,
+        },
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/auth/reset-password/{token}': {
+      patch: {
+        tags: ['reset-password'],
+        description: 'Enter your previous password to reset another password',
+        operationId: 'reset-password',
+        security: [ {bearerAuth: {}}],
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/Reset',
+              },
+            },
+          },
+          required: true,
+        },
+        parameters: [
+          {
+            name: 'token',
+            in: 'query',
+            schema: {
+              type: 'string',
+            },
+            required: true,
+          },
+        ],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     '/api/auth/register': {
       post: {
         tags: ['Register User'],
@@ -345,7 +436,7 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/fbauth/auth/facebook': {
+    'api/fb-auth/user/auth/facebook': {
       get: {
         tags: ['Facebook Auth'],
         description: 'Creates or logs in User through Facebook',
@@ -375,7 +466,37 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/gitauth/auth/github': {
+    'api/api/auth/google': {
+      get: {
+        tags: ['Google Auth'],
+        description: 'Creates or logs in User through Google',
+        operationId: 'googleauth',
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    'api/git-auth/user/auth/github': {
       get: {
         tags: ['Github Auth'],
         description: 'Creates or logs in User through GitHub',
@@ -404,8 +525,37 @@ const openApiDocumentation = {
           },
         },
       },
-    }
-  },
+    },
+  'api/twitter-auth/user/auth/twitter': {
+      get: {
+        tags: ['Twitter Auth'],
+        description: 'Creates or logs in User through twitter',
+        operationId: 'twitterauth',
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   components: {
     schemas: {
       User: {
@@ -457,6 +607,10 @@ const openApiDocumentation = {
           password: {
             type: 'string',
             description: 'User Password',
+          },
+           password: {
+            type: 'string',
+            description: 'Password Comfirmation',
           },
         },
       },
