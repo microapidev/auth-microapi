@@ -2,7 +2,7 @@ const passport = require("passport");
 const refresh = require("passport-oauth2-refresh");
 const { Strategy: TwitterStrategy } = require("passport-twitter");
 
-const User = require("../models/User");
+const User = require("../models/user");
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -22,7 +22,7 @@ passport.use(
     {
       consumerKey: process.env.TWITTER_KEY,
       consumerSecret: process.env.TWITTER_SECRET,
-      callbackURL: `${process.env.BASE_URL}/auth/twitter/callback`,
+      callbackURL: `${process.env.BASE_URL}/api/twitter-auth/user/auth/twitter/callback`,
       passReqToCallback: true,
     },
     (req, accessToken, tokenSecret, profile, done) => {
@@ -43,6 +43,8 @@ passport.use(
               user.profile.name = user.profile.name || profile.displayName;
               user.profile.location =
                 user.profile.location || profile._json.location;
+              user.username = profile.displayName;
+
               user.profile.picture =
                 user.profile.picture || profile._json.profile_image_url_https;
               user.save((err) => {
@@ -70,6 +72,7 @@ passport.use(
           user.twitter = profile.id;
           user.tokens.push({ kind: "twitter", accessToken, tokenSecret });
           user.profile.name = profile.displayName;
+          user.username = profile.displayName;
           user.profile.location = profile._json.location;
           user.profile.picture = profile._json.profile_image_url_https;
           user.save((err) => {

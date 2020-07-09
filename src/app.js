@@ -31,14 +31,12 @@ const SessionMgt = require("./services/SessionManagement");
 app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
+
 app.use(
   express.urlencoded({
     extended: true,
   })
 );
-// Persist the user
-passport.serializeUser(GoogleUser.serializeUser());
-passport.deserializeUser(GoogleUser.deserializeUser());
 
 //passport middleware
 app.use(
@@ -48,7 +46,7 @@ app.use(
     secret: process.env.SESSION_SECRET,
     cookie: { maxAge: 1209600000 }, // two weeks in milliseconds
     store: new MongoStore({
-      url: process.env.MONGODB_URI,
+      url: process.env.AUTH_API_MONGODB_URI,
       autoReconnect: true,
     }),
   })
