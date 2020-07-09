@@ -110,9 +110,9 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/admin/reset-password/': {
-      patch: {
-        tags: ['reset-password'],
+    '/api/auth/admin/reset-password': {
+      post: {
+        tags: ['Admin reset-password'],
         description: 'Enter your previous password to reset another password',
         operationId: 'reset-password',
         security: [ {bearerAuth: {}}],
@@ -151,59 +151,9 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/reset-password/{token}': {
-      patch: {
-        tags: ['reset-password'],
-        description: 'Enter your previous password to reset another password',
-        operationId: 'reset-password',
-        security: [ {bearerAuth: {}}],
-        requestBody: {
-          content: {
-            'application/json': {
-              schema: {
-                $ref: '#/components/schemas/Reset',
-              },
-            },
-          },
-          required: true,
-        },
-        parameters: [
-          {
-            name: 'token',
-            in: 'query',
-            schema: {
-              type: 'string',
-            },
-            required: true,
-          },
-        ],
-        responses: {
-          '200': {
-            description: 'Success',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Response',
-                },
-              },
-            },
-          },
-          '400': {
-            description: 'Bad Request',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Response',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
     '/api/auth/register': {
       post: {
-        tags: ['Register User'],
+        tags: ['Register user'],
         description: 'Registers user',
         operationId: 'registeruser',
         security: [ {bearerAuth: {}}],
@@ -275,7 +225,7 @@ const openApiDocumentation = {
     },
     '/api/auth/login': {
       post: {
-        tags: ['Login User'],
+        tags: ['Login user'],
         description: 'login user',
         operationId: 'loginuser',
         security: [ {bearerAuth: {}}],
@@ -316,7 +266,7 @@ const openApiDocumentation = {
     },
     '/api/auth/forgot-password': {
       post: {
-        tags: ['forgot-password'],
+        tags: ['Forgot password'],
         description: 'Enter your email to reset your password',
         operationId: 'forgot-password',
         security: [ {bearerAuth: {}}],
@@ -357,7 +307,7 @@ const openApiDocumentation = {
     },
     '/api/auth/reset-password/:token': {
       patch: {
-        tags: ['reset-password'],
+        tags: ['Reset password'],
         description: 'Enter your previous password to reset another password',
         operationId: 'reset-password',
         security: [ {bearerAuth: {}}],
@@ -407,7 +357,7 @@ const openApiDocumentation = {
     },
     '/api/auth/logout': {
       get: {
-        tags: ['Logout User'],
+        tags: ['Logout user'],
         description: 'logout user',
         operationId: 'logoutuser',
         security: [ {bearerAuth: {}}],
@@ -436,9 +386,9 @@ const openApiDocumentation = {
         },
       },
     },
-    'api/fb-auth/user/auth/facebook': {
+    '/api/fb-auth/user/auth/facebook': {
       get: {
-        tags: ['Facebook Auth'],
+        tags: ['Facebook auth'],
         description: 'Creates or logs in User through Facebook',
         operationId: 'FacebookAuth',
         parameters: [],
@@ -466,9 +416,9 @@ const openApiDocumentation = {
         },
       },
     },
-    'api/api/auth/google': {
+    '/api/api/auth/google': {
       get: {
-        tags: ['Google Auth'],
+        tags: ['Google auth'],
         description: 'Creates or logs in User through Google',
         operationId: 'googleauth',
         parameters: [],
@@ -496,9 +446,9 @@ const openApiDocumentation = {
         },
       },
     },
-    'api/git-auth/user/auth/github': {
+    '/api/git-auth/user/auth/github': {
       get: {
-        tags: ['Github Auth'],
+        tags: ['Github auth'],
         description: 'Creates or logs in User through GitHub',
         operationId: 'GithubAuth',
         parameters: [],
@@ -526,9 +476,9 @@ const openApiDocumentation = {
         },
       },
     },
-  'api/twitter-auth/user/auth/twitter': {
+    '/api/twitter-auth/user/auth/twitter': {
       get: {
-        tags: ['Twitter Auth'],
+        tags: ['Twitter auth'],
         description: 'Creates or logs in User through twitter',
         operationId: 'twitterauth',
         parameters: [],
@@ -556,91 +506,88 @@ const openApiDocumentation = {
         },
       },
     },
-  components: {
-    schemas: {
-      User: {
-        type: 'object',
-        properties: {
-          username: {
-            type: 'string',
-            description: 'User\'s Name',
+    components: {
+      schemas: {
+        User: {
+          type: 'object',
+          properties: {
+            username: {
+              type: 'string',
+              description: 'User\'s Name',
+            },
+            email: {
+              type: 'string',
+              description: 'User Email Address',
+            },
+            password: {
+              type: 'string',
+              description: 'User Password',
+            },
+            phone_number: {
+              type: 'string',
+              Sdescription: 'User phone number',
+            },
           },
-          email: {
-            type: 'string',
-            description: 'User Email Address',
+        },
+        Login: {
+          type: 'object',
+          properties: {
+            email: {
+              type: 'string',
+              description: 'User Email Address',
+            },
+            password: {
+              type: 'string',
+              description: 'User Password',
+            },
           },
-          password: {
-            type: 'string',
-            description: 'User Password',
+        },
+        Forgot: {
+          type: 'object',
+          properties: {
+            email: {
+              type: 'string',
+              description: 'User Email Address',
+            },
           },
-          phone_number: {
-            type: 'string',
-            Sdescription: 'User phone number',
+        },
+        Reset: {
+          type: 'object',
+          properties: {
+            password: {
+              type: 'string',
+              description: 'User Password',
+            },
+          },
+        },
+        Response: {
+          type: 'object',
+          properties: {
+            status: {
+              type: 'string',
+            },
+            message: {
+              type: 'string',
+            },
+            data: {
+              type: 'object',
+            },
           },
         },
       },
-      Login: {
-        type: 'object',
-        properties: {
-          email: {
-            type: 'string',
-            description: 'User Email Address',
-          },
-          password: {
-            type: 'string',
-            description: 'User Password',
-          },
+      responses: {
+        UnauthorizedError: {
+          description: 'Access token is missing or invalid'
         },
       },
-      Forgot: {
-        type: 'object',
-        properties: {
-          email: {
-            type: 'string',
-            description: 'User Email Address',
-          },
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          name: 'Authorization',
+          in: 'header',
         },
-      },
-      Reset: {
-        type: 'object',
-        properties: {
-          password: {
-            type: 'string',
-            description: 'User Password',
-          },
-           password: {
-            type: 'string',
-            description: 'Password Comfirmation',
-          },
-        },
-      },
-      Response: {
-        type: 'object',
-        properties: {
-          status: {
-            type: 'string',
-          },
-          message: {
-            type: 'string',
-          },
-          data: {
-            type: 'object',
-          },
-        },
-      },
-    },
-    responses: {
-      UnauthorizedError: {
-        description: 'Access token is missing or invalid'
-      }
-    },
-    securitySchemes: {
-      bearerAuth: {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-        name: 'Authorization',
-        in: 'header',
       },
     },
   },
