@@ -25,7 +25,6 @@ const openApiDocumentation = require('./swagger/openApiDocumentation');
 require('express-async-errors');
 require('dotenv').config();
 
-
 connectDB();
 const SessionMgt = require('./services/SessionManagement');
 
@@ -98,19 +97,17 @@ app.use(session({
 
 
 
-
-
 //passport middleware
-app.use(session({
-  secret: 'facebook-login-app',
-  resave: true,
-  saveUninitialized: true
-}));
+app.use(
+  session({
+    secret: 'facebook-login-app',
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
-
-
 
 // configure user session
 SessionMgt.config(app);
@@ -128,14 +125,10 @@ app.use('/api/auth/google', googleLoginRouter);
 
 // app.use('/api/admin/auth/email', emailVerificationRouter());
 
-
-
 app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
 // app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(unknownRoutes);
 app.use(errorHandler);
-
-
 
 module.exports = app;
