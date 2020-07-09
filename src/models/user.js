@@ -14,6 +14,15 @@ const userSchema = new mongoose.Schema({
     uniqueCaseInsensitive: true,
     required: [true, "Please add a name"],
   },
+  failedAttempts: {
+    count: {
+      type: Number,
+      default: 0,
+    },
+    lastAttempt: {
+      type: Date,
+    },
+  },
   email: {
     type: String,
     uniqueCaseInsensitive: true,
@@ -50,6 +59,13 @@ const userSchema = new mongoose.Schema({
     location: String,
     website: String,
     picture: String,
+  },
+  active: {
+    type: Number,
+    // 1 for active and 0 for not active
+    enum: [0, 1],
+    required: true,
+    default: 1,
   },
 });
 

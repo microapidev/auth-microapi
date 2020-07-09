@@ -18,9 +18,12 @@ const { errorHandler, unknownRoutes } = require("./utils/middleware");
 const { authorizeUser } = require("./controllers/auth");
 const swaggerUi = require("swagger-ui-express");
 const passport = require("passport");
-require("./config/passport");
-
 const openApiDocumentation = require("./swagger/openApiDocumentation");
+const adminFunctionRouter = require("./routes/admin");
+const GoogleUser = require("./models/googleUser");
+const googleLoginRouter = require("./routes/googleLogin");
+const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
+require("./config/passport");
 
 require("express-async-errors");
 require("dotenv").config();
@@ -52,11 +55,57 @@ app.use(
   })
 );
 
+// Handles via Google Login
 app.use(passport.initialize());
 app.use(passport.session());
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: `${process.env.HOST}/api/auth/google/callback`,
+    },
+    (accessToken, refreshToken, profile, done) => {
+      GoogleUser.findOne({ email: profile.emails[0].value }, (err, user) => {
+        if (err) {
+          return done(err);
+        }
+        // Check if the user is available
+        if (!user) {
+          let newUser = new GoogleUser({
+            googleId: profile.id,
+            username: profile.displayName.trim(),
+            firstname: profile.name.givenName,
+            lastname: profile.name.familyName,
+            email: profile.emails[0].value,
+            isVerified: profile.emails[0].verified,
+          });
+
+          newUser.save((err) => {
+            if (err) {
+              console.log(err);
+            }
+            console.log("===New=Google=Profile===");
+            return done(err, newUser);
+          });
+        } else {
+          console.log("===Existing=Google=Profile===");
+          // console.log(user);
+          return done(err, user);
+        }
+      });
+    }
+  )
+);
+// Persist the user
+passport.serializeUser(GoogleUser.serializeUser());
+passport.deserializeUser(GoogleUser.deserializeUser());
 
 // configure user session
 SessionMgt.config(app);
+
+// admin function routes
+app.use("/api/admin", adminFunctionRouter);
 
 // auth routes
 app.use("/api/auth/admin", adminRouter);
@@ -66,6 +115,7 @@ app.use("/api/auth/user", authorizeUser, userRouter);
 app.use("/api/fb-auth/user", fbRouter);
 app.use("/api/twitter-auth/user", twitterRouter);
 app.use("/api/git-auth/user", gitRouter);
+app.use("/api/auth/google", googleLoginRouter);
 
 // DON'T DELETE: Admin acc. verification
 
