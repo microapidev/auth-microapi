@@ -7,12 +7,22 @@ const findOrCreate = require('mongoose-findorcreate');
 const saltRounds = 10;
 const { JWT_EXPIRE, JWT_SECRET } = require('../utils/config');
 
+
 // Modified user model
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
     uniqueCaseInsensitive: true,
     required: [true, 'Please add a name'],
+  },
+  failedAttempts: {
+    count: {
+      type: Number,
+      default: 0,
+    },
+    lastAttempt: {
+      type: Date,
+    },
   },
   email: {
     type: String,
@@ -21,13 +31,13 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'Please enter a Password'],
+    // required: [true, "Please enter a Password"],
     minlength: 8,
     // select: false,
   },
   phone_number: {
     type: String,
-    required: [true, 'Please enter a phone number'],
+    // required: [true, "Please enter a phone number"],
     min: 10,
   },
   resetPasswordToken: String,
@@ -40,8 +50,24 @@ const userSchema = new mongoose.Schema({
   },
   isEmailVerified: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
+  twitter: String,
+  tokens: Array,
+  profile: {
+    name: String,
+    gender: String,
+    location: String,
+    website: String,
+    picture: String,
+  },
+  active: {
+    type: Number,
+    // 1 for active and 0 for not active
+    enum: [0, 1],
+    required: true,
+    default: 1,
+  },
 });
 
 userSchema.plugin(mongodbErrorHandler);
@@ -53,7 +79,7 @@ userSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     delete returnedObject._id;
     delete returnedObject.password;
-  }
+  },
 });
 
 userSchema.methods.matchPasswords = async function (enteredPassword) {
@@ -65,7 +91,7 @@ userSchema.pre('save', function () {
   // Check if password is present and is modified, then hash
   const user = this;
 
-  // commented to allow hashing of password on password reset 
+  // commented to allow hashing of password on password reset
   // if (user.password && user.isModified('password')) {
   if (user.password) {
     user.password = bcrypt.hashSync(user.password, saltRounds);
@@ -85,9 +111,11 @@ userSchema.methods.generateToken = async function () {
 userSchema.statics.findByToken = function (token, cb) {
   let user = this;
 
-  jwt.verify(token,'secret',(err, decode) => {
-    user.findOne({'_id':decode, 'token':token}, (err, user) => {
-      if(err) {return cb(err);}
+  jwt.verify(token, 'secret', (err, decode) => {
+    user.findOne({ _id: decode, token: token }, (err, user) => {
+      if (err) {
+        return cb(err);
+      }
       cb(null, user);
     });
   });

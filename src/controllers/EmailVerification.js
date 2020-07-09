@@ -19,12 +19,8 @@ class EmailVerification{
   }
 
   async resendVerification(req, res){
-    console.log(req);
-
-    response.status(404).send(response('Stil working on it...', {}));
-
+    const data = await EmailVerService.resendVerificationEmail(req);
+    return res.status(200).send(response('New Verification Link Sent.', data));
   }
-
 }
-
 module.exports = new EmailVerification();

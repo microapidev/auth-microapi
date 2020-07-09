@@ -8,7 +8,11 @@ adminRouter.post('/register', registerValidation(), adminRegister);
 
 adminRouter.post('/getkey', loginValidation(), adminGetKey);
 
-adminRouter.post('/forgot-password', forgotValidation(), adminForgotPassword);
+adminRouter.post('/reset-password', forgotValidation(), adminForgotPassword);
+
+adminRouter.get('/reset-password/:token', (request, response, next) => {
+  response.status(200).send('It\'s cool you\'re here 😁, but you should be using postman to send a PATCH request to change password via this url!');
+});
 
 adminRouter.patch('/reset-password/:token', resetPasswordValidation(), adminResetPassword);
 
