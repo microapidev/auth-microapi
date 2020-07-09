@@ -7,6 +7,8 @@ const cookieParser = require("cookie-parser");
 const userRouter = require("./routes/auth");
 const adminRouter = require("./routes/adminAuth");
 const fbRouter = require("./routes/fbauth");
+const session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
 const twitterRouter = require("./routes/twitterAuth");
 const gitRouter = require("./routes/gitauth");
 const emailVerificationRouter = require("./routes/EmailVerification");
@@ -16,7 +18,7 @@ const { errorHandler, unknownRoutes } = require("./utils/middleware");
 const { authorizeUser } = require("./controllers/auth");
 const swaggerUi = require("swagger-ui-express");
 const passport = require("passport");
-const session = require("express-session");
+require("./config/passport");
 
 const openApiDocumentation = require("./swagger/openApiDocumentation");
 
@@ -41,26 +43,14 @@ passport.deserializeUser(GoogleUser.deserializeUser());
 //passport middleware
 app.use(
   session({
-    secret: "facebook-login-app",
     resave: true,
     saveUninitialized: true,
-  })
-);
-
-// initialize express-session to allow us track the logged-in user.
-// app.use(session({
-//   key: 'user_sid',
-//   secret: 'somerandonstuffsjl',
-//   resave: false,
-//   saveUninitialized: false,
-// }));
-
-//passport middleware
-app.use(
-  session({
-    secret: "facebook-login-app",
-    resave: true,
-    saveUninitialized: true,
+    secret: process.env.SESSION_SECRET,
+    cookie: { maxAge: 1209600000 }, // two weeks in milliseconds
+    store: new MongoStore({
+      url: process.env.MONGODB_URI,
+      autoReconnect: true,
+    }),
   })
 );
 
