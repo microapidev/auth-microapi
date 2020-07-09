@@ -9,6 +9,7 @@ const EmailVerification = require('../models/EmailVerification');
 const User = require('../models/user');
 // const AdminUser = require('../models/admin');
 const { CustomError } = require('../utils/CustomError');
+const verifyEmail = require('../utils/EmailVerification');
 
 class EmailVerificationService{
 
@@ -40,8 +41,29 @@ class EmailVerificationService{
     return {
       isVerified: userData.isEmailVerified
     };
-    
   }
+
+  async resendVerificationEmail(req){
+    /* GET new token for verification */
+    console.log('===Retrieved User===');
+    console.log(req.user);
+    if(!req.user){
+      return  {
+        code: 403,
+        message: 'Login first to request a new link'
+      };
+    }
+
+    //Sends new token
+    let data = await verifyEmail.createVerificationLink(req.user, req);
+    return  {
+      code: 200,
+      message: 'New Verification Link Sent'
+    };     
+
+  }
+
+
 
   // ================
   logger(msg){
