@@ -13,16 +13,14 @@ https://docs.google.com/spreadsheets/d/1aNd-d2mQIOHOYnCLvG1wHn7pYS2XqHnmDSzABABQ
 - [x] Email verification
 - [x] Password recovery ("forgot password")
 - [ ] Password reset ("update password")
-- [ ] Social authentication
-- [ ] Rate limiting
-- [x] Persistent login
+- [x] Social authentication ("twitter, facebook, github, google")
+- [x] Rate limiting ("lockout on unsuccessful login attempts")
+- [ ] Persistent login ("remember me")
 
 ## Prerequisites:
-- Node v~12.16.0
+- node v~12.16.0
 - npm v~6.14.5
-- MongoDB Atlas URI
-- Sendgrid APIKEY
-- Clone repo
+- MongoDB Atlas URI, Sendgrid APIKEY, Social Auth keys
 
 ## Setup:
 - `cd auth-microapi`
@@ -37,19 +35,21 @@ Use Postman to test endpoints
 ## API
 | Method | URI                                      | PARAMS                                  | HEADERS                                       |
 | :---   | :----                                    | :----:                                  | :----:                                        |
-| POST   | api/admin/auth/reigster                  | email, username, password, phone_number | application/json                              |
-| POST   | api/admin/auth/forgot-password           |                  email                  |             application/json                  |
-| PATCH  | api/admin/auth/reset-password/:token     |                 password                |             application/json                  |
-| POST   | api/admin/auth/getkey                    | email, password                         | application/json                              |
-| *POST  | api/auth/register                        | email, username, password, phone_number | application/json, Authorization: Bearer token |
-| POST   | api/auth/email/verification:token        |               -                         | application/json, Authorization: Bearer token |
-| GET    | api/auth/email/resend/verification       |                   -                     | application/json, Authorization: Bearer token |
-| *POST  | api/auth/login                           | email, password                         | application/json, Authorization: Bearer token |
-| *GET   | api/auth/logout                          |                -                        |             Authorization: Bearer token       |
-| Get    | api/fbauth/auth/facebook                 |      ------                             |                                               |
-| Get    | api/gitauth/auth/github                  |      ------                             |                                               |
-| POST   | api/auth/forgot-password                 |                  email                  | application/json, Authorization: Bearer token |
-| PATCH  | api/auth/reset-password/:token           |                 password                | application/json, Authorization: Bearer token |
+| POST   | api/auth/admin/reigster                  | email, username, password, phone_number | application/json                              |
+| POST   |  api/auth/admin/getkey                   |               email, password           |             application/json                  |
+| POST   | api/auth/admin/reset-password            |       email                             |             application/json                  |
+| PATCH  | api/auth/admin/reset-password/:token     |      password, password_confirmation    | application/json                              |
+| POST   | api/auth/user/register                   | email, username, password, phone_number | application/json, Authorization: Bearer token |
+| GET    | api/auth/user/email-verification/:token  |               -                         | application/json, Authorization: Bearer token |
+| GET    | api/auth/user/email-verification/resend  |                   -                     | application/json, Authorization: Bearer token |
+| POST   | api/auth/user/login                      | email, password                         | application/json, Authorization: Bearer token |
+| POST   | api/auth/user/password/reset             | email                                   | application/json, Authorization: Bearer token |
+| PATCH  | api/auth/user/password/:token            | password, password_confirmation         | application/json, Authorization: Bearer token |
+| GET    | api/auth/user/logout                     |                -                        |             Authorization: Bearer token       |
+| GET    | api/fb-auth/user/auth/facebook           | ------                                  | Authorization: Bearer token                   |
+| GET    | api/twitter-auth/user/auth/twitter       |  ------                                 | Authorization: Bearer token                   |
+| GET    | api/git-auth/user/auth/github            |      ------                             | Authorization: Bearer token                   |
+| GET    | api/api/auth/google                      |      ------                             | Authorization: Bearer token                   |
 
 * *(get Authorization token from api/admin/auth/getkey)
 
