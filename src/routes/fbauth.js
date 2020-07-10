@@ -39,9 +39,9 @@ passport.use(new FacebookStrategy({
     
 })
 ));
-fbRouter.get('/auth/facebook', passport.authenticate('facebook'));
+fbRouter.get('/', passport.authenticate('facebook'));
 
-fbRouter.get('/auth/facebook/callback',
+fbRouter.get('/callback',
   passport.authenticate('facebook', { failureRedirect: '/login' }),
   (req, res) => {
   // Successful authentication, redirect home.
