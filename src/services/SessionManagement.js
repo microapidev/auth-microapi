@@ -9,7 +9,7 @@ require('express-async-errors');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const mongoStoreFactory = require('connect-mongo')(session);
-const { v4: uuidv4 } = require('uuid');
+// const { v4: uuidv4 } = require('uuid');
 
 
 // persistence store of our session
@@ -23,9 +23,9 @@ class SessionManagement {
   async config(app) {
     app.use(session({
       store: sessionStore,
-      genid: function(request) {
-        return uuidv4();; // use UUIDs for session IDs
-      },
+      // genid: function(request) {
+      //   return uuidv4();; // use UUIDs for session IDs
+      // },
       secret: 'canyoukeepasecret',
       saveUninitialized: true,
       resave: false,
