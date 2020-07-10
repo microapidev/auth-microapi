@@ -116,7 +116,7 @@ const openApiDocumentation = {
     },
     '/api/auth/admin/reset-password': {
       post: {
-        tags: ['Admin reset-password'],
+        tags: ['Admin reset password'],
         description: 'Get new password in case of forgotten password',
         operationId: 'reset-password',
         security: [ {bearerAuth: {}}],
@@ -157,7 +157,7 @@ const openApiDocumentation = {
     },
     '/api/auth/admin/reset-password/{token}': {
       patch: {
-        tags: ['Admin reset-password'],
+        tags: ['Admin chanage password'],
         description: 'Get new password in case of forgotten password',
         operationId: 'reset-password',
         security: [ {bearerAuth: {}}],
