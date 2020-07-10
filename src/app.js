@@ -1,35 +1,35 @@
-require("express-async-errors");
-require("dotenv").config();
-const express = require("express");
+require('express-async-errors');
+require('dotenv').config();
+const express = require('express');
 const app = express();
-const cors = require("cors");
-const cookieParser = require("cookie-parser");
-const userRouter = require("./routes/auth");
-const adminRouter = require("./routes/adminAuth");
-const fbRouter = require("./routes/fbauth");
-const session = require("express-session");
-const MongoStore = require("connect-mongo")(session);
-const twitterRouter = require("./routes/twitterAuth");
-const gitRouter = require("./routes/gitauth");
-const emailVerificationRouter = require("./routes/EmailVerification");
-const resetPasswordRouter = require("./routes/resetPassword");
-const { connectDB } = require("./controllers/db");
-const { errorHandler, unknownRoutes } = require("./utils/middleware");
-const { authorizeUser } = require("./controllers/auth");
-const swaggerUi = require("swagger-ui-express");
-const passport = require("passport");
-const openApiDocumentation = require("./swagger/openApiDocumentation");
-const adminFunctionRouter = require("./routes/admin");
-const GoogleUser = require("./models/googleUser");
-const googleLoginRouter = require("./routes/googleLogin");
-const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
-require("./config/passport");
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const userRouter = require('./routes/auth');
+const adminRouter = require('./routes/adminAuth');
+const fbRouter = require('./routes/fbauth');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+const twitterRouter = require('./routes/twitterAuth');
+const gitRouter = require('./routes/gitauth');
+const emailVerificationRouter = require('./routes/EmailVerification');
+const resetPasswordRouter = require('./routes/resetPassword');
+const { connectDB } = require('./controllers/db');
+const { errorHandler, unknownRoutes } = require('./utils/middleware');
+const { authorizeUser } = require('./controllers/auth');
+const swaggerUi = require('swagger-ui-express');
+const passport = require('passport');
+const openApiDocumentation = require('./swagger/openApiDocumentation');
+const adminFunctionRouter = require('./routes/admin');
+const GoogleUser = require('./models/googleUser');
+const googleLoginRouter = require('./routes/googleLogin');
+const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+require('./config/passport');
 
-require("express-async-errors");
-require("dotenv").config();
+require('express-async-errors');
+require('dotenv').config();
 
 connectDB();
-const SessionMgt = require("./services/SessionManagement");
+const SessionMgt = require('./services/SessionManagement');
 
 app.use(cors());
 app.use(cookieParser());
@@ -85,11 +85,11 @@ passport.use(
             if (err) {
               console.log(err);
             }
-            console.log("===New=Google=Profile===");
+            console.log('===New=Google=Profile===');
             return done(err, newUser);
           });
         } else {
-          console.log("===Existing=Google=Profile===");
+          console.log('===Existing=Google=Profile===');
           // console.log(user);
           return done(err, user);
         }
@@ -105,26 +105,26 @@ passport.deserializeUser(GoogleUser.deserializeUser());
 SessionMgt.config(app);
 
 // admin function routes
-app.use("/api/admin", adminFunctionRouter);
+app.use('/api/admin', adminFunctionRouter);
 
 // auth routes
-app.use("/api/auth/admin", adminRouter);
-app.use("/api/auth/user/email-verification", emailVerificationRouter());
-app.use("/api/auth/user/password", resetPasswordRouter);
-app.use("/api/auth/user", authorizeUser, userRouter);
-app.use("/api/auth/facebook", authorizeUser, fbRouter);
-app.use("/api/auth/twitter", authorizeUser, twitterRouter);
-app.use("/api/auth/github", authorizeUser, gitRouter);
-app.use("/api/auth/google", authorizeUser, googleLoginRouter);
+app.use('/api/auth/admin', adminRouter);
+app.use('/api/auth/user/email-verification', emailVerificationRouter());
+app.use('/api/auth/user/password', resetPasswordRouter);
+app.use('/api/auth/user', authorizeUser, userRouter);
+app.use('/api/auth/facebook', fbRouter);
+app.use('/api/auth/twitter', twitterRouter);
+app.use('/api/auth/github', gitRouter);
+app.use('/api/auth/google', googleLoginRouter);
 
 // DON'T DELETE: Admin acc. verification
 
 // app.use('/api/admin/auth/email', emailVerificationRouter());
 
-app.use("/api/doc", swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
+app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
 // app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(unknownRoutes);
-// app.use(errorHandler);
+app.use(errorHandler);
 
 module.exports = app;
