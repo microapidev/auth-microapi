@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 const mongodbErrorHandler = require('mongoose-mongodb-errors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const findOrCreate = require('mongoose-findorcreate');
 // const moment = require('moment');
 const saltRounds = 10;
-const { JWT_EXPIRE, JWT_SECRET, JWT_ADMIN_SECRET, APP_DB } = require('../utils/config');
+const { JWT_EXPIRE, JWT_SECRET, JWT_ADMIN_SECRET, AUTH_API_DB } = require('../utils/config');
 
 // Modified user model
 const userSchema = new mongoose.Schema({
@@ -29,10 +30,6 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Please enter a phone number'],
     min: 10,
   },
-  // isEmailVerified:{
-  //   type: Boolean,
-  //   default: false
-  // },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
   createdAt: {
@@ -40,7 +37,7 @@ const userSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
-
+userSchema.plugin(findOrCreate);
 userSchema.plugin(mongodbErrorHandler);
 
 // remove password, _id and return id instead whenever user is retrieved from db
@@ -62,7 +59,9 @@ userSchema.pre('save', function () {
   // Check if password is present and is modified, then hash
   const user = this;
 
-  if (user.password && user.isModified('password')) {
+  // commented to allow hashing of password on password reset
+  // if (user.password && user.isModified('password')) {
+  if (user.password) {
     user.password = bcrypt.hashSync(user.password, saltRounds);
   }
 });
@@ -74,7 +73,7 @@ userSchema.methods.generateAPIKEY = function () {
     {
       id: admin.id,
       email: admin.email,
-      DBURI: APP_DB
+      DBURI: AUTH_API_DB
     },
     JWT_ADMIN_SECRET
   );

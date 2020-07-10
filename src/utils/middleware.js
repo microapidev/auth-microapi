@@ -1,36 +1,12 @@
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
 const { JWT_ADMIN_SECRET } = require('../utils/config');
+const CustomResponse = require('../utils/response');
 
 
 const auth = async (request, response, next) => {
-  // This middleware will check if client's cookie is still saved in user agent
-  // const token = request.cookies.w_auth;
 
-  // console.log(token)
-
-  // const user = await User.findByToken(token);
-
-  // if (!user) {
-  //   return response.status(301).json({
-  //     sucess: false,
-  //     msg: "UnAuthorised"
-  //   })
-  // }
-
-  // console.log("middleware token", user)
-
-  // request.token = token;
-  // request.user = user;
-
-  // if (request.cookies.user_sid && !request.session.user && !request.session.isAdmin) {
-  //   response.clearCookie('user_sid');
-  // }
-
-  // next();
   let token = request.cookies.w_auth;
-
-  // console.log("token middleware", token)
 
   const user = await User.findByToken(token);
   console.log('findByToken', user);
@@ -55,27 +31,43 @@ const auth = async (request, response, next) => {
 const unknownRoutes = (request, response, next) => {
   // This middleware returns response when client tries to access unknown routes through this domain
   response.status(404).send({ error: 'unknown endpoint' });
-
 };
 
-const errorHandler = (error, request, response, next) => {
-  // This middleware handles errors responses sent to client
-  if (error.name === 'CastError') {
-    return response.status(400).send({
-      error: 'malformatted id'
-    });
-  } else if (error.name === 'ValidationError') {
-    return response.status(400).json({
-      error: error.message,
-      name: error.name
-    });
-  } else if (error.name === 'JsonWebTokenError') {
-    return response.status(401).json({
-      error: 'invalid token'
-    });
-  }
+// const errorHandler = (error, request, response, next) => {
+//   // This middleware handles errors responses sent to client
+//   if (error.name === 'ValidationError') {
+//     response.status(400).json(
+//       CustomResponse('ValidationError', { statusCode: 422, message: error.message }, false)
+//     );
+//   } else if (error.name === 'SyntaxError') {
+//     response.status(401).json(
+//       CustomResponse('SyntaxError', { statusCode: 422, message: error.message }, false)
+//     );
+//   } else if (error.name === 'JsonWebTokenError') {
+//     response.status(401).json(
+//       CustomResponse('JsonWebTokenError', { statusCode: 401, message: error.message }, false)
+//     );
+//   } else if (error.name === 'CustomError') {
+//     response.status(error.status).json(
+//       CustomResponse(error.message, { statusCode: error.status, message: error.message }, false)
+//     );
+//   } else if (error.name === 'TypeError') {
+//     response.status(400).send('fn error');
+//   }
+//   // else {
+//   //   response.status(500).json(CustomResponse('Unhandled Error', error = { statusCode: 500, message: 'Unhandled Error' }, false));
+//   // }
+//   next(error);
+// };
 
-  next(error);
+const errorHandler = (error, req, res, next) => {
+  return res.status(error.status || 500).json({
+    error: {
+      message: error.message || 'Oops Something wrong!',
+      status: error.status,
+      name: error.name
+    }
+  });
 };
 
 module.exports = {
