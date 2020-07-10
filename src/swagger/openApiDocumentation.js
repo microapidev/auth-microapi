@@ -15,7 +15,11 @@ const openApiDocumentation = {
     },
     {
       url: 'https://auth-microapi.herokuapp.com',
-      description: 'Production Server',
+      description: 'Staging Server',
+    },
+    {
+      url: 'https://auth.microapi.dev',
+      description: 'Staging Server',
     }
   ],
   tags: [
