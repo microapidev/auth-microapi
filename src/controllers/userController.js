@@ -3,7 +3,7 @@
 
 const userModel = require("../models/user");
 
-const { ErrorResponse } = require("../utils/error");
+const { ErrorResponse } = require("../utils/errors");
 
 
 const last30DAys = Date.now() - 30;

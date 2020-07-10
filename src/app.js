@@ -63,7 +63,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: `${process.env.HOST}/api/auth/google/callback`,
+      callbackURL: `${process.env.HOST}/callback`,
     },
     (accessToken, refreshToken, profile, done) => {
       GoogleUser.findOne({ email: profile.emails[0].value }, (err, user) => {
@@ -112,10 +112,10 @@ app.use('/api/auth/admin', adminRouter);
 app.use('/api/auth/user/email-verification', emailVerificationRouter());
 app.use('/api/auth/user/password', resetPasswordRouter);
 app.use('/api/auth/user', authorizeUser, userRouter);
-app.use('/api/auth/facebook', authorizeUser, fbRouter);
-app.use('/api/auth/twitter', authorizeUser, twitterRouter);
-app.use('/api/auth/github', authorizeUser, gitRouter);
-app.use('/api/auth/google', authorizeUser, googleLoginRouter);
+app.use('/api/auth/facebook', fbRouter);
+app.use('/api/auth/twitter', twitterRouter);
+app.use('/api/auth/github',  gitRouter);
+app.use('/api/auth/google',  googleLoginRouter);
 
 // DON'T DELETE: Admin acc. verification
 

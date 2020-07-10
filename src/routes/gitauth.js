@@ -17,7 +17,7 @@ passport.deserializeUser((id, done) => {
   User.findById(id, (err, user) => {
     done(err, user);
   });
-  
+
 
 
 });
@@ -27,7 +27,7 @@ passport.deserializeUser((id, done) => {
 passport.use(new GitHubStrategy({
   clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_CLIENT_SECRET,
-  callbackURL: 'https://auth-microapi.herokuapp.com/callback'
+  callbackURL: 'https://auth.microapi.dev/callback'
 },
 ((accessToken, refreshToken, profile, cb) => {
   User.findOrCreate({ githubId: profile.id }, (err, user) => {
