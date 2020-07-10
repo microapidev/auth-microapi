@@ -37,10 +37,10 @@ passport.use(new GitHubStrategy({
 ));
 
 
-gitRouter.get('/auth/github',
+gitRouter.get('/',
   passport.authenticate('github'));
 
-gitRouter.get('/auth/github/callback',
+gitRouter.get('/callback',
   passport.authenticate('github', { failureRedirect: '/login' }),
   (req, res) => {
     // Successful authentication, redirect home.
