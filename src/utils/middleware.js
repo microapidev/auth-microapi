@@ -33,31 +33,41 @@ const unknownRoutes = (request, response, next) => {
   response.status(404).send({ error: 'unknown endpoint' });
 };
 
-const errorHandler = (error, request, response, next) => {
-  // This middleware handles errors responses sent to client
-  if (error.name === 'ValidationError') {
-    response.status(400).json(
-      CustomResponse('ValidationError', { statusCode: 422, message: error.message }, false)
-    );
-  } else if (error.name === 'SyntaxError') {
-    response.status(401).json(
-      CustomResponse('SyntaxError', { statusCode: 422, message: error.message }, false)
-    );
-  } else if (error.name === 'JsonWebTokenError') {
-    response.status(401).json(
-      CustomResponse('JsonWebTokenError', { statusCode: 401, message: error.message }, false)
-    );
-  } else if (error.name === 'CustomError') {
-    response.status(error.status).json(
-      CustomResponse(error.message, { statusCode: error.status, message: error.message }, false)
-    );
-  } else if (error.name === 'TypeError') {
-    response.status(400).send('fn error');
-  }
-  // else {
-  //   response.status(500).json(CustomResponse('Unhandled Error', error = { statusCode: 500, message: 'Unhandled Error' }, false));
-  // }
-  next(error);
+// const errorHandler = (error, request, response, next) => {
+//   // This middleware handles errors responses sent to client
+//   if (error.name === 'ValidationError') {
+//     response.status(400).json(
+//       CustomResponse('ValidationError', { statusCode: 422, message: error.message }, false)
+//     );
+//   } else if (error.name === 'SyntaxError') {
+//     response.status(401).json(
+//       CustomResponse('SyntaxError', { statusCode: 422, message: error.message }, false)
+//     );
+//   } else if (error.name === 'JsonWebTokenError') {
+//     response.status(401).json(
+//       CustomResponse('JsonWebTokenError', { statusCode: 401, message: error.message }, false)
+//     );
+//   } else if (error.name === 'CustomError') {
+//     response.status(error.status).json(
+//       CustomResponse(error.message, { statusCode: error.status, message: error.message }, false)
+//     );
+//   } else if (error.name === 'TypeError') {
+//     response.status(400).send('fn error');
+//   }
+//   // else {
+//   //   response.status(500).json(CustomResponse('Unhandled Error', error = { statusCode: 500, message: 'Unhandled Error' }, false));
+//   // }
+//   next(error);
+// };
+
+const errorHandler = (error, req, res, next) => {
+  return res.status(error.status || 500).json({
+    error: {
+      message: error.message || 'Oops Something wrong!',
+      status: error.status,
+      name: error.name
+    }
+  });
 };
 
 module.exports = {
