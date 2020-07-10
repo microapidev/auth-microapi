@@ -121,7 +121,7 @@ app.use('/api/auth/google', authorizeUser, googleLoginRouter);
 
 // app.use('/api/admin/auth/email', emailVerificationRouter());
 
-app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
+app.use('/', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
 // app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(unknownRoutes);
