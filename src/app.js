@@ -112,9 +112,9 @@ app.use('/api/auth/admin', adminRouter);
 app.use('/api/auth/user/email-verification', emailVerificationRouter());
 app.use('/api/auth/user/password', resetPasswordRouter);
 app.use('/api/auth/user', authorizeUser, userRouter);
-app.use('/api/fb-auth/user', authorizeUser, fbRouter);
-app.use('/api/twitter-auth/user', authorizeUser, twitterRouter);
-app.use('/api/git-auth/user', authorizeUser, gitRouter);
+app.use('/api/auth/facebook', authorizeUser, fbRouter);
+app.use('/api/auth/twitter', authorizeUser, twitterRouter);
+app.use('/api/auth/github', authorizeUser, gitRouter);
 app.use('/api/auth/google', authorizeUser, googleLoginRouter);
 
 // DON'T DELETE: Admin acc. verification

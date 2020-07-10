@@ -611,6 +611,10 @@ const openApiDocumentation = {
       url: 'http:localhost:5000',
       description: 'Local Server',
     },
+    {
+      url: 'https://auth-microapi.herokuapp.com',
+      description: 'Production Server',
+    }
   ],
   tags: [
     {
@@ -626,7 +630,7 @@ const openApiDocumentation = {
   },
   //input api paths in here
   paths: {
-    '/api/admin/auth/register': {
+    '/api/auth/admin/register': {
       post: {
         tags: ['Register Admin'],
         description: 'Registers admin',
@@ -667,7 +671,7 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/admin/auth/getkey': {
+    '/api/auth/admin/getkey': {
       post: {
         tags: ['Get APIKEY'],
         description: 'login user',
@@ -711,7 +715,7 @@ const openApiDocumentation = {
     '/api/auth/admin/reset-password': {
       post: {
         tags: ['Admin reset-password'],
-        description: 'Enter your previous password to reset another password',
+        description: 'Get new password in case of forgotten password',
         operationId: 'reset-password',
         security: [ {bearerAuth: {}}],
         requestBody: {
@@ -751,8 +755,8 @@ const openApiDocumentation = {
     },
     '/api/auth/admin/reset-password/{token}': {
       patch: {
-        tags: ['Admin change password'],
-        description: 'Enter your previous password to reset another password',
+        tags: ['Admin reset-password'],
+        description: 'Get new password in case of forgotten password',
         operationId: 'reset-password',
         security: [ {bearerAuth: {}}],
         requestBody: {
@@ -799,7 +803,7 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/register': {
+    '/api/auth/user/register': {
       post: {
         tags: ['Register User'],
         description: 'Registers user',
@@ -840,11 +844,11 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/resend/verification': {
+    '/api/auth/user/email-verification/resend': {
       get: {
         tags: ['Email resend verification'],
         description: 'email resend varification',
-        operationId: 'veryfyuseremail',
+        operationId: 'verifyuseremail',
         security: [ {bearerAuth: {}}],
         parameters: [],
         responses: {
@@ -871,7 +875,7 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/login': {
+    '/api/auth/user/login': {
       post: {
         tags: ['Login User'],
         description: 'login user',
@@ -912,7 +916,7 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/forgot-password': {
+    '/api/auth/user/password/reset': {
       post: {
         tags: ['forgot-password'],
         description: 'Enter your email to reset your password',
@@ -953,10 +957,10 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/reset-password/{token}': {
+    '/api/auth/user/password/{token}': {
       patch: {
         tags: ['reset-password'],
-        description: 'Enter your previous password to reset another password',
+        description: 'Enter your new password to reset password',
         operationId: 'reset-password',
         security: [ {bearerAuth: {}}],
         requestBody: {
@@ -1003,7 +1007,7 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/fb-auth/user/auth/facebook': {
+    '/api/auth/facebook': {
       get: {
         tags: ['Facebook Auth'],
         description: 'Creates or logs in User through Facebook',
@@ -1033,7 +1037,7 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/api/auth/google': {
+    '/api/auth/google': {
       get: {
         tags: ['Google Auth'],
         description: 'Creates or logs in User through Google',
@@ -1063,7 +1067,7 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/twitter-auth/user/auth/twitter': {
+    '/api/auth/twitter': {
       get: {
         tags: ['Twitter Auth'],
         description: 'Creates or logs in User through Twitter',
@@ -1093,7 +1097,7 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/git-auth/user/auth/github': {
+    '/api/auth/github': {
       get: {
         tags: ['Github Auth'],
         description: 'Creates or logs in User through GitHub',
@@ -1124,7 +1128,7 @@ const openApiDocumentation = {
       },
     }
   },
-  '/api/auth/logout': {
+  '/api/auth/user/logout': {
     get: {
       tags: ['Logout User'],
       description: 'logout user',
