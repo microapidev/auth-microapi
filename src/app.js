@@ -42,18 +42,18 @@ app.use(
 );
 
 //passport middleware
-// app.use(
-//   session({
-//     resave: true,
-//     saveUninitialized: true,
-//     secret: process.env.SESSION_SECRET,
-//     cookie: { maxAge: 1209600000 }, // two weeks in milliseconds
-//     store: new MongoStore({
-//       url: process.env.AUTH_API_MONGODB_URI,
-//       autoReconnect: true,
-//     }),
-//   })
-// );
+app.use(
+  session({
+    resave: true,
+    saveUninitialized: true,
+    secret: process.env.SESSION_SECRET,
+    cookie: { maxAge: 1209600000 }, // two weeks in milliseconds
+    store: new MongoStore({
+      url: process.env.AUTH_API_MONGODB_URI,
+      autoReconnect: true,
+    }),
+  })
+);
 
 // Handles via Google Login
 app.use(passport.initialize());
@@ -112,16 +112,28 @@ app.use('/api/auth/admin', adminRouter);
 app.use('/api/auth/user/email-verification', emailVerificationRouter());
 app.use('/api/auth/user/password', resetPasswordRouter);
 app.use('/api/auth/user', authorizeUser, userRouter);
+<<<<<<< HEAD
 app.use('/api/auth/facebook', fbRouter);
 app.use('/api/auth/twitter', twitterRouter);
 app.use('/api/auth/github',  gitRouter);
 app.use('/api/auth/google',  googleLoginRouter);
+||||||| merged common ancestors
+app.use('/api/auth/facebook', authorizeUser, fbRouter);
+app.use('/api/auth/twitter', authorizeUser, twitterRouter);
+app.use('/api/auth/github', authorizeUser, gitRouter);
+app.use('/api/auth/google', authorizeUser, googleLoginRouter);
+=======
+app.use('/api/auth/facebook', fbRouter);
+app.use('/api/auth/twitter', twitterRouter);
+app.use('/api/auth/github', gitRouter);
+app.use('/api/auth/google', googleLoginRouter);
+>>>>>>> 19adb0e8735920407d926c79ddb243ff3134b1c5
 
 // DON'T DELETE: Admin acc. verification
 
 // app.use('/api/admin/auth/email', emailVerificationRouter());
 
-app.use('/', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
+app.use('/api/doc', swaggerUi.serve, swaggerUi.setup(openApiDocumentation));
 // app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use(unknownRoutes);

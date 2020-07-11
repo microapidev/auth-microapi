@@ -22,7 +22,13 @@ passport.use(
     {
       consumerKey: process.env.TWITTER_KEY,
       consumerSecret: process.env.TWITTER_SECRET,
+<<<<<<< HEAD
       callbackURL: `${process.env.BASE_URL}/callback`,
+||||||| merged common ancestors
+      callbackURL: `${process.env.BASE_URL}/api/twitter-auth/user/auth/twitter/callback`,
+=======
+      callbackURL: `${process.env.BASE_URL}/api/auth/twitter/callback`,
+>>>>>>> 19adb0e8735920407d926c79ddb243ff3134b1c5
       passReqToCallback: true,
     },
     (req, accessToken, tokenSecret, profile, done) => {
@@ -32,7 +38,7 @@ passport.use(
             return done(err);
           }
           if (existingUser) {
-            done(err);
+            done(null, existingUser);
           } else {
             User.findById(req.user.id, (err, user) => {
               if (err) {
@@ -129,10 +135,11 @@ exports.isAuthorized = (req, res, next) => {
                 user.tokens.some((tokenObject) => {
                   if (tokenObject.kind === provider) {
                     tokenObject.accessToken = accessToken;
-                    if (params.expires_in)
-                    {tokenObject.accessTokenExpires = moment()
-                      .add(params.expires_in, 'seconds')
-                      .format();}
+                    if (params.expires_in) {
+                      tokenObject.accessTokenExpires = moment()
+                        .add(params.expires_in, 'seconds')
+                        .format();
+                    }
                     return true;
                   }
                   return false;
@@ -140,7 +147,9 @@ exports.isAuthorized = (req, res, next) => {
                 req.user = user;
                 user.markModified('tokens');
                 user.save((err) => {
-                  if (err) {console.log(err);}
+                  if (err) {
+                    console.log(err);
+                  }
                   next();
                 });
               });
