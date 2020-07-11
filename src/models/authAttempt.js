@@ -22,8 +22,4 @@ const authAttemptSchema = new mongoose.Schema({
 },{timestamps:true});
 
 
-authAttemptSchema.statics.record = (user,state) => {
-
-}
-
 module.exports = mongoose.model('AuthAttempt',authAttemptSchema);

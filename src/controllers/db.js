@@ -1,12 +1,12 @@
 const { AUTH_API_DB } = require('../utils/config');
 const mongoose = require('mongoose');
-mongoose.set('debug', true);
+// mongoose.set('debug', true);
 
 const connectDB = () => {
   console.log('Connecting to database...');
 
   mongoose.connect(
-    AUTH_API_DB,
+    'mongodb://localhost:27017/authstuff',
     {
       keepAlive: true,
       useNewUrlParser: true,

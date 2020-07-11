@@ -15,6 +15,8 @@ const SessionMgt = require('../services/SessionManagement');
 const { createVerificationLink } = require('../utils/EmailVerification');
 const CustomResponse = require('../utils/response');
 const { CustomError } = require('../utils/CustomError');
+const {recordAttempt} = require('../utils/authAttempt');
+
 
 exports.userRegistration = async (request, response) => {
   // Register as guest
@@ -29,7 +31,7 @@ exports.userRegistration = async (request, response) => {
 
   user = new User({ ...request.body });
   user = await user.save();
-
+  recordAttempt(user,'successful','local');
   // Send a confirmation link to email
   const mailStatus = await createVerificationLink(user, request);
   // console.log(mailStatus);
@@ -70,11 +72,13 @@ exports.userLogin = async (request, response) => {
   // check if user exists in DB or if password provided by user doesn't match user password in DB
   if (!user || !(await user.matchPasswords(password))) {
     user = await setFails(user, user.failedAttempts.count + 1);
+    recordAttempt(user,'failed','local')
     throw new CustomError('Invalid email or password', 401);
   }
 
 
   if(user.active === 0){
+    recordAttempt(user,'failed','local');
     throw new CustomError('This account has been deactivated. Contact an admin', 401);
   }
   
@@ -86,7 +90,7 @@ exports.userLogin = async (request, response) => {
     throw new CustomError('Please verify your email to proceed', 401);
   }
   SessionMgt.login(request, user);
-
+  recordAttempt(user,'successful','local');
   response.status(200).json(CustomResponse('Login successful', user));
 };
 

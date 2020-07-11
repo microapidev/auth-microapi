@@ -20,6 +20,7 @@ const swaggerUi = require('swagger-ui-express');
 const passport = require('passport');
 const openApiDocumentation = require('./swagger/openApiDocumentation');
 const adminFunctionRouter = require('./routes/admin');
+const authAttemptRoutes = require('./routes/authAttempt');
 const GoogleUser = require('./models/googleUser');
 const googleLoginRouter = require('./routes/googleLogin');
 const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
@@ -116,7 +117,7 @@ app.use('/api/auth/facebook', fbRouter);
 app.use('/api/auth/twitter', twitterRouter);
 app.use('/api/auth/github', gitRouter);
 app.use('/api/auth/google', googleLoginRouter);
-
+app.use('/api/auth-attempt/',authAttemptRoutes);
 // DON'T DELETE: Admin acc. verification
 
 // app.use('/api/admin/auth/email', emailVerificationRouter());
