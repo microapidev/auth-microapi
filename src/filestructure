@@ -1,0 +1,10 @@
+...
+src__
+    |__ index.js - all configurations goes here
+    |__ app.js - all routes should be registered here
+    |__ utils - all reusable code here
+    |__ middlewares - all middlewares resides here
+    |__ services - all core logic should be written here
+    |__ controllers - all responses should be handled here using the right services
+    |__ routes - all specific route definitions here
+...

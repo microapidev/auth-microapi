@@ -13,7 +13,50 @@ const bcrypt = require('bcrypt');
 const { sendForgotPasswordMail } = require('../EmailFactory/index');
 const CustomResponse = require('../utils/response');
 const mongoose = require('mongoose');
+const AdminSrv = require('../services/adminAuth');
 
+class AdminController{
+
+  async register(request, response) {
+  
+    const data = await AdminSrv.register(request.body);
+    return response.status(201).json(CustomResponse('Registration successful', data));
+  }
+
+  async getKey(request, response){
+  
+    const data = await AdminSrv.getKey(request.body);
+    return response.status(200).json(CustomResponse(data.message, data.data));
+
+  } //end getKey
+
+  async forgotPassword(request, response){
+
+    const data = await AdminSrv.forgotPassword(request);
+    return response.status(200).json(CustomResponse(`A password reset link has been sent to ${data.email}`));
+
+  } //end forgotPassword
+
+  async resetPassword(request, response){
+    
+    const data = await AdminSrv.resetPassword(request);
+    return response.status(200).json(CustomResponse('Password updated successfully. You may login'));
+
+  } //end resetPassword
+
+  async deactivateUser(req,res){
+
+    const data = await AdminSrv.deactivateUser(req);
+    res.status(data.code).send(CustomResponse('User has been successfully deactivated', data));
+
+  } //end deactivateUser  
+
+} //end class
+
+
+module.exports = new AdminController();
+
+/**
 exports.adminRegister = async (request, response) => {
   // Adds a new admin to Auth-MicroApi DB 
 
@@ -148,4 +191,4 @@ exports.deactivateUser = async (req,res) => {
       message: 'Something went wrong.'
     });
   }
-};
+}; */
