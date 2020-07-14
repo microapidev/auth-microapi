@@ -112,22 +112,10 @@ app.use('/api/auth/admin', adminRouter);
 app.use('/api/auth/user/email-verification', emailVerificationRouter());
 app.use('/api/auth/user/password', resetPasswordRouter);
 app.use('/api/auth/user', authorizeUser, userRouter);
-<<<<<<< HEAD
-app.use('/api/auth/facebook', fbRouter);
-app.use('/api/auth/twitter', twitterRouter);
-app.use('/api/auth/github',  gitRouter);
-app.use('/api/auth/google',  googleLoginRouter);
-||||||| merged common ancestors
-app.use('/api/auth/facebook', authorizeUser, fbRouter);
-app.use('/api/auth/twitter', authorizeUser, twitterRouter);
-app.use('/api/auth/github', authorizeUser, gitRouter);
-app.use('/api/auth/google', authorizeUser, googleLoginRouter);
-=======
 app.use('/api/auth/facebook', fbRouter);
 app.use('/api/auth/twitter', twitterRouter);
 app.use('/api/auth/github', gitRouter);
 app.use('/api/auth/google', googleLoginRouter);
->>>>>>> 19adb0e8735920407d926c79ddb243ff3134b1c5
 
 // DON'T DELETE: Admin acc. verification
 
