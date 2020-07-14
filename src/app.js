@@ -108,7 +108,7 @@ SessionMgt.config(app);
 app.use('/api/admin', adminFunctionRouter);
 
 // auth routes
-app.use('/api/auth/admin', adminRouter);
+app.use('/api/auth/admin', adminRouter());
 app.use('/api/auth/user/email-verification', emailVerificationRouter());
 app.use('/api/auth/user/password', resetPasswordRouter);
 app.use('/api/auth/user', authorizeUser, userRouter);
