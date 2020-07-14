@@ -5,14 +5,7 @@
  * =================================================================
  */
 
-const Admin = require('../models/admin');
-const crypto = require('crypto');
-const User = require('../models/user');
-const { CustomError } = require('../utils/CustomError');
-const bcrypt = require('bcrypt');
-const { sendForgotPasswordMail } = require('../EmailFactory/index');
 const CustomResponse = require('../utils/response');
-const mongoose = require('mongoose');
 const AdminSrv = require('../services/adminAuth');
 
 class AdminController{
@@ -21,7 +14,8 @@ class AdminController{
   
     const data = await AdminSrv.register(request.body);
     return response.status(201).json(CustomResponse('Registration successful', data));
-  }
+
+  } //end register
 
   async getKey(request, response){
   
