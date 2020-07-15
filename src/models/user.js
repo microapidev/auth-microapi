@@ -3,7 +3,6 @@ const mongodbErrorHandler = require('mongoose-mongodb-errors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const findOrCreate = require('mongoose-findorcreate');
-// const moment = require('moment');
 const saltRounds = 10;
 const { JWT_EXPIRE, JWT_SECRET } = require('../utils/config');
 
@@ -15,6 +14,16 @@ const userSchema = new mongoose.Schema({
     uniqueCaseInsensitive: true,
     required: [true, 'Please add a name'],
   },
+  twoFactorAuth: {
+    is2FA: {
+      type: Boolean,
+      default: false
+    },
+    verify: {
+      type: String,
+      default: null
+    }
+  }
   failedAttempts: {
     count: {
       type: Number,

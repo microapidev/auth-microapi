@@ -6,23 +6,17 @@ const CustomResponse = require('../utils/response');
 
 const auth = async (request, response, next) => {
 
-  let token = request.cookies.w_auth;
+  let userId = request.cookies.w_auth;
 
-  const user = await User.findByToken(token);
-  console.log('findByToken', user);
-
-  User.findByToken(token, (err, user) => {
+  User.findByToken(userId, (err, user) => {
     if (err) { throw err; }
     if (!user) {
       return response.json({
         isAuth: false,
         error: true,
-        msg: 'UnAuthorised/Invalid token'
+        msg: 'UnAuthorised/Invalid user'
       });
     }
-    console.log('users middleware', user);
-
-    request.token = token;
     request.user = user;
     next();
   });
