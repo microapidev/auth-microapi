@@ -1,5 +1,4 @@
 const RandomString = require('randomstring');
-
 const User = require('../models/user');
 const SessionMgt = require('../services/SessionManagement');
 const {createVerificationLink} = require('../utils/EmailVerification');
@@ -33,7 +32,6 @@ class UserService{
       message: mailStatus.message,
       code: mailStatus.code
     };
-
   }
 
   async login(req){
