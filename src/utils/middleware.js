@@ -56,6 +56,7 @@ const unknownRoutes = (request, response, next) => {
 
 const errorHandler = (error, request, response, next) => {
   // This middleware handles errors responses sent to client
+  console.log(error);
   if (error.name === 'ValidationError') {
     response.status(400).json(
       CustomResponse('ValidationError', { statusCode: 422, message: error.message }, false)
