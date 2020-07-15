@@ -111,7 +111,7 @@ app.use('/api/admin', adminFunctionRouter);
 app.use('/api/auth/admin', adminRouter());
 app.use('/api/auth/user/email-verification', emailVerificationRouter());
 app.use('/api/auth/user/password', resetPasswordRouter);
-app.use('/api/auth/user', authorizeUser, userRouter);
+app.use('/api/auth/user', authorizeUser, userRouter());
 app.use('/api/auth/facebook', fbRouter);
 app.use('/api/auth/twitter', twitterRouter);
 app.use('/api/auth/github', gitRouter);

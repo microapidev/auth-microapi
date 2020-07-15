@@ -1,6 +1,10 @@
+const mongoose = require('mongoose');
 const Admin = require('../models/admin');
 const CustomError = require('../utils/CustomError');
 const RandomString = require('randomstring');
+const crypto = require('crypto');
+const bcrypt = require('bcrypt');
+const { sendForgotPasswordMail } = require('../EmailFactory/index');
 
 class AdminService{
   async register(body){    
@@ -112,7 +116,7 @@ class AdminService{
     }
 
     return {
-      status: success
+      status: 'success'
     };
 
   } // end resetPassword

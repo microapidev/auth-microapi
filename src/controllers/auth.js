@@ -5,17 +5,60 @@
  * =================================================================
  */
 
-const User = require('../models/user');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { JWT_ADMIN_SECRET } = require('../utils/config');
+
 const { sendForgotPasswordMail } = require('../EmailFactory/index');
+const User = require('../models/user');
+const UserSrv = require('../services/auth');
 const SessionMgt = require('../services/SessionManagement');
 const { createVerificationLink } = require('../utils/EmailVerification');
+const { JWT_ADMIN_SECRET } = require('../utils/config');
 const CustomResponse = require('../utils/response');
 const { CustomError } = require('../utils/CustomError');
 
+
+class UserController{
+
+  async register(req, res){
+  
+    const data = UserSrv.register(req);    
+    return res.status(data.code).json(CustomResponse(data.message, data.user));
+
+  }
+
+  async login(req, res){
+
+    const data = UserSrv.login(req);
+    res.status(200).json(CustomResponse('Login successful', data.user));
+
+  }
+
+  async forgotPassword(req, res){
+    
+    const data = UserSrv.forgotPassword(req);
+    return res
+      .status(200)
+      .json(
+        CustomResponse(`A password reset link has been sent to ${data.user.email}`)
+      );
+    
+  }
+
+  async resetPassword(req, res){
+
+    const data = await UserSrv.resetPassword(req);
+    return res
+      .status(200)
+      .json(CustomResponse('Password updated successfully. You may login'));
+  }
+
+} //end class UserController
+
+module.exports = new UserController();
+
+/*
 exports.userRegistration = async (request, response) => {
   // Register as guest
   const { email } = request.body;
@@ -49,14 +92,14 @@ exports.userLogin = async (request, response) => {
     user.failedAttempts.lastAttempt = Date.now();
     return user.save();
   };
-  /**
-   * This checks if the user has
-   * tried and failed to login
-   * more than thrice. If true,
-   * it checks the last time the
-   * user logged in, if it's less
-   * than a day ago, it stops the user.
-   */
+  
+  //  * This checks if the user has
+  //  * tried and failed to login
+  //  * more than thrice. If true,
+  //  * it checks the last time the
+  //  * user logged in, if it's less
+  //  * than a day ago, it stops the user.
+   
   if (user.failedAttempts && user.failedAttempts.count > 3) {
     let time = new Date(user.failedAttempts.lastAttempt);
     time = time.getTime() + 1000 * 60 * 60 * 24;
@@ -160,6 +203,7 @@ exports.userResetPassword = async (request, response) => {
     .status(200)
     .json(CustomResponse('Password updated successfully. You may login'));
 };
+*/
 
 exports.authorizeUser = async (request, response, next) => {
   // This middleware authorizes users by checking if valid API_KEY is sent with the request
