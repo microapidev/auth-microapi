@@ -60,7 +60,7 @@ SessionMgt.config(app);
 // auth routes
 app.use('/api/admin', adminRouter());
 app.use('/api/user/email-verification', emailVerificationRouter());
-app.use('/api/user', userRouter());
+app.use('/api/user', authorizeUser, userRouter());
 app.use('/api/facebook', authorizeUser, fbRouter);
 app.use('/api/twitter', authorizeUser, twitterRouter);
 app.use('/api/github', authorizeUser, gitRouter);
