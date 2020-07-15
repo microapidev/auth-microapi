@@ -2,7 +2,7 @@ const passport = require('passport');
 const refresh = require('passport-oauth2-refresh');
 const { Strategy: TwitterStrategy } = require('passport-twitter');
 
-const User = require('../models/user');
+const User = require('../../models/user');
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
