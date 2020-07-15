@@ -100,9 +100,7 @@ userSchema.pre('save', function () {
   // Check if password is present and is modified, then hash
   const user = this;
 
-  // commented to allow hashing of password on password reset
-  // if (user.password && user.isModified('password')) {
-  if (user.password) {
+  if (user.password && user.isModified('password')) {
     user.password = bcrypt.hashSync(user.password, saltRounds);
   }
 });
