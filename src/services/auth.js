@@ -85,6 +85,15 @@ class UserService{
       throw new CustomError('Please verify your email to proceed', 401);
     }
 
+
+  if(user.twoFactorAuth.status === "approved") {
+    SessionMgt.login(req, user);
+    return {
+      msg: "Your account is already protected for 2FA",
+      data: user
+    }
+  }
+
     const userNumber = `+${234}` + user.phone_number.slice(1);
 
     try {
@@ -130,6 +139,15 @@ class UserService{
   const phone = `+${234}` + user2FA.phone_number.slice(1);
   const email = user2FA.email;
 
+  let user = await User.findOne({ email });
+
+  if(user2FA.twoFactorAuth.status === 'approved' && user.twoFactorAuth.status === "approved") {
+    return {
+      msg: "Your account is already verified for 2FA",
+      data: user
+    }
+  }
+
   try{
     if(user2FA.twoFactorAuth.is2FA && user2FA.twoFactorAuth.status === 'pending' && code.length === 6) {
        const data = await client
@@ -150,8 +168,9 @@ class UserService{
     };
 
     user = await set2FA(user, data.status);
+    user2FA.twoFactorAuth.status = data.status
     user = user.toJSON();
-// console.log(user)
+console.log(user2FA)
       return {
         verify: data
       }
@@ -167,8 +186,40 @@ class UserService{
     }
    } 
   }
+}
 
-  
+async activeUser(req) {
+  const active = req.session.user
+console.log(active)
+  try{
+    if(!active) {
+      return {
+        data: "Please Login before you do that"
+      } 
+    }
+    if(active.twoFactorAuth.is2FA && active.twoFactorAuth.status === 'pending') {
+      return {
+        msg: 'Please verify your 2FA Auth',
+        data: active
+      }
+    }
+     if(active.twoFactorAuth.is2FA && active.twoFactorAuth.status === 'approved') {
+      return {
+         msg: 'Your account is highly protected with 2FA',
+        data: active
+      }
+    }
+    if(!active.twoFactorAuth.is2FA && active.twoFactorAuth.status === null) {
+      return {
+        msg: 'Here your credential but I highly recommend you enable 2FA auth',
+        data: active
+      }
+    }
+  } catch(err) {
+    return {
+      data: err
+    }
+  }
 }
 
   async forgotPassword(req){    
