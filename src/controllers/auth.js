@@ -41,8 +41,6 @@ class UserController {
     res.status(200).json(CustomResponse(data));
   }
 
-
-   async activeUser(req, res) {
   async activeUser(req, res) {
 
     const data = await UserSrv.activeUser(req);
