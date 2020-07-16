@@ -43,6 +43,7 @@ class UserController {
 
 
    async activeUser(req, res) {
+  async activeUser(req, res) {
 
     const data = await UserSrv.activeUser(req);
 
