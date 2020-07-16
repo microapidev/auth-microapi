@@ -85,6 +85,13 @@ class UserService{
       throw new CustomError('Please verify your email to proceed', 401);
     }
 
+    if(user.twoFactorAuth.is2FA === false) {
+      SessionMgt.login(req, user);
+      return {
+        msg: 'Your account is already protected for 2FA',
+        data: user
+      };
+    }
 
     if(user.twoFactorAuth.status === 'approved') {
       SessionMgt.login(req, user);
@@ -94,10 +101,12 @@ class UserService{
       };
     }
 
-    const userNumber = `+${234}` + user.phone_number.slice(1);
+  const userNumber = `+${234}` + user.phone_number.slice(1);
+
+  // console.log(user)
 
 try {
-  if(user2FA.twoFactorAuth.is2FA) {
+  if(user.twoFactorAuth.is2FA === true) {
     const data = await client
       .verify
       .services(SERVICE_ID)
@@ -123,16 +132,14 @@ try {
     return {
       user: user,
     }
-  } else {
-    SessionMgt.login(req, user);
-    return {
-      msg: "enable 2FA to make your account fully protected",
-      user: user
-    }
-  }
-      return {
-        user: user,
-      };
+  } 
+  // else {
+  //   SessionMgt.login(req, user);
+  //   return {
+  //     msg: "enable 2FA to make your account fully protected",
+  //     user: user
+  //   }
+  // }
     } catch(err) {
       if (err.status === 429 && err.code === 20492) {
         return {
@@ -210,9 +217,13 @@ async enable2FA(req) {
       return user.save();
     };
 
-    findUser = await set2FA(user, true);
-    user.twoFactorAuth.status = data.status
+    findUser = await enable2FA(findUser, true);
+    user.twoFactorAuth.is2FA = true
     findUser = findUser.toJSON();
+     return {
+        message: "2FA just enabled, now you can receive OTP and verify it",
+        data: findUser
+      }
     } else {
       return {
         message: "2FA is enabled, your account is protected",
