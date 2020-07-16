@@ -45,7 +45,8 @@ class UserService{
     const setFails = async (user, val) => {
       user.failedAttempts.count = val;
       user.failedAttempts.lastAttempt = Date.now();
-      return user.save();
+
+      await user.save();
     };
     /**
      * This checks if the user has
@@ -55,19 +56,19 @@ class UserService{
      * user logged in, if it's less
      * than a day ago, it stops the user.
      */
-    if (user.failedAttempts && user.failedAttempts.count > 3) {
-      let time = new Date(user.failedAttempts.lastAttempt);
-      time = time.getTime() + 1000 * 60 * 60 * 24;
-      if (time > Date.now()) {
-        throw new CustomError('You have tried logging in too many times', 401);
-      } else if (time < Date.now()) {
-        user = await setFails(user, 0);
-      }
-    }
+    // if (user.failedAttempts && user.failedAttempts.count > 3) {
+    //   let time = new Date(user.failedAttempts.lastAttempt);
+    //   time = time.getTime() + 1000 * 60 * 60 * 24;
+    //   if (time > Date.now()) {
+    //     throw new CustomError('You have tried logging in too many times', 401);
+    //   } else if (time < Date.now()) {
+    //     user = await setFails(user, 0);
+    //   }
+    // }
   
     // check if user exists in DB or if password provided by user doesn't match user password in DB
     if (!user || !(await user.matchPasswords(password))) {
-      user = await setFails(user, user.failedAttempts.count + 1);
+      // await setFails(user, user.failedAttempts.count + 1);
       throw new CustomError('Invalid email or password', 401);
     }
   
@@ -76,7 +77,7 @@ class UserService{
       throw new CustomError('This account has been deactivated. Contact an admin', 401);
     }
     
-    user = await setFails(user, 0);
+    // user = await setFails(user, 0);
     user = user.toJSON();
   
     // check if user has unverified email
@@ -84,6 +85,7 @@ class UserService{
       throw new CustomError('Please verify your email to proceed', 401);
     }
 
+<<<<<<< HEAD
     const userNumber = `+${234}` + user.phone_number.slice(1);
     const data = await client
       .verify
@@ -93,8 +95,6 @@ class UserService{
           to: userNumber,
           channel: 'sms'
     })
-
-    // SessionMgt.login(request, user);
 
     let user2FA = await User.findOne({ email });
   
@@ -106,6 +106,8 @@ class UserService{
 
     user = await set2FA(user2FA, data.status);
     user = user.toJSON();
+    
+    SessionMgt.login(req, user);
 
     return {
       user: user,

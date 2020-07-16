@@ -36,9 +36,6 @@ app.use(
   })
 );
 
-// configure user session
-SessionMgt.config(app);
-
 //passport middleware
 // app.use(
 //   session({
@@ -57,14 +54,13 @@ SessionMgt.config(app);
 // app.use(passport.initialize());
 // app.use(passport.session());
 
-// admin function routes
-// app.use('/api/admin', adminFunctionRouter);
+// configure user session
+SessionMgt.config(app);
 
 // auth routes
 app.use('/api/admin', adminRouter());
 app.use('/api/user/email-verification', emailVerificationRouter());
-// app.use('/api/user/password', resetPasswordRouter);
-app.use('/api/user', userRouter());
+app.use('/api/user', authorizeUser, userRouter());
 app.use('/api/facebook', authorizeUser, fbRouter);
 app.use('/api/twitter', authorizeUser, twitterRouter);
 app.use('/api/github', authorizeUser, gitRouter);
