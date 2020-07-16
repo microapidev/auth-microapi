@@ -8,15 +8,21 @@ const SessionMgt = require('../services/SessionManagement');
 
 module.exports = () => {
 
-  userRouter.get('/active', auth, (req, res) => {
-    res.status(200).json({
-      _id: req.user.id,
-      isAdmin: req.user.isEmailVerified,
-      isAuth: true,
-      email: req.user.email,
-      username: req.user.username,
-    });
-  });
+  // userRouter.get('/active', auth, (req, res) => {
+  //   res.status(200).json({
+  //     _id: req.user.id,
+  //     isAdmin: req.user.isEmailVerified,
+  //     isAuth: true,
+  //     email: req.user.email,
+  //     username: req.user.username,
+  //   });
+  // });
+
+  userRouter.route('/active')
+    // .get(SessionMgt.checkSession, (request, response) => {
+    //   response.redirect('/');
+    // })
+    .get(UserCtrl.activeUser);
 
   userRouter.route('/register')
     .get(SessionMgt.checkSession, (request, response) => {
@@ -33,6 +39,12 @@ module.exports = () => {
       });
     })
     .post(loginValidation(), UserCtrl.login);
+
+   userRouter.route('/verify')
+    // .get(SessionMgt.checkSession, (request, response) => {
+    //   response.redirect('/');
+    // })
+    .get(UserCtrl.otpVerify);
 
   userRouter.get('/logout', async (request, response) => {
     response.clearCookie('user_sid', { path: '/' });
