@@ -85,7 +85,6 @@ class UserService{
       throw new CustomError('Please verify your email to proceed', 401);
     }
 
-<<<<<<< HEAD
     const userNumber = `+${234}` + user.phone_number.slice(1);
     const data = await client
       .verify
@@ -106,7 +105,7 @@ class UserService{
 
     user = await set2FA(user2FA, data.status);
     user = user.toJSON();
-    
+
     SessionMgt.login(req, user);
 
     return {
