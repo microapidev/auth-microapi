@@ -4,7 +4,9 @@ const SessionMgt = require('../services/SessionManagement');
 const {createVerificationLink} = require('../utils/EmailVerification');
 const { CustomError } = require('../utils/CustomError');
 const {sendForgotPasswordMail} = require('../EmailFactory');
+const { ACCOUNT_SID, AUTH_TOKEN, SERVICE_ID } = require('../utils/config')
 
+const client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN)
 
 class UserService{
 
@@ -82,13 +84,54 @@ class UserService{
       throw new CustomError('Please verify your email to proceed', 401);
     }
 
-    SessionMgt.login(request, user);
+    const userNumber = `+${234}` + user.phone_number.slice(1);
+    const data = await client
+      .verify
+      .services(SERVICE_ID)
+      .verifications
+      .create({
+          to: userNumber,
+          channel: 'sms'
+    })
+
+    // SessionMgt.login(request, user);
+
+    let user2FA = await User.findOne({ email });
+  
+    const set2FA = async (user, val) => {
+      user.twoFactorAuth.is2FA = true;
+      user.twoFactorAuth.status = val;
+      return user.save();
+    };
+
+    user = await set2FA(user2FA, data.status);
+    user = user.toJSON();
 
     return {
-      user: user
+      user: user,
     };
   
   } //end login
+
+  async otpVerify(req) {
+    const { email } = req.query;
+    
+    let user2FA = await User.findOne({ email });
+    
+   //  const set2FA = async (user, val) => {
+   //    user.twoFactorAuth.is2FA = true;
+   //    user.twoFactorAuth.status = val;
+   //    return user.save();
+   //  };
+   // const verify = await client
+   //    .verify
+   //    .services(SERVICE_ID)
+   //    .verificationChecks
+   //    .create({
+   //      to: `+${req.body.phone}`,
+   //      code: req.body.code
+   //    })
+  }
 
   async forgotPassword(req){    
     

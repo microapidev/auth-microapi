@@ -19,11 +19,11 @@ const userSchema = new mongoose.Schema({
       type: Boolean,
       default: false
     },
-    verify: {
+    status: {
       type: String,
       default: null
     }
-  }
+  },
   failedAttempts: {
     count: {
       type: Number,

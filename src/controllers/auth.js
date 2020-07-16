@@ -27,6 +27,13 @@ class UserController {
     res.status(200).json(CustomResponse('Login successful', data.user));
   }
 
+  async otpVerify(req, res) {
+
+    const data = await UserSrv.otpVerify(req);
+
+    res.status(200).json(CustomResponse('OTP successful verified', data));
+  }
+
   async forgotPassword(req, res) {
     
     const data = await UserSrv.forgotPassword(req);
