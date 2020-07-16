@@ -313,6 +313,37 @@ const openApiDocumentation = {
         },
       },
     },
+    '/api/user/enable': {
+      get: {
+        tags: ['enable 2FA'],
+        description: 'enable 2FA',
+        operationId: 'enable2FA',
+        security: [ {bearerAuth: {}}],
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     '/api/user/login': {
       post: {
         tags: ['Login User'],
@@ -329,6 +360,38 @@ const openApiDocumentation = {
           },
           required: true,
         },
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/user/verify': {
+      get: {
+        tags: ['verify OTP'],
+        description: 'verify OTP',
+        operationId: 'verifyOTP',
+        security: [ {bearerAuth: {}}],
+        requestBody: {},
         parameters: [],
         responses: {
           '200': {

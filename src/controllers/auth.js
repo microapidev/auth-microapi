@@ -31,8 +31,16 @@ class UserController {
 
     const data = await UserSrv.otpVerify(req);
 
-    res.status(200).json(CustomResponse(data && data.status === 'approved' ? 'OTP successfully verified' : 'Invalid code/code expired', data));
+    res.status(200).json(CustomResponse("verification data", data));
   }
+
+  async enable2FA(req, res) {
+
+    const data = await UserSrv.enable2FA(req);
+
+    res.status(200).json(CustomResponse(data));
+  }
+
 
    async activeUser(req, res) {
 
