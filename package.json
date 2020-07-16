@@ -11,7 +11,7 @@
     "lint": "eslint \"src/**/*.js\"",
     "lint:fix": "eslint --fix \"src/**/*.js\"",
     "dev": "cross-env DEBUG=log NODE_ENV=development nodemon --exec babel-node ./src/index.js",
-    "start": "cross-env DEBUG=log NODE_ENV=production node ./src/index.js"
+    "start": "cross-env DEBUG=log NODE_ENV=production node --exec babel-node ./src/index.js"
   },
   "repository": {
     "type": "git",
