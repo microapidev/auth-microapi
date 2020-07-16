@@ -5,55 +5,58 @@
  * =================================================================
  */
 
-require('express-async-errors');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const mongoStoreFactory = require('connect-mongo')(session);
+const passport = require('passport');
+const CustomResponse = require('../utils/response');
 // const { v4: uuidv4 } = require('uuid');
 
 
 // persistence store of our session
 const sessionStore = new mongoStoreFactory({
   mongooseConnection: mongoose.connection,
-  ttl: (1 * 60 * 60),
   collection: 'session'
 });
 
+const sess = {
+  store: sessionStore,
+  // genid: function(request) {
+  //   return uuidv4();; // use UUIDs for session IDs
+  // },
+  secret: 'canyoukeepasecret',
+  saveUninitialized: false,
+  resave: false,
+  rolling: true,
+  cookie: {
+    path: '/',
+    sameSite: true,
+    httpOnly: true,
+    secure: false,
+    maxAge: 24 * 60 * 60 * 1000  //24 hours
+  },
+  name: 'user_sid'
+};
+
 class SessionManagement {
   async config(app) {
-    app.use(session({
-      store: sessionStore,
-      // genid: function(request) {
-      //   return uuidv4();; // use UUIDs for session IDs
-      // },
-      secret: 'canyoukeepasecret',
-      saveUninitialized: true,
-      resave: false,
-      rolling: true,
-      cookie: {
-        path: '/',
-        sameSite: true,
-        httpOnly: true,
-        secure: false,
-        maxAge: 60 * 60 * 1000  //1 hr
-      },
-      name: 'user_sid'
-    }));
+    if (app.get('env') === 'production') {
+      app.set('trust proxy', 1); // trust first proxy
+      sess.cookie.secure = true; // serve secure cookies
+    }
+    app.use(session(sess));
+    app.use(passport.session());
   }
 
   async checkSession(request, response, next) {
-    if (request.cookies.connect.sid && !request.session.user) {
-      // expired session but unexpired cookie
-      response.clearCookie('user_sid');
-
-      next();
-
-    } else if (request.session.user && request.cookies.connect.sid) {
+    if (request.session.user && request.cookies.user_sid) {
       // valid cookie and session
-      await request.session.regenerate();
 
-      return response.status(200).json(CustomResponse('User is already logged in'));
-      // response.redirect('/dashboard');
+      return response.status(200).json(CustomResponse('User is already logged in, redirect them to dashboard.')); //TODO: return user data;
+
+    } else if (request.cookies.user_sid && !request.session.user) {
+      // expired session but unexpired cookie
+      // for use when saveUninitialized is set to true
     }
 
     next();

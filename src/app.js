@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const cors = require('cors');
+const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const userRouter = require('./routes/auth');
 const adminRouter = require('./routes/adminAuth');
@@ -19,7 +20,8 @@ const swaggerUi = require('swagger-ui-express');
 const openApiDocumentation = require('./swagger/openApiDocumentation');
 // const adminFunctionRouter = require('./routes/admin');
 const googleLoginRouter = require('./routes/googleLogin');
-// require('./config/passport/twitterStrategy');
+require('./config/passport/twitterStrategy');
+require('./config/passport/googleStrategy');
 
 require('dotenv').config();
 
@@ -50,9 +52,7 @@ app.use(
 //   })
 // );
 
-// Handles via Google Login
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.initialize());
 
 // configure user session
 SessionMgt.config(app);

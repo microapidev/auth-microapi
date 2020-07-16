@@ -2,7 +2,6 @@ const userRouter = require('express').Router();
 const { registerValidation, loginValidation } = require('../utils/validation/joiValidation');
 const { auth, authorizeUser } = require('../utils/middleware');
 const UserCtrl = require('../controllers/auth');
-// const { userForgotPassword, userResetPassword } = require('../controllers/auth');
 const { forgotValidation, resetPasswordValidation } = require('../utils/validation/joiValidation');
 const SessionMgt = require('../services/SessionManagement');
 
@@ -27,29 +26,35 @@ module.exports = () => {
 
   userRouter.route('/register')
     .get(SessionMgt.checkSession, (request, response) => {
-      response.redirect('/');
+      response.status(200).json({
+        success: true
+      });
     })
     .post(registerValidation(), UserCtrl.register);
 
   userRouter.route('/login')
     .get(SessionMgt.checkSession, (request, response) => {
-      response.redirect('/');
+      response.status(200).json({
+        success: true
+      });
     })
     .post(loginValidation(), UserCtrl.login);
 
-   userRouter.route('/verify')
+  userRouter.route('/verify')
     // .get(SessionMgt.checkSession, (request, response) => {
     //   response.redirect('/');
     // })
     .get(UserCtrl.otpVerify);
 
   userRouter.get('/logout', async (request, response) => {
-    response.clearCookie('connect.sid');
+    response.clearCookie('user_sid', { path: '/' });
+
     request.session.destroy();
 
     // response.redirect('/');
-    response.status(200).send({
+    response.status(200).json({
       success: true,
+      message: 'Redirect user to login at GET: /api/user/login'
     });
   });
 

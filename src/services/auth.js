@@ -4,9 +4,9 @@ const SessionMgt = require('../services/SessionManagement');
 const {createVerificationLink} = require('../utils/EmailVerification');
 const { CustomError } = require('../utils/CustomError');
 const {sendForgotPasswordMail} = require('../EmailFactory');
-const { ACCOUNT_SID, AUTH_TOKEN, SERVICE_ID } = require('../utils/config')
+const { ACCOUNT_SID, AUTH_TOKEN, SERVICE_ID } = require('../utils/config');
 
-const client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN)
+const client = require('twilio')(ACCOUNT_SID, AUTH_TOKEN);
 
 class UserService{
 
@@ -86,141 +86,141 @@ class UserService{
     }
 
 
-  if(user.twoFactorAuth.status === "approved") {
-    SessionMgt.login(req, user);
-    return {
-      msg: "Your account is already protected for 2FA",
-      data: user
+    if(user.twoFactorAuth.status === 'approved') {
+      SessionMgt.login(req, user);
+      return {
+        msg: 'Your account is already protected for 2FA',
+        data: user
+      };
     }
-  }
 
     const userNumber = `+${234}` + user.phone_number.slice(1);
 
     try {
-    const data = await client
-      .verify
-      .services(SERVICE_ID)
-      .verifications
-      .create({
+      const data = await client
+        .verify
+        .services(SERVICE_ID)
+        .verifications
+        .create({
           to: userNumber,
           channel: 'sms'
-    })
+        });
 
-    let user2FA = await User.findOne({ email });
+      let user2FA = await User.findOne({ email });
   
-    const set2FA = async (user, val) => {
-      user.twoFactorAuth.is2FA = true;
-      user.twoFactorAuth.status = val;
-      return user.save();
-    };
+      const set2FA = async (user, val) => {
+        user.twoFactorAuth.is2FA = true;
+        user.twoFactorAuth.status = val;
+        return user.save();
+      };
 
-    user = await set2FA(user2FA, data.status);
-    user = user.toJSON();
+      user = await set2FA(user2FA, data.status);
+      user = user.toJSON();
 
-    SessionMgt.login(req, user);
+      SessionMgt.login(req, user);
 
-    return {
-      user: user,
-    }
+      return {
+        user: user,
+      };
     } catch(err) {
       if (err.status === 429 && err.code === 20492) {
         return {
-        data: "Too many request"
-    }
-  }
-} 
-} //end login
+          data: 'Too many request'
+        };
+      }
+    } 
+  } //end login
 
   async otpVerify(req) {
 
-  const user2FA = req.session.user;
+    const user2FA = req.session.user;
 
-  const { code } = req.query
-  const phone = `+${234}` + user2FA.phone_number.slice(1);
-  const email = user2FA.email;
+    const { code } = req.query;
+    const phone = `+${234}` + user2FA.phone_number.slice(1);
+    const email = user2FA.email;
 
-  let user = await User.findOne({ email });
-
-  if(user2FA.twoFactorAuth.status === 'approved' && user.twoFactorAuth.status === "approved") {
-    return {
-      msg: "Your account is already verified for 2FA",
-      data: user
-    }
-  }
-
-  try{
-    if(user2FA.twoFactorAuth.is2FA && user2FA.twoFactorAuth.status === 'pending' && code.length === 6) {
-       const data = await client
-      .verify
-      .services(SERVICE_ID)
-      .verificationChecks
-      .create({
-        to: phone,
-        code: code
-      })
-
-      console.log(data)
     let user = await User.findOne({ email });
 
-    const set2FA = async (user, val) => {
-      user.twoFactorAuth.status = val;
-      return user.save();
-    };
-
-    user = await set2FA(user, data.status);
-    user2FA.twoFactorAuth.status = data.status
-    user = user.toJSON();
-console.log(user2FA)
+    if(user2FA.twoFactorAuth.status === 'approved' && user.twoFactorAuth.status === 'approved') {
       return {
-        verify: data
-      }
-    } else {
+        msg: 'Your account is already verified for 2FA',
+        data: user
+      };
+    }
+
+    try{
+      if(user2FA.twoFactorAuth.is2FA && user2FA.twoFactorAuth.status === 'pending' && code.length === 6) {
+        const data = await client
+          .verify
+          .services(SERVICE_ID)
+          .verificationChecks
+          .create({
+            to: phone,
+            code: code
+          });
+
+        console.log(data);
+        let user = await User.findOne({ email });
+
+        const set2FA = async (user, val) => {
+          user.twoFactorAuth.status = val;
+          return user.save();
+        };
+
+        user = await set2FA(user, data.status);
+        user2FA.twoFactorAuth.status = data.status;
+        user = user.toJSON();
+        console.log(user2FA);
+        return {
+          verify: data
+        };
+      } 
       return {
         data: data.valid
-      }
-    }
-  } catch (err) {
-   if(err.status === 404 && err.code === 20404) {
-    return {
-      data: "Invalid code/code expired"
-    }
-   } 
-  }
-}
-
-async activeUser(req) {
-  const active = req.session.user
-console.log(active)
-  try{
-    if(!active) {
-      return {
-        data: "Please Login before you do that"
+      };
+    
+    } catch (err) {
+      if(err.status === 404 && err.code === 20404) {
+        return {
+          data: 'Invalid code/code expired'
+        };
       } 
     }
-    if(active.twoFactorAuth.is2FA && active.twoFactorAuth.status === 'pending') {
-      return {
-        msg: 'Please verify your 2FA Auth',
-        data: active
+  }
+
+  async activeUser(req) {
+    const active = req.session.user;
+    console.log(active);
+    try{
+      if(!active) {
+        return {
+          data: 'Please Login before you do that'
+        }; 
       }
-    }
-     if(active.twoFactorAuth.is2FA && active.twoFactorAuth.status === 'approved') {
-      return {
-         msg: 'Your account is highly protected with 2FA',
-        data: active
+      if(active.twoFactorAuth.is2FA && active.twoFactorAuth.status === 'pending') {
+        return {
+          msg: 'Please verify your 2FA Auth',
+          data: active
+        };
       }
-    }
-    if(!active.twoFactorAuth.is2FA && active.twoFactorAuth.status === null) {
-      return {
-        msg: 'Here your credential but I highly recommend you enable 2FA auth',
-        data: active
+      if(active.twoFactorAuth.is2FA && active.twoFactorAuth.status === 'approved') {
+        return {
+          msg: 'Your account is highly protected with 2FA',
+          data: active
+        };
       }
-    }
-  } catch(err) {
-    return {
-      data: err
+      if(!active.twoFactorAuth.is2FA && active.twoFactorAuth.status === null) {
+        return {
+          msg: 'Here your credential but I highly recommend you enable 2FA auth',
+          data: active
+        };
+      }
+    } catch(err) {
+      return {
+        data: err
+      };
     }
   }
-}
 
   async forgotPassword(req){    
     
