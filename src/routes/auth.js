@@ -1,7 +1,7 @@
 const userRouter = require('express').Router();
 const { registerValidation, loginValidation } = require('../utils/validation/joiValidation');
 const { auth, authorizeUser } = require('../utils/middleware');
-const UserCtrl = require('../controllers/auth');
+const UserController = require('../controllers/auth');
 const { forgotValidation, resetPasswordValidation } = require('../utils/validation/joiValidation');
 const SessionMgt = require('../services/SessionManagement');
 
@@ -22,7 +22,7 @@ module.exports = () => {
     // .get(SessionMgt.checkSession, (request, response) => {
     //   response.redirect('/');
     // })
-    .get(UserCtrl.activeUser);
+    .get(UserController.activeUser);
 
   userRouter.route('/register')
     .get(SessionMgt.checkSession, (request, response) => {
@@ -30,7 +30,7 @@ module.exports = () => {
         success: true
       });
     })
-    .post(registerValidation(), UserCtrl.register);
+    .post(registerValidation(), UserController.register);
 
   userRouter.route('/login')
     .get(SessionMgt.checkSession, (request, response) => {
@@ -38,13 +38,13 @@ module.exports = () => {
         success: true
       });
     })
-    .post(loginValidation(), UserCtrl.login);
+    .post(loginValidation(), UserController.login);
 
   userRouter.route('/verify')
     // .get(SessionMgt.checkSession, (request, response) => {
     //   response.redirect('/');
     // })
-    .get(UserCtrl.otpVerify);
+    .get(UserController.otpVerify);
 
   userRouter.get('/logout', async (request, response) => {
     response.clearCookie('user_sid', { path: '/' });
@@ -58,13 +58,13 @@ module.exports = () => {
     });
   });
 
-  userRouter.post('/password/reset', authorizeUser, forgotValidation(), UserCtrl.forgotPassword);
+  userRouter.post('/password/reset', authorizeUser, forgotValidation(), UserController.forgotPassword);
 
   userRouter.get('/password/:token', (request, response, next) => {
     response.status(200).send('It\'s cool you\'re here 😁, but you should be using postman to send a PATCH request to change password via this url!');
   });
 
-  userRouter.patch('/:token', authorizeUser, resetPasswordValidation(), UserCtrl.resetPassword);
+  userRouter.patch('/:token', authorizeUser, resetPasswordValidation(), UserController.resetPassword);
 
   return userRouter;
 };

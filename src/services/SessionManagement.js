@@ -10,7 +10,7 @@ const session = require('express-session');
 const mongoStoreFactory = require('connect-mongo')(session);
 const passport = require('passport');
 const CustomResponse = require('../utils/response');
-// const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 
 
 // persistence store of our session
@@ -21,9 +21,9 @@ const sessionStore = new mongoStoreFactory({
 
 const sess = {
   store: sessionStore,
-  // genid: function(request) {
-  //   return uuidv4();; // use UUIDs for session IDs
-  // },
+  genid: function() {
+    return uuidv4();; // use UUIDs for session IDs
+  },
   secret: 'canyoukeepasecret',
   saveUninitialized: false,
   resave: false,
@@ -65,11 +65,11 @@ class SessionManagement {
   // create new session for user on login
   login(request, user) {
     request.session.user = user;
-    // sessionStore.set(genid(request), request.session)
-    //   .then((ret) => console.log(ret))
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
+    sessionStore.set(sess.genid(), request.session)
+      .then((ret) => console.log(ret))
+      .catch(error => {
+        console.log(error);
+      });
     // eslint-disable-next-line curly
     // if (!session) throw new CustomError('Couldn\'t refresh user session. Try again');
   }
