@@ -34,7 +34,7 @@ class UserController {
     res.status(200).json(CustomResponse(data && data.status === 'approved' ? 'OTP successfully verified' : 'Invalid code/code expired', data));
   }
 
-   async activeUser(req, res) {
+  async activeUser(req, res) {
 
     const data = await UserSrv.activeUser(req);
 

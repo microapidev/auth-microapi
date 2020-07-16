@@ -40,7 +40,7 @@ module.exports = () => {
     })
     .post(loginValidation(), UserCtrl.login);
 
-   userRouter.route('/verify')
+  userRouter.route('/verify')
     // .get(SessionMgt.checkSession, (request, response) => {
     //   response.redirect('/');
     // })
