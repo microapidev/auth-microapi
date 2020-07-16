@@ -32,10 +32,10 @@ module.exports = () => {
     .post(loginValidation(), UserCtrl.login);
 
    userRouter.route('/verify')
-    .get(SessionMgt.checkSession, (request, response) => {
-      response.redirect('/');
-    })
-    .post(UserCtrl.otpVerify);
+    // .get(SessionMgt.checkSession, (request, response) => {
+    //   response.redirect('/');
+    // })
+    .get(UserCtrl.otpVerify);
 
   userRouter.get('/logout', async (request, response) => {
     response.clearCookie('connect.sid');

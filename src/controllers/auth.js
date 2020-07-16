@@ -24,14 +24,14 @@ class UserController {
 
     const data = await UserSrv.login(req);
 
-    res.status(200).json(CustomResponse('Login successful', data.user));
+    res.status(200).json(CustomResponse(data ? 'Login successful' : 'Something Wrong/Too many request to Twilio API', data));
   }
 
   async otpVerify(req, res) {
 
     const data = await UserSrv.otpVerify(req);
 
-    res.status(200).json(CustomResponse('OTP successful verified', data));
+    res.status(200).json(CustomResponse(data && data.verify.valid === true ? 'OTP successfully verified' : 'Invalid code/code expired', data));
   }
 
   async forgotPassword(req, res) {

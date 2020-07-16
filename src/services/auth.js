@@ -86,6 +86,8 @@ class UserService{
     }
 
     const userNumber = `+${234}` + user.phone_number.slice(1);
+
+    try {
     const data = await client
       .verify
       .services(SERVICE_ID)
@@ -110,29 +112,64 @@ class UserService{
 
     return {
       user: user,
-    };
-  
-  } //end login
+    }
+    } catch(err) {
+      if (err.status === 429 && err.code === 20492) {
+        return {
+        data: "Too many request"
+    }
+  }
+} 
+} //end login
 
   async otpVerify(req) {
-    const { email } = req.query;
-    
-    let user2FA = await User.findOne({ email });
-    
-   //  const set2FA = async (user, val) => {
-   //    user.twoFactorAuth.is2FA = true;
-   //    user.twoFactorAuth.status = val;
-   //    return user.save();
-   //  };
-   // const verify = await client
-   //    .verify
-   //    .services(SERVICE_ID)
-   //    .verificationChecks
-   //    .create({
-   //      to: `+${req.body.phone}`,
-   //      code: req.body.code
-   //    })
+
+  const user2FA = req.session.user;
+
+  const { code } = req.query
+  const phone = `+${234}` + user2FA.phone_number.slice(1);
+  const email = user2FA.email;
+
+  try{
+    if(user2FA.twoFactorAuth.is2FA && user2FA.twoFactorAuth.status === 'pending' && code.length === 6) {
+       const data = await client
+      .verify
+      .services(SERVICE_ID)
+      .verificationChecks
+      .create({
+        to: phone,
+        code: code
+      })
+
+      console.log(data)
+    let user = await User.findOne({ email });
+
+    const set2FA = async (user, val) => {
+      user.twoFactorAuth.status = val;
+      return user.save();
+    };
+
+    user = await set2FA(user, data.status);
+    user = user.toJSON();
+// console.log(user)
+      return {
+        verify: data
+      }
+    } else {
+      return {
+        data: data.valid
+      }
+    }
+  } catch (err) {
+   if(err.status === 404 && err.code === 20404) {
+    return {
+      data: "Invalid code/code expired"
+    }
+   } 
   }
+
+  
+}
 
   async forgotPassword(req){    
     

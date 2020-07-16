@@ -6,7 +6,7 @@ const CustomResponse = require('../utils/response');
 
 const auth = async (request, response, next) => {
 
-  let userId = request.cookies.w_auth;
+  let userId = request.sessions.user;
 
   User.findByToken(userId, (err, user) => {
     if (err) { throw err; }
