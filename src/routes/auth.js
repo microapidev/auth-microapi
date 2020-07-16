@@ -24,6 +24,12 @@ module.exports = () => {
     // })
     .get(UserCtrl.activeUser);
 
+    userRouter.route('/enable')
+    // .get(SessionMgt.checkSession, (request, response) => {
+    //   response.redirect('/');
+    // })
+    .get(UserCtrl.enable2FA);
+
   userRouter.route('/register')
     .get(SessionMgt.checkSession, (request, response) => {
       response.status(200).json({

@@ -96,6 +96,13 @@ class UserService{
 
     const userNumber = `+${234}` + user.phone_number.slice(1);
 
+try {
+  if(user2FA.twoFactorAuth.is2FA) {
+    const data = await client
+      .verify
+      .services(SERVICE_ID)
+      .verifications
+      .create({
     try {
       const data = await client
         .verify
@@ -119,6 +126,16 @@ class UserService{
 
       SessionMgt.login(req, user);
 
+    return {
+      user: user,
+    }
+  } else {
+    SessionMgt.login(req, user);
+    return {
+      msg: "enable 2FA to make your account fully protected",
+      user: user
+    }
+  }
       return {
         user: user,
       };
@@ -159,6 +176,9 @@ class UserService{
             code: code
           });
 
+
+      // console.log(data)
+    let user = await User.findOne({ email });
         console.log(data);
         let user = await User.findOne({ email });
 
@@ -167,6 +187,15 @@ class UserService{
           return user.save();
         };
 
+    user = await set2FA(user, data.status);
+    user2FA.twoFactorAuth.status = data.status
+    user = user.toJSON();
+// console.log(user2FA)
+      return {
+         message: "OTP successfully verified",
+        verify: data
+      }
+    } else {
         user = await set2FA(user, data.status);
         user2FA.twoFactorAuth.status = data.status;
         user = user.toJSON();
@@ -188,6 +217,47 @@ class UserService{
     }
   }
 
+async enable2FA(req) {
+  const user = req.session.user;
+  const email = user.email
+
+ let findUser = await User.findOne({ email })
+  try{
+    if(findUser.twoFactorAuth.is2FA === false) {
+       const enable2FA = async (user, val) => {
+      user.twoFactorAuth.is2FA = val;
+      return user.save();
+    };
+
+    findUser = await set2FA(user, true);
+    user.twoFactorAuth.status = data.status
+    findUser = findUser.toJSON();
+    } else {
+      return {
+        message: "2FA is enabled, your account is protected",
+        data: findUser
+      }
+    }
+  } catch (err) {
+    return {
+      message: "something wrong" + err
+    }
+  }
+}
+
+async activeUser(req) {
+  const active = req.session.user
+console.log(active)
+  try{
+    if(!active) {
+      return {
+        data: "Please Login before you do that"
+      } 
+    }
+    if(active.twoFactorAuth.is2FA && active.twoFactorAuth.status === 'pending') {
+      return {
+        msg: 'Please verify your 2FA Auth',
+        data: active
   async activeUser(req) {
     const active = req.session.user;
     console.log(active);
