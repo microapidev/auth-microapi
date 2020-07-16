@@ -103,12 +103,6 @@ try {
       .services(SERVICE_ID)
       .verifications
       .create({
-    try {
-      const data = await client
-        .verify
-        .services(SERVICE_ID)
-        .verifications
-        .create({
           to: userNumber,
           channel: 'sms'
         });
@@ -176,10 +170,6 @@ try {
             code: code
           });
 
-
-      // console.log(data)
-    let user = await User.findOne({ email });
-        console.log(data);
         let user = await User.findOne({ email });
 
         const set2FA = async (user, val) => {
@@ -190,24 +180,15 @@ try {
     user = await set2FA(user, data.status);
     user2FA.twoFactorAuth.status = data.status
     user = user.toJSON();
-// console.log(user2FA)
       return {
-         message: "OTP successfully verified",
+        message: "OTP successfully verified",
         verify: data
       }
     } else {
-        user = await set2FA(user, data.status);
-        user2FA.twoFactorAuth.status = data.status;
-        user = user.toJSON();
-        console.log(user2FA);
-        return {
-          verify: data
-        };
-      } 
       return {
         data: data.valid
       };
-    
+    }
     } catch (err) {
       if(err.status === 404 && err.code === 20404) {
         return {
@@ -245,19 +226,6 @@ async enable2FA(req) {
   }
 }
 
-async activeUser(req) {
-  const active = req.session.user
-console.log(active)
-  try{
-    if(!active) {
-      return {
-        data: "Please Login before you do that"
-      } 
-    }
-    if(active.twoFactorAuth.is2FA && active.twoFactorAuth.status === 'pending') {
-      return {
-        msg: 'Please verify your 2FA Auth',
-        data: active
   async activeUser(req) {
     const active = req.session.user;
     console.log(active);
