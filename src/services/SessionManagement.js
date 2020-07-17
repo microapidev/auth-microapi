@@ -16,7 +16,7 @@ const { v4: uuidv4 } = require('uuid');
 // persistence store of our session
 const sessionStore = new mongoStoreFactory({
   mongooseConnection: mongoose.connection,
-  collection: 'session'
+  collection: 'sessions'
 });
 
 const sess = {
