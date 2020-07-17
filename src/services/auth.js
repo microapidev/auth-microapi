@@ -208,10 +208,12 @@ class UserService{
   }
 
   async enable2FA(req) {
-    const user = req.session.user;
-    const email = user.email;
+    const { userId } = req.query;
+    const findUser = await User.findById(userId);
+    // const user = req.session.user;
+    // const email = user.email;
 
-    let findUser = await User.findOne({ email });
+    // let findUser = await User.findOne({ email });
     try{
       if(findUser.twoFactorAuth.is2FA === false) {
         const enable2FA = async (user, val) => {

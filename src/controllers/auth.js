@@ -36,7 +36,7 @@ class UserController {
 
   async enable2FA(req, res) {
 
-    const data = await UserSrv.enable2FA(req);
+    const data = await UserService.enable2FA(req);
 
     res.status(200).json(CustomResponse(data));
   }
