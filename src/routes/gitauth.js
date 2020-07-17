@@ -29,7 +29,6 @@ gitRouter.get('/callback',
   (req, res) => {
     // Successful authentication, redirect home.
     res.redirect('https://upbeat-leavitt-2a7b54.netlify.app/pages/dashboard.html');
-
   });
 
 

@@ -10,8 +10,7 @@ fbRouter.get('/', passport.authenticate('facebook', { scope: ['email', 'public_p
 fbRouter.get('/callback',
   passport.authenticate('facebook', { failureRedirect: '/login' }),
   (req, res) => {
-    res.redirect('https://upbeat-leavitt-2a7b54.netlify.app/index.html');
-
+    res.redirect('https://upbeat-leavitt-2a7b54.netlify.app/pages/dashboard.html');
   });
 
 
