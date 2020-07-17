@@ -17,24 +17,8 @@ passport.deserializeUser((id, done) => {
   User.findById(id, (err, user) => {
     done(err, user);
   });
-  
-
 
 });
-
-
-// Github Auth
-passport.use(new GitHubStrategy({
-  clientID: process.env.GITHUB_CLIENT_ID,
-  clientSecret: process.env.GITHUB_CLIENT_SECRET,
-  callbackURL: 'https://auth-microapi.herokuapp.com/callback'
-},
-((accessToken, refreshToken, profile, cb) => {
-  User.findOrCreate({ githubId: profile.id }, (err, user) => {
-    return cb(err, user);
-  });
-})
-));
 
 
 gitRouter.get('/',
@@ -44,7 +28,7 @@ gitRouter.get('/callback',
   passport.authenticate('github', { failureRedirect: '/login' }),
   (req, res) => {
     // Successful authentication, redirect home.
-    res.redirect('/');
+    res.redirect('https://upbeat-leavitt-2a7b54.netlify.app/index.html');
 
   });
 

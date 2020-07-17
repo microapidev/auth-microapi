@@ -25,6 +25,7 @@ const openApiDocumentation = require('./swagger/openApiDocumentation');
 // const adminFunctionRouter = require('./routes/admin');
 const googleLoginRouter = require('./routes/googleLogin');
 require('./config/passport/twitterStrategy');
+require('./config/passport/githubStrategy');
 require('./config/passport/googleStrategy');
 
 require('dotenv').config();
@@ -67,7 +68,7 @@ app.use('/api/user/email-verification', emailVerificationRouter());
 app.use('/api/user', authorizeUser, userRouter());
 app.use('/api/facebook', authorizeUser, fbRouter);
 app.use('/api/twitter', twitterRouter);
-app.use('/api/github', authorizeUser, gitRouter);
+app.use('/api/github', gitRouter);
 app.use('/api/google', authorizeUser, googleLoginRouter);
 
 // DON'T DELETE: Admin acc. verification
