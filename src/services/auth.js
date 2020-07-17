@@ -88,7 +88,7 @@ class UserService{
     if(user.twoFactorAuth.is2FA === false) {
       SessionMgt.login(req, user);
       return {
-        msg: 'Your account is already protected for 2FA',
+        msg: 'Your account is not two factor authenticated',
         data: user
       };
     }
@@ -96,8 +96,9 @@ class UserService{
     if(user.twoFactorAuth.status === 'approved') {
       SessionMgt.login(req, user);
       return {
-        msg: 'Your account is already protected for 2FA',
-        data: user
+        msg: 'Your account is protected with 2FA',
+        // data: user
+        data: user.toJSON().id
       };
     }
 
@@ -151,9 +152,10 @@ class UserService{
 
   async otpVerify(req) {
 
-    const user2FA = req.session.user;
+    // const user2FA = req.session.user;
 
-    const { code } = req.query;
+    const { code, userId } = req.query;
+    const user2FA = await User.findById(userId);
     const phone = `+${234}` + user2FA.phone_number.slice(1);
     const email = user2FA.email;
 
@@ -161,7 +163,7 @@ class UserService{
 
     if(user2FA.twoFactorAuth.status === 'approved' && user.twoFactorAuth.status === 'approved') {
       return {
-        msg: 'Your account is already verified for 2FA',
+        msg: 'Your account is two factor authenticated',
         data: user
       };
     }
@@ -206,10 +208,12 @@ class UserService{
   }
 
   async enable2FA(req) {
-    const user = req.session.user;
-    const email = user.email;
+    const { userId } = req.query;
+    const findUser = await User.findById(userId);
+    // const user = req.session.user;
+    // const email = user.email;
 
-    let findUser = await User.findOne({ email });
+    // let findUser = await User.findOne({ email });
     try{
       if(findUser.twoFactorAuth.is2FA === false) {
         const enable2FA = async (user, val) => {
