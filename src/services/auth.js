@@ -155,7 +155,7 @@ class UserService{
     // const user2FA = req.session.user;
 
     const { code, userId } = req.query;
-    const user2FA = await User.findById(userId);
+    const user2FA = await User.findById({ _id: userId });
     const phone = `+${234}` + user2FA.phone_number.slice(1);
     const email = user2FA.email;
 
