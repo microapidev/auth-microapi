@@ -22,7 +22,7 @@ passport.use(
     {
       consumerKey: process.env.TWITTER_KEY,
       consumerSecret: process.env.TWITTER_SECRET,
-      callbackURL: `${process.env.BASE_URL}/api/twitter/callback`,
+      callbackURL: `${process.env.HOST}/api/twitter/callback`,
       passReqToCallback: true,
     },
     (req, accessToken, tokenSecret, profile, done) => {
