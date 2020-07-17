@@ -1,7 +1,7 @@
 const passport = require('passport');
 const refresh = require('passport-oauth2-refresh');
 const { Strategy: TwitterStrategy } = require('passport-twitter');
-
+const SessionManagement = require('../../services/SessionManagement');
 const User = require('../../models/user');
 
 passport.serializeUser((user, done) => {
@@ -22,46 +22,49 @@ passport.use(
     {
       consumerKey: process.env.TWITTER_KEY,
       consumerSecret: process.env.TWITTER_SECRET,
-      callbackURL: `${process.env.BASE_URL}/api/auth/twitter/callback`,
+      callbackURL: `${process.env.BASE_URL}/api/twitter/callback`,
       passReqToCallback: true,
     },
     (req, accessToken, tokenSecret, profile, done) => {
-      if (req.user) {
-        User.findOne({ twitter: profile.id }, (err, existingUser) => {
-          if (err) {
-            return done(err);
-          }
-          if (existingUser) {
-            done(null, existingUser);
-          } else {
-            User.findById(req.user.id, (err, user) => {
-              if (err) {
-                return done(err);
-              }
-              user.twitter = profile.id;
-              user.tokens.push({ kind: 'twitter', accessToken, tokenSecret });
-              user.profile.name = user.profile.name || profile.displayName;
-              user.profile.location =
-                user.profile.location || profile._json.location;
-              user.username = profile.displayName;
 
-              user.profile.picture =
-                user.profile.picture || profile._json.profile_image_url_https;
-              user.save((err) => {
-                if (err) {
-                  return done(err);
-                }
-                done(err, user);
-              });
-            });
-          }
-        });
-      } else {
+      // if (req.user) {
+      //   User.findOne({ twitter: profile.id }, (err, existingUser) => {
+      //     if (err) {
+      //       return done(err);
+      //     }
+      //     if (existingUser) {
+      //       done(null, existingUser);
+      //     } else {
+      //       User.findById(req.user._id, (err, user) => {
+      //         if (err) {
+      //           return done(err);
+      //         }
+      //         user.twitter = profile.id;
+      //         user.tokens.push({ kind: 'twitter', accessToken, tokenSecret });
+      //         user.profile.name = user.profile.name || profile.displayName;
+      //         user.profile.location =
+      //           user.profile.location || profile._json.location;
+      //         user.username = profile.displayName;
+
+      //         user.profile.picture =
+      //           user.profile.picture || profile._json.profile_image_url_https;
+      //         user.save((err) => {
+      //           if (err) {
+      //             return done(err);
+      //           }
+      //           done(err, user);
+      //         });
+      //       });
+      //     }
+      //   });
+      // } else {
+        console.log(req.session)
         User.findOne({ twitter: profile.id }, (err, existingUser) => {
           if (err) {
             return done(err);
           }
           if (existingUser) {
+            SessionManagement.login(req,existingUser);
             return done(null, existingUser);
           }
           const user = new User();
@@ -76,10 +79,12 @@ passport.use(
           user.profile.location = profile._json.location;
           user.profile.picture = profile._json.profile_image_url_https;
           user.save((err) => {
-            done(err, user);
+            SessionManagement.login(req,new Object(user));
+
+           return done(err, user);
           });
         });
-      }
+      // }
     }
   )
 );
