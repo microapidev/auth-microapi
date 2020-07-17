@@ -28,7 +28,7 @@ gitRouter.get('/callback',
   passport.authenticate('github', { failureRedirect: '/login' }),
   (req, res) => {
     // Successful authentication, redirect home.
-    res.redirect('https://upbeat-leavitt-2a7b54.netlify.app/index.html');
+    res.redirect('https://upbeat-leavitt-2a7b54.netlify.app/pages/dashboard.html');
 
   });
 
