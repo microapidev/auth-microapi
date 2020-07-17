@@ -1,6 +1,6 @@
 const userRouter = require('express').Router();
 const { registerValidation, loginValidation } = require('../utils/validation/joiValidation');
-const { auth } = require('../utils/middleware');
+const { auth } = require('../middlewares/middleware');
 const UserCtrl = require('../controllers/auth');
 const SessionMgt = require('../services/SessionManagement');
 
