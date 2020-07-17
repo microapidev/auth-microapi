@@ -30,7 +30,7 @@ const sess = {
   rolling: true,
   cookie: {
     path: '/',
-    sameSite: true,
+    sameSite: 'none',
     httpOnly: true,
     secure: false,
     maxAge: 24 * 60 * 60 * 1000  //24 hours
