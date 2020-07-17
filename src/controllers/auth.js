@@ -31,7 +31,7 @@ class UserController {
 
     const data = await UserService.otpVerify(req);
 
-    res.status(200).json(CustomResponse("verification data", data));
+    res.status(200).json(CustomResponse('verification data', data));
   }
 
   async enable2FA(req, res) {
