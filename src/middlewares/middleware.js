@@ -6,26 +6,41 @@ const CustomResponse = require('../utils/response');
 
 const auth = async (request, response, next) => {
 
-  let token = request.cookies.w_auth;
+  let userId = request.sessions.user;
 
-  const user = await User.findByToken(token);
-  console.log('findByToken', user);
-
-  User.findByToken(token, (err, user) => {
+  User.findByToken(userId, (err, user) => {
     if (err) { throw err; }
     if (!user) {
       return response.json({
         isAuth: false,
         error: true,
-        msg: 'UnAuthorised/Invalid token'
+        msg: 'UnAuthorised/Invalid user'
       });
     }
-    console.log('users middleware', user);
-
-    request.token = token;
     request.user = user;
     next();
   });
+};
+
+const authorizeUser = (request, response, next) => {
+  // This middleware authorizes users by checking if valid API_KEY is sent with the request
+
+  const authorization = request.get('authorization');
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    const token = authorization.substring(7);
+    const decodedUser = jwt.verify(token, JWT_ADMIN_SECRET);
+
+    if (!decodedUser.id) {
+      return response.status(403).json({ error: 'Invalid API_KEY' });
+    }
+    // TODO: link users using admin access token, use kaseem's auth middleware
+    // TODO: if user has unverified email refer them to email verificaton; use sessions maybe
+    // request.adminUser = decodedUser;
+  } else {
+    return response.status(401).send('Access denied. No token provided.');
+  }
+
+  next();
 };
 
 const unknownRoutes = (request, response, next) => {
@@ -35,6 +50,7 @@ const unknownRoutes = (request, response, next) => {
 
 const errorHandler = (error, request, response, next) => {
   // This middleware handles errors responses sent to client
+  console.log(error);
   if (error.name === 'ValidationError') {
     response.status(400).json(
       CustomResponse('ValidationError', { statusCode: 422, message: error.message }, false)
@@ -51,10 +67,7 @@ const errorHandler = (error, request, response, next) => {
     response.status(error.status).json(
       CustomResponse(error.message, { statusCode: error.status, message: error.message }, false)
     );
-  } else if (error.name === 'TypeError') {
-    response.status(400).send('fn error');
-  }
-  else {
+  } else {
     response.status(500).json(CustomResponse('Unhandled Error', error = { statusCode: 500, message: 'Unhandled Error' }, false));
   }
   // next(error);
@@ -62,6 +75,7 @@ const errorHandler = (error, request, response, next) => {
 
 
 module.exports = {
+  authorizeUser,
   auth,
   errorHandler,
   unknownRoutes

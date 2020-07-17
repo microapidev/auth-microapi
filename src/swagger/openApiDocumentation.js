@@ -36,7 +36,39 @@ const openApiDocumentation = {
   },
   //input api paths in here
   paths: {
-    '/api/auth/admin/register': {
+    '/api/user/active': {
+      get: {
+        tags: ['Active user'],
+        description: 'Registers admin',
+        operationId: 'register',
+        security: [ {bearerAuth: {}}],
+        requestBody: {},
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/admin/register': {
       post: {
         tags: ['Register Admin'],
         description: 'Registers admin',
@@ -77,7 +109,7 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/admin/getkey': {
+    '/api/admin/getkey': {
       post: {
         tags: ['Get APIKEY'],
         description: 'login user',
@@ -118,7 +150,7 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/admin/reset-password': {
+    '/api/admin/reset-password': {
       post: {
         tags: ['Admin reset password'],
         description: 'Get new password in case of forgotten password',
@@ -159,7 +191,7 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/admin/reset-password/{token}': {
+    '/api/admin/reset-password/{token}': {
       patch: {
         tags: ['Admin chanage password'],
         description: 'Get new password in case of forgotten password',
@@ -209,7 +241,7 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/user/register': {
+    '/api/user/register': {
       post: {
         tags: ['Register User'],
         description: 'Registers user',
@@ -250,7 +282,7 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/user/email-verification/resend': {
+    '/api/user/email-verification/resend': {
       get: {
         tags: ['Email resend verification'],
         description: 'email resend varification',
@@ -281,7 +313,38 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/user/login': {
+    '/api/user/enable': {
+      get: {
+        tags: ['enable 2FA'],
+        description: 'enable 2FA',
+        operationId: 'enable2FA',
+        security: [ {bearerAuth: {}}],
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/user/login': {
       post: {
         tags: ['Login User'],
         description: 'login user',
@@ -322,7 +385,39 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/user/password/reset': {
+    '/api/user/verify': {
+      get: {
+        tags: ['verify OTP'],
+        description: 'verify OTP',
+        operationId: 'verifyOTP',
+        security: [ {bearerAuth: {}}],
+        requestBody: {},
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/api/user/password/reset': {
       post: {
         tags: ['forgot-password'],
         description: 'Enter your email to reset your password',
@@ -363,7 +458,7 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/user/password/{token}': {
+    '/api/user/password/{token}': {
       patch: {
         tags: ['reset-password'],
         description: 'Enter your new password to reset password',
@@ -534,7 +629,7 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/user/logout': {
+    '/api/user/logout': {
       get: {
         tags: ['Logout user '],
         description: 'logout user',

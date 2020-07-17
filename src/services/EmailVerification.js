@@ -24,15 +24,16 @@ class EmailVerificationService{
     // Now update the user/admin profile and return updated data 
     this.logger(req.baseUrl);
     let userData;
-    if(req.baseUrl !== '/api/admin/auth/email'){
+    if(req.baseUrl === '/api/user/email-verification'){
       userData = await User.findByIdAndUpdate(token._userId, 
         {$set: {isEmailVerified: true}}, 
         {new: true});
-    } else {
-      userData = await AdminUser.findByIdAndUpdate(token._userId, 
-        {$set: {isEmailVerified: true}}, 
-        {new: true});
     }
+    // else if (req.baseUrl === '/api/admin/email-verification') {
+    //   userData = await AdminUser.findByIdAndUpdate(token._userId, 
+    //     {$set: {isEmailVerified: true}}, 
+    //     {new: true});
+    // }
 
     this.logger(userData);
     if(!userData)

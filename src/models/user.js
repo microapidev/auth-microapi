@@ -3,7 +3,6 @@ const mongodbErrorHandler = require('mongoose-mongodb-errors');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const findOrCreate = require('mongoose-findorcreate');
-// const moment = require('moment');
 const saltRounds = 10;
 const { JWT_EXPIRE, JWT_SECRET } = require('../utils/config');
 
@@ -14,6 +13,16 @@ const userSchema = new mongoose.Schema({
     type: String,
     uniqueCaseInsensitive: true,
     required: [true, 'Please add a name'],
+  },
+  twoFactorAuth: {
+    is2FA: {
+      type: Boolean,
+      default: false
+    },
+    status: {
+      type: String,
+      default: null
+    }
   },
   failedAttempts: {
     count: {
@@ -31,13 +40,13 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    // required: [true, "Please enter a Password"],
+    required: [true, 'Please enter a Password'],
     minlength: 8,
     // select: false,
   },
   phone_number: {
     type: String,
-    // required: [true, "Please enter a phone number"],
+    required: [true, 'Please enter a phone number'],
     min: 10,
   },
   resetPasswordToken: String,
@@ -91,9 +100,7 @@ userSchema.pre('save', function () {
   // Check if password is present and is modified, then hash
   const user = this;
 
-  // commented to allow hashing of password on password reset
-  // if (user.password && user.isModified('password')) {
-  if (user.password) {
+  if (user.password && user.isModified('password')) {
     user.password = bcrypt.hashSync(user.password, saltRounds);
   }
 });

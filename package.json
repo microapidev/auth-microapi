@@ -64,7 +64,8 @@
     "randomstring": "^1.1.5",
     "should": "^13.2.3",
     "swagger-jsdoc": "^4.0.0",
-    "swagger-ui-express": "^4.1.4"
+    "swagger-ui-express": "^4.1.4",
+    "twilio": "^3.48.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.1",
