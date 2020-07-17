@@ -24,7 +24,7 @@ module.exports = () => {
     // })
     .get(UserCtrl.activeUser);
 
-    userRouter.route('/enable')
+  userRouter.route('/enable')
     // .get(SessionMgt.checkSession, (request, response) => {
     //   response.redirect('/');
     // })

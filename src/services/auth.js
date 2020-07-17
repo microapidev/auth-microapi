@@ -101,45 +101,45 @@ class UserService{
       };
     }
 
-  const userNumber = `+${234}` + user.phone_number.slice(1);
+    const userNumber = `+${234}` + user.phone_number.slice(1);
 
-  // console.log(user)
+    // console.log(user)
 
-try {
-  if(user.twoFactorAuth.is2FA === true) {
-    const data = await client
-      .verify
-      .services(SERVICE_ID)
-      .verifications
-      .create({
-          to: userNumber,
-          channel: 'sms'
-        });
+    try {
+      if(user.twoFactorAuth.is2FA === true) {
+        const data = await client
+          .verify
+          .services(SERVICE_ID)
+          .verifications
+          .create({
+            to: userNumber,
+            channel: 'sms'
+          });
 
-      let user2FA = await User.findOne({ email });
+        let user2FA = await User.findOne({ email });
   
-      const set2FA = async (user, val) => {
-        user.twoFactorAuth.is2FA = true;
-        user.twoFactorAuth.status = val;
-        return user.save();
-      };
+        const set2FA = async (user, val) => {
+          user.twoFactorAuth.is2FA = true;
+          user.twoFactorAuth.status = val;
+          return user.save();
+        };
 
-      user = await set2FA(user2FA, data.status);
-      user = user.toJSON();
+        user = await set2FA(user2FA, data.status);
+        user = user.toJSON();
 
-      SessionMgt.login(req, user);
+        SessionMgt.login(req, user);
 
-    return {
-      user: user,
-    }
-  } 
-  // else {
-  //   SessionMgt.login(req, user);
-  //   return {
-  //     msg: "enable 2FA to make your account fully protected",
-  //     user: user
-  //   }
-  // }
+        return {
+          user: user,
+        };
+      } 
+      // else {
+      //   SessionMgt.login(req, user);
+      //   return {
+      //     msg: "enable 2FA to make your account fully protected",
+      //     user: user
+      //   }
+      // }
     } catch(err) {
       if (err.status === 429 && err.code === 20492) {
         return {
@@ -184,18 +184,18 @@ try {
           return user.save();
         };
 
-    user = await set2FA(user, data.status);
-    user2FA.twoFactorAuth.status = data.status
-    user = user.toJSON();
-      return {
-        message: "OTP successfully verified",
-        verify: data
-      }
-    } else {
+        user = await set2FA(user, data.status);
+        user2FA.twoFactorAuth.status = data.status;
+        user = user.toJSON();
+        return {
+          message: 'OTP successfully verified',
+          verify: data
+        };
+      } 
       return {
         data: data.valid
       };
-    }
+    
     } catch (err) {
       if(err.status === 404 && err.code === 20404) {
         return {
@@ -205,37 +205,37 @@ try {
     }
   }
 
-async enable2FA(req) {
-  const user = req.session.user;
-  const email = user.email
+  async enable2FA(req) {
+    const user = req.session.user;
+    const email = user.email;
 
- let findUser = await User.findOne({ email })
-  try{
-    if(findUser.twoFactorAuth.is2FA === false) {
-       const enable2FA = async (user, val) => {
-      user.twoFactorAuth.is2FA = val;
-      return user.save();
-    };
+    let findUser = await User.findOne({ email });
+    try{
+      if(findUser.twoFactorAuth.is2FA === false) {
+        const enable2FA = async (user, val) => {
+          user.twoFactorAuth.is2FA = val;
+          return user.save();
+        };
 
-    findUser = await enable2FA(findUser, true);
-    user.twoFactorAuth.is2FA = true
-    findUser = findUser.toJSON();
-     return {
-        message: "2FA just enabled, now you can receive OTP and verify it",
-        data: findUser
-      }
-    } else {
+        findUser = await enable2FA(findUser, true);
+        user.twoFactorAuth.is2FA = true;
+        findUser = findUser.toJSON();
+        return {
+          message: '2FA just enabled, now you can receive OTP and verify it',
+          data: findUser
+        };
+      } 
       return {
-        message: "2FA is enabled, your account is protected",
+        message: '2FA is enabled, your account is protected',
         data: findUser
-      }
-    }
-  } catch (err) {
-    return {
-      message: "something wrong" + err
+      };
+    
+    } catch (err) {
+      return {
+        message: 'something wrong' + err
+      };
     }
   }
-}
 
   async activeUser(req) {
     const active = req.session.user;
