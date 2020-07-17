@@ -58,32 +58,32 @@ passport.use(
       //     }
       //   });
       // } else {
-        console.log(req.session)
-        User.findOne({ twitter: profile.id }, (err, existingUser) => {
-          if (err) {
-            return done(err);
-          }
-          if (existingUser) {
-            SessionManagement.login(req,existingUser);
-            return done(null, existingUser);
-          }
-          const user = new User();
-          // Twitter will not provide an email address.  Period.
-          // But a person’s twitter username is guaranteed to be unique
-          // so we can "fake" a twitter email address as follows:
-          user.email = `${profile.username}@twitter.com`;
-          user.twitter = profile.id;
-          user.tokens.push({ kind: 'twitter', accessToken, tokenSecret });
-          user.profile.name = profile.displayName;
-          user.username = profile.displayName;
-          user.profile.location = profile._json.location;
-          user.profile.picture = profile._json.profile_image_url_https;
-          user.save((err) => {
-            SessionManagement.login(req,new Object(user));
+      console.log(req.session);
+      User.findOne({ twitter: profile.id }, (err, existingUser) => {
+        if (err) {
+          return done(err);
+        }
+        if (existingUser) {
+          SessionManagement.login(req,existingUser);
+          return done(null, existingUser);
+        }
+        const user = new User();
+        // Twitter will not provide an email address.  Period.
+        // But a person’s twitter username is guaranteed to be unique
+        // so we can "fake" a twitter email address as follows:
+        user.email = `${profile.username}@twitter.com`;
+        user.twitter = profile.id;
+        user.tokens.push({ kind: 'twitter', accessToken, tokenSecret });
+        user.profile.name = profile.displayName;
+        user.username = profile.displayName;
+        user.profile.location = profile._json.location;
+        user.profile.picture = profile._json.profile_image_url_https;
+        user.save((err) => {
+          SessionManagement.login(req,new Object(user));
 
-           return done(err, user);
-          });
+          return done(err, user);
         });
+      });
       // }
     }
   )
