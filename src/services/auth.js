@@ -85,43 +85,62 @@ class UserService{
       throw new CustomError('Please verify your email to proceed', 401);
     }
 
+    if(user.twoFactorAuth.is2FA === false) {
+      SessionMgt.login(req, user);
+      return {
+        msg: 'Your account is not two factor authenticated',
+        data: user
+      };
+    }
 
     if(user.twoFactorAuth.status === 'approved') {
       SessionMgt.login(req, user);
       return {
-        msg: 'Your account is already protected for 2FA',
-        data: user
+        msg: 'Your account is protected with 2FA',
+        // data: user
+        data: user.toJSON().id
       };
     }
 
     const userNumber = `+${234}` + user.phone_number.slice(1);
 
+    // console.log(user)
+
     try {
-      const data = await client
-        .verify
-        .services(SERVICE_ID)
-        .verifications
-        .create({
-          to: userNumber,
-          channel: 'sms'
-        });
+      if(user.twoFactorAuth.is2FA === true) {
+        const data = await client
+          .verify
+          .services(SERVICE_ID)
+          .verifications
+          .create({
+            to: userNumber,
+            channel: 'sms'
+          });
 
-      let user2FA = await User.findOne({ email });
+        let user2FA = await User.findOne({ email });
   
-      const set2FA = async (user, val) => {
-        user.twoFactorAuth.is2FA = true;
-        user.twoFactorAuth.status = val;
-        return user.save();
-      };
+        const set2FA = async (user, val) => {
+          user.twoFactorAuth.is2FA = true;
+          user.twoFactorAuth.status = val;
+          return user.save();
+        };
 
-      user = await set2FA(user2FA, data.status);
-      user = user.toJSON();
+        user = await set2FA(user2FA, data.status);
+        user = user.toJSON();
 
-      SessionMgt.login(req, user);
+        SessionMgt.login(req, user);
 
-      return {
-        user: user,
-      };
+        return {
+          user: user,
+        };
+      } 
+      // else {
+      //   SessionMgt.login(req, user);
+      //   return {
+      //     msg: "enable 2FA to make your account fully protected",
+      //     user: user
+      //   }
+      // }
     } catch(err) {
       if (err.status === 429 && err.code === 20492) {
         return {
@@ -133,9 +152,10 @@ class UserService{
 
   async otpVerify(req) {
 
-    const user2FA = req.session.user;
+    // const user2FA = req.session.user;
 
-    const { code } = req.query;
+    const { code, userId } = req.query;
+    const user2FA = await User.findById(userId);
     const phone = `+${234}` + user2FA.phone_number.slice(1);
     const email = user2FA.email;
 
@@ -143,7 +163,7 @@ class UserService{
 
     if(user2FA.twoFactorAuth.status === 'approved' && user.twoFactorAuth.status === 'approved') {
       return {
-        msg: 'Your account is already verified for 2FA',
+        msg: 'Your account is two factor authenticated',
         data: user
       };
     }
@@ -159,7 +179,6 @@ class UserService{
             code: code
           });
 
-        console.log(data);
         let user = await User.findOne({ email });
 
         const set2FA = async (user, val) => {
@@ -170,8 +189,8 @@ class UserService{
         user = await set2FA(user, data.status);
         user2FA.twoFactorAuth.status = data.status;
         user = user.toJSON();
-        console.log(user2FA);
         return {
+          message: 'OTP successfully verified',
           verify: data
         };
       } 
@@ -185,6 +204,40 @@ class UserService{
           data: 'Invalid code/code expired'
         };
       } 
+    }
+  }
+
+  async enable2FA(req) {
+    const { userId } = req.query;
+    const findUser = await User.findById(userId);
+    // const user = req.session.user;
+    // const email = user.email;
+
+    // let findUser = await User.findOne({ email });
+    try{
+      if(findUser.twoFactorAuth.is2FA === false) {
+        const enable2FA = async (user, val) => {
+          user.twoFactorAuth.is2FA = val;
+          return user.save();
+        };
+
+        findUser = await enable2FA(findUser, true);
+        user.twoFactorAuth.is2FA = true;
+        findUser = findUser.toJSON();
+        return {
+          message: '2FA just enabled, now you can receive OTP and verify it',
+          data: findUser
+        };
+      } 
+      return {
+        message: '2FA is enabled, your account is protected',
+        data: findUser
+      };
+    
+    } catch (err) {
+      return {
+        message: 'something wrong' + err
+      };
     }
   }
 

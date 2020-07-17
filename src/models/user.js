@@ -40,19 +40,17 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    // required: [true, "Please enter a Password"],
+    // required: [true, 'Please enter a Password'],
     minlength: 8,
     // select: false,
   },
   phone_number: {
     type: String,
-    // required: [true, "Please enter a phone number"],
+    // required: [true, 'Please enter a phone number'],
     min: 10,
   },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
-  facebookId: String,
-  githubId: String,
   createdAt: {
     type: Date,
     default: Date.now,
@@ -62,6 +60,8 @@ const userSchema = new mongoose.Schema({
     default: false,
   },
   twitter: String,
+  facebook: String,
+  github: String,
   tokens: Array,
   profile: {
     name: String,

@@ -10,27 +10,27 @@ const session = require('express-session');
 const mongoStoreFactory = require('connect-mongo')(session);
 const passport = require('passport');
 const CustomResponse = require('../utils/response');
-// const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 
 
 // persistence store of our session
 const sessionStore = new mongoStoreFactory({
   mongooseConnection: mongoose.connection,
-  collection: 'session'
+  collection: 'sessions'
 });
 
 const sess = {
   store: sessionStore,
-  // genid: function(request) {
-  //   return uuidv4();; // use UUIDs for session IDs
-  // },
+  genid: function() {
+    return uuidv4();; // use UUIDs for session IDs
+  },
   secret: 'canyoukeepasecret',
   saveUninitialized: false,
   resave: false,
   rolling: true,
   cookie: {
     path: '/',
-    sameSite: true,
+    sameSite: 'none',
     httpOnly: true,
     secure: false,
     maxAge: 24 * 60 * 60 * 1000  //24 hours
@@ -65,11 +65,11 @@ class SessionManagement {
   // create new session for user on login
   login(request, user) {
     request.session.user = user;
-    // sessionStore.set(genid(request), request.session)
-    //   .then((ret) => console.log(ret))
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
+    sessionStore.set(sess.genid(), request.session)
+      .then((ret) => console.log(ret))
+      .catch(error => {
+        console.log(error);
+      });
     // eslint-disable-next-line curly
     // if (!session) throw new CustomError('Couldn\'t refresh user session. Try again');
   }
