@@ -51,8 +51,6 @@ const userSchema = new mongoose.Schema({
   },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
-  facebookId: String,
-  githubId: String,
   createdAt: {
     type: Date,
     default: Date.now,
@@ -62,6 +60,7 @@ const userSchema = new mongoose.Schema({
     default: false,
   },
   twitter: String,
+  facebook: String,
   github: String,
   tokens: Array,
   profile: {

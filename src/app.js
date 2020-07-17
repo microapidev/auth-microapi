@@ -27,6 +27,7 @@ const googleLoginRouter = require('./routes/googleLogin');
 require('./config/passport/twitterStrategy');
 require('./config/passport/githubStrategy');
 require('./config/passport/googleStrategy');
+require('./config/passport/facebookStrategy');
 
 require('dotenv').config();
 
@@ -66,7 +67,7 @@ SessionMgt.config(app);
 app.use('/api/admin', adminRouter());
 app.use('/api/user/email-verification', emailVerificationRouter());
 app.use('/api/user', authorizeUser, userRouter());
-app.use('/api/facebook', authorizeUser, fbRouter);
+app.use('/api/facebook', fbRouter);
 app.use('/api/twitter', twitterRouter);
 app.use('/api/github', gitRouter);
 app.use('/api/google', authorizeUser, googleLoginRouter);
