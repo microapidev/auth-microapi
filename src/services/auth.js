@@ -295,7 +295,7 @@ class UserService{
         new: true,
       }
     );
-    console.log(user);
+    // console.log(user);
 
     if (!user) {
       throw new CustomError(

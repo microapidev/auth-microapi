@@ -64,7 +64,7 @@ module.exports = () => {
     });
   });
 
-  userRouter.post('/password/reset', authorizeUser, forgotValidation(), UserController.forgotPassword);
+  userRouter.post('/password/reset', forgotValidation(), UserController.forgotPassword);
 
   userRouter.get('/password/:token', (request, response, next) => {
     response.redirect(`/pages/forgot-new/?token=${request.params.token}`);
