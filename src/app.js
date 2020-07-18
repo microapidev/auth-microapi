@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const passport = require('passport');
+// const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const userRouter = require('./routes/auth');
 const adminRouter = require('./routes/adminAuth');
@@ -58,7 +58,6 @@ app.use(
 //   })
 // );
 
-app.use(passport.initialize());
 
 // configure user session
 SessionMgt.config(app);
