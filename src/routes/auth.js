@@ -64,13 +64,13 @@ module.exports = () => {
     });
   });
 
-  userRouter.post('/password/reset', forgotValidation(), UserController.forgotPassword);
+  userRouter.post('/reset', forgotValidation(), UserController.forgotPassword);
 
-  userRouter.get('/password/:token', (request, response, next) => {
+  userRouter.get('/:token', (request, response, next) => {
     response.redirect(`/pages/forgot-new/?token=${request.params.token}`);
   });
 
-  userRouter.patch('/password/:token', authorizeUser, resetPasswordValidation(), UserController.resetPassword);
+  userRouter.patch('/:token', authorizeUser, resetPasswordValidation(), UserController.resetPassword);
 
   return userRouter;
 };
