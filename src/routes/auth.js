@@ -67,7 +67,7 @@ module.exports = () => {
   userRouter.post('/reset', forgotValidation(), UserController.forgotPassword);
 
   userRouter.get('/:token', (request, response, next) => {
-    response.redirect(`/pages/forgot-new/?token=${request.params.token}`);
+    response.redirect(`https://upbeat-leavitt-2a7b54.netlify.app/pages/forgot-new/?token=${request.params.token}`);
   });
 
   userRouter.patch('/:token', authorizeUser, resetPasswordValidation(), UserController.resetPassword);
