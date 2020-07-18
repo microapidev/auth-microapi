@@ -295,6 +295,7 @@ class UserService{
         new: true,
       }
     );
+    console.log(user);
 
     if (!user) {
       throw new CustomError(
@@ -303,7 +304,7 @@ class UserService{
       );
     }
     
-    const resetUrl = `http:\/\/${req.headers.host}\/api\/auth\/user\/password\/${token}`;
+    const resetUrl = `http:\/\/${req.headers.host}\/api\/user\/password\/${token}`;
     sendForgotPasswordMail(user.email, user.username, resetUrl);
 
     return {
