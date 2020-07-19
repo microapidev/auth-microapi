@@ -45,6 +45,7 @@ class SessionManagement {
       sess.cookie.secure = true; // serve secure cookies
     }
     app.use(session(sess));
+    app.use(passport.initialize());
     app.use(passport.session());
   }
 

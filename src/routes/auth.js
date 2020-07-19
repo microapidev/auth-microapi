@@ -64,10 +64,10 @@ module.exports = () => {
     });
   });
 
-  userRouter.post('/password/reset', authorizeUser, forgotValidation(), UserController.forgotPassword);
+  userRouter.post('/reset', forgotValidation(), UserController.forgotPassword);
 
-  userRouter.get('/password/:token', (request, response, next) => {
-    response.status(200).send('It\'s cool you\'re here 😁, but you should be using postman to send a PATCH request to change password via this url!');
+  userRouter.get('/:token', (request, response, next) => {
+    response.redirect(`https://upbeat-leavitt-2a7b54.netlify.app/pages/forgot-new/?token=${request.params.token}`);
   });
 
   userRouter.patch('/:token', authorizeUser, resetPasswordValidation(), UserController.resetPassword);

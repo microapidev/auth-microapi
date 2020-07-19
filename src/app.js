@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const passport = require('passport');
+// const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const userRouter = require('./routes/auth');
 const adminRouter = require('./routes/adminAuth');
@@ -58,7 +58,6 @@ app.use(
 //   })
 // );
 
-app.use(passport.initialize());
 
 // configure user session
 SessionMgt.config(app);
@@ -66,11 +65,12 @@ SessionMgt.config(app);
 // auth routes
 app.use('/api/admin', adminRouter());
 app.use('/api/user/email-verification', emailVerificationRouter());
+app.use('/api/user/password', userRouter());
 app.use('/api/user', authorizeUser, userRouter());
 app.use('/api/facebook', fbRouter);
 app.use('/api/twitter', twitterRouter);
 app.use('/api/github', gitRouter);
-app.use('/api/google', authorizeUser, googleLoginRouter);
+app.use('/api/google', googleLoginRouter);
 
 // DON'T DELETE: Admin acc. verification
 
