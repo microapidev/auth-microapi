@@ -82,6 +82,16 @@ exports.updateSettingsValidation = () => (req, res, next) => {
   return validator(schema, req.body, res, next);
 };
 
+exports.updateAuthProvidersValidation = () => (req, res, next) => {
+  const schema = Joi.object().keys({
+    twitterEnabled: Joi.boolean(),
+    facebookEnabled: Joi.boolean(),
+    githubEnabled: Joi.boolean(),
+    googleEnabled: Joi.boolean(),
+  });
+  return validator(schema, req.body, res, next);
+};
+
 exports.forgotValidation = () => (req, res, next) => {
   const schema = Joi.object().keys({
     email: Joi.string()

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Admin = require("../models/admin");
 const Settings = require("../models/settings");
-const CustomError = require("../utils/CustomError");
+const { CustomError } = require("../utils/CustomError");
 const RandomString = require("randomstring");
 const { sendForgotPasswordMail } = require("../EmailFactory/index");
 
@@ -67,7 +67,7 @@ class AdminService {
       throw new CustomError("Admin with email not found", 404);
     }
 
-    const data = user;
+    const data = user.settings;
     const message = "Settings retrieved successfully";
 
     return {
