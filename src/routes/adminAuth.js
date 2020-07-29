@@ -2,6 +2,7 @@ const adminRouter = require("express").Router();
 const {
   registerValidation,
   loginValidation,
+  getSettingsValidation,
   updateSettingsValidation,
   forgotValidation,
   resetPasswordValidation,
@@ -16,7 +17,7 @@ module.exports = () => {
     forgotValidation(),
     AdminCtrl.forgotPassword
   );
-  adminRouter.get("/settings", AdminCtrl.getSettings);
+  adminRouter.get("/settings", getSettingsValidation(), AdminCtrl.getSettings);
   adminRouter.patch(
     "/settings",
     updateSettingsValidation(),
