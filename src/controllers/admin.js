@@ -1,52 +1,59 @@
 /**=================================================================
- * ====   TITLE::     ADDING ADMIN FORGOT AND RESET PASSWORD    ====  
+ * ====   TITLE::     ADDING ADMIN FORGOT AND RESET PASSWORD    ====
  * ====   AUTHOR:: jimoh19 <jemohkunle2007@gmail.com>           ====
  * ====   DATE::            30TH JUNE 2020                      ====
  * =================================================================
  */
 
-const CustomResponse = require('../utils/response');
-const AdminSrv = require('../services/adminAuth');
+const CustomResponse = require("../utils/response");
+const AdminSrv = require("../services/adminAuth");
 
-class AdminController{
-
+class AdminController {
   async register(request, response) {
-  
     const data = await AdminSrv.register(request.body);
-    return response.status(201).json(CustomResponse('Registration successful', data));
-
+    return response
+      .status(201)
+      .json(CustomResponse("Registration successful", data));
   } //end register
 
-  async getKey(request, response){
-  
+  async getKey(request, response) {
     const data = await AdminSrv.getKey(request.body);
     return response.status(200).json(CustomResponse(data.message, data.data));
-
   } //end getKey
 
-  async forgotPassword(request, response){
+  async getSettings(request, response) {
+    const data = await AdminSrv.getSettings(request.body);
+    return response.status(200).json(CustomResponse(data.message, data.data));
+  } //end getSettings
 
+  async updateSettings(request, response) {
+    const data = await AdminSrv.updateSettings(request.body);
+    return response.status(200).json(CustomResponse(data.message, data.data));
+  } //end getSettings
+
+  async forgotPassword(request, response) {
     const data = await AdminSrv.forgotPassword(request);
-    return response.status(200).json(CustomResponse(`A password reset link has been sent to ${data.email}`));
-
+    return response
+      .status(200)
+      .json(
+        CustomResponse(`A password reset link has been sent to ${data.email}`)
+      );
   } //end forgotPassword
 
-  async resetPassword(request, response){
-    
+  async resetPassword(request, response) {
     const data = await AdminSrv.resetPassword(request);
-    return response.status(200).json(CustomResponse('Password updated successfully. You may login'));
-
+    return response
+      .status(200)
+      .json(CustomResponse("Password updated successfully. You may login"));
   } //end resetPassword
 
-  async deactivateUser(req,res){
-
+  async deactivateUser(req, res) {
     const data = await AdminSrv.deactivateUser(req);
-    res.status(data.code).send(CustomResponse('User has been successfully deactivated', data));
-
-  } //end deactivateUser  
-
+    res
+      .status(data.code)
+      .send(CustomResponse("User has been successfully deactivated", data));
+  } //end deactivateUser
 } //end class
-
 
 module.exports = new AdminController();
 
