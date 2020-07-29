@@ -1,93 +1,84 @@
-const passport = require('passport');
-const refresh = require('passport-oauth2-refresh');
-const { Strategy: TwitterStrategy } = require('passport-twitter');
-const SessionManagement = require('../../services/SessionManagement');
-const User = require('../../models/user');
-
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
-    done(err, user);
-  });
-});
+const passport = require("passport");
+const refresh = require("passport-oauth2-refresh");
+const { Strategy: TwitterStrategy } = require("passport-twitter");
+const SessionManagement = require("../../services/SessionManagement");
+const User = require("../../models/user");
 
 /**
  * Sign in with Twitter.
  */
-passport.use(
-  new TwitterStrategy(
+const createTwitterStrategy = (key, secret) => {
+  return new TwitterStrategy(
     {
-      consumerKey: process.env.TWITTER_KEY,
-      consumerSecret: process.env.TWITTER_SECRET,
+      consumerKey: key || process.env.TWITTER_KEY,
+      consumerSecret: secret || process.env.TWITTER_SECRET,
       callbackURL: `${process.env.HOST}/api/twitter/callback`,
       passReqToCallback: true,
     },
-    (req, accessToken, tokenSecret, profile, done) => {
+    callback
+  );
+};
 
-      // if (req.user) {
-      //   User.findOne({ twitter: profile.id }, (err, existingUser) => {
-      //     if (err) {
-      //       return done(err);
-      //     }
-      //     if (existingUser) {
-      //       done(null, existingUser);
-      //     } else {
-      //       User.findById(req.user._id, (err, user) => {
-      //         if (err) {
-      //           return done(err);
-      //         }
-      //         user.twitter = profile.id;
-      //         user.tokens.push({ kind: 'twitter', accessToken, tokenSecret });
-      //         user.profile.name = user.profile.name || profile.displayName;
-      //         user.profile.location =
-      //           user.profile.location || profile._json.location;
-      //         user.username = profile.displayName;
+const callback = (req, accessToken, tokenSecret, profile, done) => {
+  // if (req.user) {
+  //   User.findOne({ twitter: profile.id }, (err, existingUser) => {
+  //     if (err) {
+  //       return done(err);
+  //     }
+  //     if (existingUser) {
+  //       done(null, existingUser);
+  //     } else {
+  //       User.findById(req.user._id, (err, user) => {
+  //         if (err) {
+  //           return done(err);
+  //         }
+  //         user.twitter = profile.id;
+  //         user.tokens.push({ kind: 'twitter', accessToken, tokenSecret });
+  //         user.profile.name = user.profile.name || profile.displayName;
+  //         user.profile.location =
+  //           user.profile.location || profile._json.location;
+  //         user.username = profile.displayName;
 
-      //         user.profile.picture =
-      //           user.profile.picture || profile._json.profile_image_url_https;
-      //         user.save((err) => {
-      //           if (err) {
-      //             return done(err);
-      //           }
-      //           done(err, user);
-      //         });
-      //       });
-      //     }
-      //   });
-      // } else {
-      console.log(req.session);
-      User.findOne({ twitter: profile.id }, (err, existingUser) => {
-        if (err) {
-          return done(err);
-        }
-        if (existingUser) {
-          SessionManagement.login(req,existingUser);
-          return done(null, existingUser);
-        }
-        const user = new User();
-        // Twitter will not provide an email address.  Period.
-        // But a person’s twitter username is guaranteed to be unique
-        // so we can "fake" a twitter email address as follows:
-        user.email = `${profile.username}@twitter.com`;
-        user.twitter = profile.id;
-        user.tokens.push({ kind: 'twitter', accessToken, tokenSecret });
-        user.profile.name = profile.displayName;
-        user.username = profile.displayName;
-        user.profile.location = profile._json.location;
-        user.profile.picture = profile._json.profile_image_url_https;
-        user.save((err) => {
-          SessionManagement.login(req,new Object(user));
-
-          return done(err, user);
-        });
-      });
-      // }
+  //         user.profile.picture =
+  //           user.profile.picture || profile._json.profile_image_url_https;
+  //         user.save((err) => {
+  //           if (err) {
+  //             return done(err);
+  //           }
+  //           done(err, user);
+  //         });
+  //       });
+  //     }
+  //   });
+  // } else {
+  console.log(req.session);
+  User.findOne({ twitter: profile.id }, (err, existingUser) => {
+    if (err) {
+      return done(err);
     }
-  )
-);
+    if (existingUser) {
+      SessionManagement.login(req, existingUser);
+      return done(null, existingUser);
+    }
+    const user = new User();
+    // Twitter will not provide an email address.  Period.
+    // But a person’s twitter username is guaranteed to be unique
+    // so we can "fake" a twitter email address as follows:
+    user.email = `${profile.username}@twitter.com`;
+    user.twitter = profile.id;
+    user.tokens.push({ kind: "twitter", accessToken, tokenSecret });
+    user.profile.name = profile.displayName;
+    user.username = profile.displayName;
+    user.profile.location = profile._json.location;
+    user.profile.picture = profile._json.profile_image_url_https;
+    user.save((err) => {
+      SessionManagement.login(req, new Object(user));
+
+      return done(err, user);
+    });
+  });
+  // }
+};
 
 /**
  * Login Required middleware.
@@ -96,14 +87,14 @@ exports.isAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect('/login');
+  res.redirect("/login");
 };
 
 /**
  * Authorization Required middleware.
  */
 exports.isAuthorized = (req, res, next) => {
-  const provider = req.path.split('/')[2];
+  const provider = req.path.split("/")[2];
   const token = req.user.tokens.find((token) => token.kind === provider);
   if (token) {
     // Is there an access token expiration and access token expired?
@@ -115,13 +106,13 @@ exports.isAuthorized = (req, res, next) => {
     // No: we are good, go to next():
     if (
       token.accessTokenExpires &&
-      moment(token.accessTokenExpires).isBefore(moment().subtract(1, 'minutes'))
+      moment(token.accessTokenExpires).isBefore(moment().subtract(1, "minutes"))
     ) {
       if (token.refreshToken) {
         if (
           token.refreshTokenExpires &&
           moment(token.refreshTokenExpires).isBefore(
-            moment().subtract(1, 'minutes')
+            moment().subtract(1, "minutes")
           )
         ) {
           res.redirect(`/auth/${provider}`);
@@ -136,7 +127,7 @@ exports.isAuthorized = (req, res, next) => {
                     tokenObject.accessToken = accessToken;
                     if (params.expires_in) {
                       tokenObject.accessTokenExpires = moment()
-                        .add(params.expires_in, 'seconds')
+                        .add(params.expires_in, "seconds")
                         .format();
                     }
                     return true;
@@ -144,7 +135,7 @@ exports.isAuthorized = (req, res, next) => {
                   return false;
                 });
                 req.user = user;
-                user.markModified('tokens');
+                user.markModified("tokens");
                 user.save((err) => {
                   if (err) {
                     console.log(err);
@@ -165,3 +156,15 @@ exports.isAuthorized = (req, res, next) => {
     res.redirect(`/auth/${provider}`);
   }
 };
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+  User.findById(id, (err, user) => {
+    done(err, user);
+  });
+});
+
+module.exports = createTwitterStrategy;
