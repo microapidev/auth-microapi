@@ -8,8 +8,6 @@ const cookieParser = require('cookie-parser');
 const userRouter = require('./routes/auth');
 const adminRouter = require('./routes/adminAuth');
 const fbRouter = require('./routes/fbauth');
-const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
 const twitterRouter = require('./routes/twitterAuth');
 const gitRouter = require('./routes/gitauth');
 const emailVerificationRouter = require('./routes/EmailVerification');
@@ -43,21 +41,6 @@ app.use(
     extended: true,
   })
 );
-
-// passport middleware
-// app.use(
-//   session({
-//     resave: true,
-//     saveUninitialized: true,
-//     secret: process.env.SESSION_SECRET,
-//     cookie: { maxAge: 1209600000 }, // two weeks in milliseconds
-//     store: new MongoStore({
-//       url: process.env.AUTH_API_MONGODB_URI,
-//       autoReconnect: true,
-//     }),
-//   })
-// );
-
 
 // configure user session
 SessionMgt.config(app);

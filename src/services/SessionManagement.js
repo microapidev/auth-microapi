@@ -21,7 +21,7 @@ const sessionStore = new mongoStoreFactory({
 
 const sess = {
   store: sessionStore,
-  genid: function() {
+  genid: function () {
     return uuidv4();; // use UUIDs for session IDs
   },
   secret: 'canyoukeepasecret',
@@ -50,29 +50,68 @@ class SessionManagement {
   }
 
   async checkSession(request, response, next) {
-    if (request.session.user && request.cookies.user_sid) {
-      // valid cookie and session
+    if (request.session.isLoggedIn) {
+      // validate login with session cookie
 
-      return response.status(200).json(CustomResponse('User is already logged in, redirect them to dashboard.')); //TODO: return user data;
+      sessionStore.get(request.session.id)
+        .then(() => {
+          return;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      return response.status(200).json(CustomResponse('User is already logged in, redirect them to dashboard.'));
 
-    } else if (request.cookies.user_sid && !request.session.user) {
-      // expired session but unexpired cookie
-      // for use when saveUninitialized is set to true
+    } else {
+      // If there's no session, create dummy session with admin id, app id, and user's IP instantiating request
+
+      request.session.flag = {
+        admin: request.admin,
+        remoteAddress: request.ip
+      };
+      // cookie remains only for duration of user-agent
+      request.session.cookie.expires = false;
+
+      sessionStore.set(sess.genid(), request.session)
+        .then(() => {
+          return;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      next();
     }
 
-    next();
   }
 
   // create new session for user on login
   login(request, user) {
+    // on login, check session store if session id exists
     request.session.user = user;
+    request.session.isLoggedIn = true;
+    request.session.flag = {
+      admin: request.admin,
+      remoteAddress: request.ip
+    };
     sessionStore.set(sess.genid(), request.session)
-      .then((ret) => console.log(ret))
+      .then(() => {
+        return;
+      })
       .catch(error => {
         console.log(error);
       });
     // eslint-disable-next-line curly
     // if (!session) throw new CustomError('Couldn\'t refresh user session. Try again');
+  }
+
+  logout(request) {
+    sessionStore.destroy(request.session.id)
+    .then(() => {
+      request.session.destroy();
+    })
+    .catch(error => {
+      console.log(error);
+    });
   }
 }
 
