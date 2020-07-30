@@ -574,7 +574,7 @@ const openApiDocumentation = {
         },
       },
     },
-    "/api/auth/facebook": {
+    "/api/facebook": {
       get: {
         tags: ["Facebook Auth"],
         description: "Creates or logs in User through Facebook",
@@ -604,7 +604,7 @@ const openApiDocumentation = {
         },
       },
     },
-    "/api/auth/google": {
+    "/api/google": {
       get: {
         tags: ["Google Auth"],
         description: "Creates or logs in User through Google",
@@ -634,7 +634,7 @@ const openApiDocumentation = {
         },
       },
     },
-    "/api/auth/twitter": {
+    "/api/twitter": {
       get: {
         tags: ["Twitter Auth"],
         description: "Creates or logs in User through Twitter",
@@ -664,7 +664,7 @@ const openApiDocumentation = {
         },
       },
     },
-    "/api/auth/github": {
+    "/api/github": {
       get: {
         tags: ["Github auth"],
         description: "github auth",
