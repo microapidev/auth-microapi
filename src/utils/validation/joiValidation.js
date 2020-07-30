@@ -54,31 +54,38 @@ exports.getSettingsValidation = () => (req, res, next) => {
 };
 
 exports.updateSettingsValidation = () => (req, res, next) => {
-  const schema = Joi.object().keys({
-    email: Joi.string()
-      .email({
-        minDomainSegments: 2,
-        tlds: { allow: true },
-      })
-      .trim()
-      .required(),
-    facebookAuthProvider: Joi.object().keys({
-      appID: Joi.string().required(),
-      appSecret: Joi.string().required(),
-    }),
-    twitterAuthProvider: Joi.object().keys({
-      key: Joi.string().required(),
-      secret: Joi.string().required(),
-    }),
-    githubAuthProvider: Joi.object().keys({
-      clientID: Joi.string().required(),
-      clientSecret: Joi.string().required(),
-    }),
-    googleAuthProvider: Joi.object().keys({
-      clientID: Joi.string().required(),
-      clientSecret: Joi.string().required(),
-    }),
-  });
+  const schema = Joi.object()
+    .keys({
+      email: Joi.string()
+        .email({
+          minDomainSegments: 2,
+          tlds: { allow: true },
+        })
+        .trim()
+        .required(),
+      facebookAuthProvider: Joi.object().keys({
+        appID: Joi.string().required(),
+        appSecret: Joi.string().required(),
+      }),
+      twitterAuthProvider: Joi.object().keys({
+        key: Joi.string().required(),
+        secret: Joi.string().required(),
+      }),
+      githubAuthProvider: Joi.object().keys({
+        clientID: Joi.string().required(),
+        clientSecret: Joi.string().required(),
+      }),
+      googleAuthProvider: Joi.object().keys({
+        clientID: Joi.string().required(),
+        clientSecret: Joi.string().required(),
+      }),
+    })
+    .or(
+      "facebookAuthProvider",
+      "twitterAuthProvider",
+      "githubAuthProvider",
+      "googleAuthProvider"
+    );
   return validator(schema, req.body, res, next);
 };
 
