@@ -1,4 +1,5 @@
 const adminRouter = require("express").Router();
+const { authorizeUser } = require("../middlewares/middleware");
 const {
   registerValidation,
   loginValidation,
@@ -17,9 +18,15 @@ module.exports = () => {
     forgotValidation(),
     AdminCtrl.forgotPassword
   );
-  adminRouter.get("/settings", getSettingsValidation(), AdminCtrl.getSettings);
+  adminRouter.get(
+    "/settings",
+    authorizeUser,
+    getSettingsValidation(),
+    AdminCtrl.getSettings
+  );
   adminRouter.patch(
     "/settings",
+    authorizeUser,
     updateSettingsValidation(),
     AdminCtrl.updateSettings
   );

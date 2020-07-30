@@ -22,12 +22,12 @@ class AdminController {
   } //end getKey
 
   async getSettings(request, response) {
-    const data = await AdminSrv.getSettings(request.body);
+    const data = await AdminSrv.getSettings(request);
     return response.status(200).json(CustomResponse(data.message, data.data));
   } //end getSettings
 
   async updateSettings(request, response) {
-    const data = await AdminSrv.updateSettings(request.body);
+    const data = await AdminSrv.updateSettings(request);
     return response.status(200).json(CustomResponse(data.message, data.data));
   } //end getSettings
 

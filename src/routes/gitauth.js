@@ -2,8 +2,14 @@ require("dotenv").config();
 const gitRouter = require("express").Router();
 const passport = require("passport");
 const createGithubStrategy = require("../config/passport/githubStrategy");
+const {
+  authorizeUser,
+  githubAuthProvider,
+} = require("../middlewares/middleware");
 
-gitRouter.get("/", passport.authenticate(createGithubStrategy()));
+gitRouter.get("/", authorizeUser, githubAuthProvider, (req, res, next) =>
+  passport.authenticate(createGithubStrategy(req.provider))(req, res, next)
+);
 
 gitRouter.get(
   "/callback",

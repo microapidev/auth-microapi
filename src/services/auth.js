@@ -1,4 +1,5 @@
 const RandomString = require("randomstring");
+const Admin = require("../models/admin");
 const User = require("../models/user");
 const SessionMgt = require("../services/SessionManagement");
 const { createVerificationLink } = require("../utils/EmailVerification");
@@ -11,16 +12,27 @@ const client = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 class UserService {
   async register(req) {
     // Register as guest
-    const { email } = req.body;
+    const { body, admin } = req;
 
     // Check if user email is taken in DB
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ email: body.email });
 
     if (user) {
       throw new CustomError("Email address already in use", 403);
     }
 
-    user = new User({ ...req.body });
+    console.log(admin);
+    const adminDoc = await Admin.findById(admin.id).populate("settings");
+    const settings = adminDoc.settings;
+
+    user = new User({
+      ...body,
+      adminId: admin.id,
+      twitterEnabled: settings.twitterAuthProvider.key !== undefined,
+      facebookEnabled: settings.facebookAuthProvider.appID !== undefined,
+      githubEnabled: settings.githubAuthProvider.clientID !== undefined,
+      googleEnabled: settings.googleAuthProvider.clientID !== undefined,
+    });
     user = await user.save();
 
     // Send a confirmation link to email
@@ -281,77 +293,7 @@ class UserService {
         data: err,
       };
     }
-  }
-
-  async updateAuthProviders(req) {
-    const active = req.session.user;
-
-    try {
-      if (!active) {
-        return {
-          data: "Please Login before you do that",
-        };
-      }
-
-      if (
-        active.twoFactorAuth.is2FA &&
-        active.twoFactorAuth.status === "pending"
-      ) {
-        return {
-          msg: "Please verify your 2FA Auth",
-          data: active,
-        };
-      }
-
-      const user = await User.findById(active.id);
-      active = user.toJSON();
-
-      const update = {
-        twitterEnabled:
-          req.body.twitterEnabled !== undefined
-            ? req.body.twitterEnabled
-            : active.twitterEnabled,
-        facebookEnabled:
-          req.body.facebookEnabled !== undefined
-            ? req.body.facebookEnabled
-            : active.facebookEnabled,
-        githubEnabled:
-          req.body.githubEnabled !== undefined
-            ? req.body.githubEnabled
-            : active.githubEnabled,
-        googleEnabled:
-          req.body.googleEnabled !== undefined
-            ? req.body.googleEnabled
-            : active.googleEnabled,
-      };
-
-      await User.findByIdAndUpdate(active.id, update);
-
-      await SessionMgt.login(req, active);
-
-      if (
-        active.twoFactorAuth.is2FA &&
-        active.twoFactorAuth.status === "approved"
-      ) {
-        return {
-          msg: "Your account is highly protected with 2FA",
-          data: active,
-        };
-      }
-
-      if (!active.twoFactorAuth.is2FA && active.twoFactorAuth.status === null) {
-        return {
-          msg:
-            "Here your updated authentication providers but I highly recommend you enable 2FA auth",
-          data: active,
-        };
-      }
-    } catch (err) {
-      return {
-        data: err,
-      };
-    }
-  } //end upadteAuthProviders
+  } // end activeUser
 
   async forgotPassword(req) {
     const { email } = req.body;

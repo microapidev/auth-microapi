@@ -2,11 +2,19 @@ const passport = require("passport");
 const GoogleUser = require("../../models/googleUser");
 const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 
-const createGoogleStrategy = (clientID, clientSecret) => {
+const createGoogleStrategy = (provider) => {
+  let clientID = "noID";
+  let clientSecret = "noSecret";
+
+  if (provider && provider.clientID) {
+    clientID = provider.clientID;
+    clientSecret = provider.clientSecret;
+  }
+
   return new GoogleStrategy(
     {
-      clientID: clientID || process.env.GOOGLE_CLIENT_ID,
-      clientSecret: clientSecret || process.env.GITHUB_CLIENT_SECRET,
+      clientID,
+      clientSecret,
       callbackURL: `${process.env.HOST}/api/google/callback`,
     },
     callback

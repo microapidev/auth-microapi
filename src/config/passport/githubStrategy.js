@@ -1,4 +1,4 @@
-const { Strategy: GitHubStrategy } = require("passport-github2");
+const GitHubStrategy = require("passport-github2").Strategy;
 const User = require("../../models/user");
 const _ = require("lodash");
 const passport = require("passport");
@@ -7,11 +7,19 @@ const SessionManagement = require("../../services/SessionManagement");
 /**
  * Sign in with GitHub.
  */
-const createGithubStrategy = (clientID, clientSecret) => {
+const createGithubStrategy = (provider) => {
+  let clientID = "noID";
+  let clientSecret = "noSecret";
+
+  if (provider && provider.clientID) {
+    clientID = provider.clientID;
+    clientSecret = provider.clientSecret;
+  }
+
   return new GitHubStrategy(
     {
-      clientID: clientID || process.env.GITHUB_CLIENT_ID,
-      clientSecret: clientSecret || process.env.GITHUB_CLIENT_SECRET,
+      clientID,
+      clientSecret,
       callbackURL: `${process.env.HOST}/api/github/callback`,
       passReqToCallback: true,
       scope: ["user:email"],

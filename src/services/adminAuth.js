@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Admin = require("../models/admin");
+const User = require("../models/user");
 const Settings = require("../models/settings");
 const { CustomError } = require("../utils/CustomError");
 const RandomString = require("randomstring");
@@ -57,10 +58,12 @@ class AdminService {
     };
   }
 
-  async getSettings(body) {
+  async getSettings(req) {
+    const { body, admin } = req;
+
     // New API KEY for admin
     let user = await Admin.findOne({
-      email: body.email,
+      email: admin.email,
     }).populate("settings");
 
     if (!user) {
@@ -76,9 +79,11 @@ class AdminService {
     };
   }
 
-  async updateSettings(body) {
+  async updateSettings(req) {
+    const { body, admin } = req;
+
     // New API KEY for admin
-    let user = await Admin.findOne({ email: body.email });
+    const user = await Admin.findOne({ email: admin.email });
 
     if (!user) {
       throw new CustomError("Admin with email not found", 404);
@@ -91,20 +96,26 @@ class AdminService {
     }
 
     // Update settings with the providers provided in the request body.
-    const {
-      facebookAuthProvider,
-      twitterAuthProvider,
-      githubAuthProvider,
-      googleAuthProvider,
-    } = body;
+    const update = {};
 
-    await Settings.findByIdAndUpdate(settings.id, {
-      $set: {
-        facebookAuthProvider,
-        twitterAuthProvider,
-        githubAuthProvider,
-        googleAuthProvider,
-      },
+    if (body.facebookAuthProvider) {
+      update.facebookAuthProvider = body.facebookAuthProvider;
+    }
+
+    if (body.twitterAuthProvider) {
+      update.twitterAuthProvider = body.twitterAuthProvider;
+    }
+
+    if (body.githubAuthProvider) {
+      update.githubAuthProvider = body.githubAuthProvider;
+    }
+
+    if (body.googleAuthProvider) {
+      update.googleAuthProvider = body.googleAuthProvider;
+    }
+
+    settings = await Settings.findByIdAndUpdate(settings.id, {
+      $set: update,
     });
 
     const data = settings;

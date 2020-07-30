@@ -3,12 +3,11 @@ const {
   registerValidation,
   loginValidation,
 } = require("../utils/validation/joiValidation");
-const { auth, authorizeUser } = require("../middlewares/middleware");
+const { authorizeUser } = require("../middlewares/middleware");
 const UserController = require("../controllers/auth");
 const {
   forgotValidation,
   resetPasswordValidation,
-  updateAuthProvidersValidation,
 } = require("../utils/validation/joiValidation");
 const SessionMgt = require("../services/SessionManagement");
 
@@ -39,7 +38,7 @@ module.exports = () => {
 
   userRouter
     .route("/register")
-    .get(SessionMgt.checkSession, (request, response) => {
+    .get(authorizeUser, SessionMgt.checkSession, (request, response) => {
       response.status(200).json({
         success: true,
       });
@@ -61,12 +60,6 @@ module.exports = () => {
     //   response.redirect('/');
     // })
     .get(UserController.otpVerify);
-
-  userRouter.patch(
-    "/providers",
-    updateAuthProvidersValidation(),
-    UserController.updateAuthProviders
-  );
 
   userRouter.get("/logout", async (request, response) => {
     response.clearCookie("user_sid", { path: "/" });

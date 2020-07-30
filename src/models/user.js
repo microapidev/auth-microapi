@@ -58,22 +58,6 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  twitterEnabled: {
-    type: Boolean,
-    default: false,
-  },
-  facebookEnabled: {
-    type: Boolean,
-    default: false,
-  },
-  githubEnabled: {
-    type: Boolean,
-    default: false,
-  },
-  googleEnabled: {
-    type: Boolean,
-    default: false,
-  },
   twitter: String,
   facebook: String,
   github: String,
@@ -91,6 +75,10 @@ const userSchema = new mongoose.Schema({
     enum: [0, 1],
     required: true,
     default: 1,
+  },
+  adminId: {
+    type: mongoose.Schema.Types.ObjectId,
+    refs: "Admin",
   },
 });
 

@@ -1,17 +1,25 @@
 const passport = require("passport");
 const refresh = require("passport-oauth2-refresh");
-const { Strategy: TwitterStrategy } = require("passport-twitter");
+const TwitterStrategy = require("passport-twitter").Strategy;
 const SessionManagement = require("../../services/SessionManagement");
 const User = require("../../models/user");
 
 /**
  * Sign in with Twitter.
  */
-const createTwitterStrategy = (key, secret) => {
+const createTwitterStrategy = (provider) => {
+  let consumerKey = "noKey";
+  let consumerSecret = "noSecret";
+
+  if (provider && provider.key) {
+    consumerKey = provider.key;
+    consumerSecret = provider.secret;
+  }
+
   return new TwitterStrategy(
     {
-      consumerKey: key || process.env.TWITTER_KEY,
-      consumerSecret: secret || process.env.TWITTER_SECRET,
+      consumerKey,
+      consumerSecret,
       callbackURL: `${process.env.HOST}/api/twitter/callback`,
       passReqToCallback: true,
     },
@@ -51,7 +59,6 @@ const callback = (req, accessToken, tokenSecret, profile, done) => {
   //     }
   //   });
   // } else {
-  console.log(req.session);
   User.findOne({ twitter: profile.id }, (err, existingUser) => {
     if (err) {
       return done(err);

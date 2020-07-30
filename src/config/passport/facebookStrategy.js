@@ -1,16 +1,24 @@
 const passport = require("passport");
-const { Strategy: FacebookStrategy } = require("passport-facebook");
+const FacebookStrategy = require("passport-facebook").Strategy;
 const User = require("../../models/user");
 const SessionManagement = require("../../services/SessionManagement");
 
 /**
  * Sign in with Facebook.
  */
-const createFacebookStrategy = (appID, appSecret) => {
+const createFacebookStrategy = (provider) => {
+  let clientID = "noID";
+  let clientSecret = "noSecret";
+
+  if (provider && provider.appID) {
+    clientID = provider.appID;
+    clientSecret = provider.appSecret;
+  }
+
   return new FacebookStrategy(
     {
-      clientID: appID || process.env.FACEBOOK_APP_ID,
-      clientSecret: appSecret || process.env.FACEBOOK_APP_SECRET,
+      clientID: clientID,
+      clientSecret: clientSecret,
       callbackURL: `${process.env.HOST}/api/facebook/callback`,
       profileFields: ["name", "email", "link", "locale", "timezone", "gender"],
       passReqToCallback: true,
@@ -20,8 +28,6 @@ const createFacebookStrategy = (appID, appSecret) => {
 };
 
 const callback = (req, accessToken, refreshToken, profile, done) => {
-  console.log(profile);
-
   if (req.user) {
     User.findOne({ facebook: profile.id }, (err, existingUser) => {
       if (err) {
