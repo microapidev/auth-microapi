@@ -7,7 +7,7 @@ const createGoogleStrategy = (clientID, clientSecret) => {
     {
       clientID: clientID || process.env.GOOGLE_CLIENT_ID,
       clientSecret: clientSecret || process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: `${process.env.HOST}/api/auth/google/callback`,
+      callbackURL: `${process.env.HOST}/api/google/callback`,
     },
     callback
   );

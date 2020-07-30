@@ -63,7 +63,7 @@ exports.updateSettingsValidation = () => (req, res, next) => {
       .trim()
       .required(),
     facebookAuthProvider: Joi.object().keys({
-      appId: Joi.string().required(),
+      appID: Joi.string().required(),
       appSecret: Joi.string().required(),
     }),
     twitterAuthProvider: Joi.object().keys({
@@ -71,23 +71,13 @@ exports.updateSettingsValidation = () => (req, res, next) => {
       secret: Joi.string().required(),
     }),
     githubAuthProvider: Joi.object().keys({
-      clientId: Joi.string().required(),
+      clientID: Joi.string().required(),
       clientSecret: Joi.string().required(),
     }),
     googleAuthProvider: Joi.object().keys({
-      clientId: Joi.string().required(),
+      clientID: Joi.string().required(),
       clientSecret: Joi.string().required(),
     }),
-  });
-  return validator(schema, req.body, res, next);
-};
-
-exports.updateAuthProvidersValidation = () => (req, res, next) => {
-  const schema = Joi.object().keys({
-    twitterEnabled: Joi.boolean(),
-    facebookEnabled: Joi.boolean(),
-    githubEnabled: Joi.boolean(),
-    googleEnabled: Joi.boolean(),
   });
   return validator(schema, req.body, res, next);
 };

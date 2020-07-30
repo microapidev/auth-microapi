@@ -16,7 +16,7 @@ route.get(
 route.get(
   "/callback",
   passport.authenticate(createGoogleStrategy(), {
-    failureRedirect: "/api/auth/google",
+    failureRedirect: "/api/google",
   }),
   (req, res) => {
     console.log(req.user);

@@ -17,7 +17,7 @@ const GitHubAuthProviderCredentialsSchema = new mongoose.Schema({});
 // Settings model
 const settingsSchema = new mongoose.Schema({
   facebookAuthProvider: {
-    appId: {
+    appID: {
       type: String,
     },
     appSecret: {
@@ -33,7 +33,7 @@ const settingsSchema = new mongoose.Schema({
     },
   },
   githubAuthProvider: {
-    clientId: {
+    clientID: {
       type: String,
     },
     clientSecret: {
@@ -41,7 +41,7 @@ const settingsSchema = new mongoose.Schema({
     },
   },
   googleAuthProvider: {
-    clientId: {
+    clientID: {
       type: String,
     },
     clientSecret: {
