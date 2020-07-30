@@ -76,10 +76,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: 1,
   },
-  adminId: {
-    type: mongoose.Schema.Types.ObjectId,
-    refs: "Admin",
-  },
 });
 
 userSchema.plugin(mongodbErrorHandler);

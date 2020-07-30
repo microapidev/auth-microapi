@@ -2,50 +2,46 @@ const mongoose = require("mongoose");
 const mongodbErrorHandler = require("mongoose-mongodb-errors");
 const findOrCreate = require("mongoose-findorcreate");
 
-// Subschema for the Facebook authentication provider credentials.
-const FacebookAuthProviderCredentialsSchema = new mongoose.Schema({});
-
-// Subschema for the Twitter authentication provider credentials.
-const TwitterAuthProviderCredentialsSchema = new mongoose.Schema({});
-
-// Subschema for the Google authentication provider credentials.
-const GoogleAuthProviderCredentialsSchema = new mongoose.Schema({});
-
-// Subschema for the GitHub authentication provider credentials.
-const GitHubAuthProviderCredentialsSchema = new mongoose.Schema({});
-
 // Settings model
 const settingsSchema = new mongoose.Schema({
   facebookAuthProvider: {
     appID: {
       type: String,
+      default: null,
     },
     appSecret: {
       type: String,
+      default: null,
     },
   },
   twitterAuthProvider: {
     key: {
       type: String,
+      default: null,
     },
     secret: {
       type: String,
+      default: null,
     },
   },
   githubAuthProvider: {
     clientID: {
       type: String,
+      default: null,
     },
     clientSecret: {
       type: String,
+      default: null,
     },
   },
   googleAuthProvider: {
     clientID: {
       type: String,
+      default: null,
     },
     clientSecret: {
       type: String,
+      default: null,
     },
   },
 });
@@ -58,6 +54,7 @@ settingsSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
   transform: (document, returnedObject) => {
+    delete returnedObject.id;
     delete returnedObject._id;
     delete returnedObject.__v;
   },

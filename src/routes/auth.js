@@ -43,7 +43,7 @@ module.exports = () => {
         success: true,
       });
     })
-    .post(registerValidation(), UserController.register);
+    .post(authorizeUser, registerValidation(), UserController.register);
 
   userRouter
     .route("/login")

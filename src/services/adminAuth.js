@@ -59,11 +59,9 @@ class AdminService {
   }
 
   async getSettings(req) {
-    const { body, admin } = req;
-
     // New API KEY for admin
     let user = await Admin.findOne({
-      email: admin.email,
+      email: req.admin.email,
     }).populate("settings");
 
     if (!user) {
@@ -83,16 +81,10 @@ class AdminService {
     const { body, admin } = req;
 
     // New API KEY for admin
-    const user = await Admin.findOne({ email: admin.email });
+    const user = await await await Admin.findOne({ email: admin.email });
 
     if (!user) {
       throw new CustomError("Admin with email not found", 404);
-    }
-
-    let settings = await Settings.findById(user.settings);
-
-    if (!settings) {
-      throw new CustomError("Settings not found or deleted", 404);
     }
 
     // Update settings with the providers provided in the request body.
@@ -114,16 +106,13 @@ class AdminService {
       update.googleAuthProvider = body.googleAuthProvider;
     }
 
-    settings = await Settings.findByIdAndUpdate(settings.id, {
-      $set: update,
+    const settings = await Settings.findByIdAndUpdate(user.settings, update, {
+      new: true,
     });
 
-    const data = settings;
-    const message = "Settings updated successfully";
-
     return {
-      data: data,
-      message: message,
+      data: settings,
+      message: "Settings updated successfully",
     };
   }
 

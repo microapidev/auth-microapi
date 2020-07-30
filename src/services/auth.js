@@ -1,5 +1,4 @@
 const RandomString = require("randomstring");
-const Admin = require("../models/admin");
 const User = require("../models/user");
 const SessionMgt = require("../services/SessionManagement");
 const { createVerificationLink } = require("../utils/EmailVerification");
@@ -21,18 +20,7 @@ class UserService {
       throw new CustomError("Email address already in use", 403);
     }
 
-    console.log(admin);
-    const adminDoc = await Admin.findById(admin.id).populate("settings");
-    const settings = adminDoc.settings;
-
-    user = new User({
-      ...body,
-      adminId: admin.id,
-      twitterEnabled: settings.twitterAuthProvider.key !== undefined,
-      facebookEnabled: settings.facebookAuthProvider.appID !== undefined,
-      githubEnabled: settings.githubAuthProvider.clientID !== undefined,
-      googleEnabled: settings.googleAuthProvider.clientID !== undefined,
-    });
+    user = new User(body);
     user = await user.save();
 
     // Send a confirmation link to email

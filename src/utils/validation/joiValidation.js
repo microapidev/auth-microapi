@@ -64,20 +64,20 @@ exports.updateSettingsValidation = () => (req, res, next) => {
         .trim()
         .required(),
       facebookAuthProvider: Joi.object().keys({
-        appID: Joi.string().required(),
-        appSecret: Joi.string().required(),
+        appID: Joi.string().allow(null).required(),
+        appSecret: Joi.string().allow(null).required(),
       }),
       twitterAuthProvider: Joi.object().keys({
-        key: Joi.string().required(),
-        secret: Joi.string().required(),
+        key: Joi.string().allow(null).required(),
+        secret: Joi.string().allow(null).required(),
       }),
       githubAuthProvider: Joi.object().keys({
-        clientID: Joi.string().required(),
-        clientSecret: Joi.string().required(),
+        clientID: Joi.string().allow(null).required(),
+        clientSecret: Joi.string().allow(null).required(),
       }),
       googleAuthProvider: Joi.object().keys({
-        clientID: Joi.string().required(),
-        clientSecret: Joi.string().required(),
+        clientID: Joi.string().allow(null).required(),
+        clientSecret: Joi.string().allow(null).required(),
       }),
     })
     .or(
