@@ -35,7 +35,7 @@ const authorizeUser = (request, response, next) => {
     }
     // TODO: link users using admin access token, use kaseem's auth middleware
     // TODO: if user has unverified email refer them to email verificaton; use sessions maybe
-    // request.adminUser = decodedUser;
+    request.admin = decodedUser;
   } else {
     return response.status(401).send('Access denied. No token provided.');
   }

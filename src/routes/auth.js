@@ -71,7 +71,7 @@ module.exports = () => {
   userRouter.get("/logout", async (request, response) => {
     response.clearCookie("user_sid", { path: "/" });
 
-    request.session.destroy();
+    SessionMgt.logout(request);
 
     // response.redirect('/');
     response.status(200).json({
