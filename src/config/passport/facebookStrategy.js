@@ -4,7 +4,9 @@ const User = require("../../models/user");
 const SessionManagement = require("../../services/SessionManagement");
 
 /**
- * Sign in with Facebook.
+ * Returns a new Facebook Strategy using the provided credentials.
+ *
+ * @param {object} provider - The configuration object containing credentials for Facebook.
  */
 const createFacebookStrategy = (provider) => {
   let clientID = "noID";
@@ -27,6 +29,14 @@ const createFacebookStrategy = (provider) => {
   );
 };
 
+/**
+ *
+ * @param {*} req
+ * @param {*} accessToken
+ * @param {*} refreshToken
+ * @param {*} profile
+ * @param {*} done
+ */
 const callback = (req, accessToken, refreshToken, profile, done) => {
   if (req.user) {
     User.findOne({ facebook: profile.id }, (err, existingUser) => {

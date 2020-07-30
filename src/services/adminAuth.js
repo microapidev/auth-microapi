@@ -81,7 +81,7 @@ class AdminService {
     const { body, admin } = req;
 
     // New API KEY for admin
-    const user = await await await Admin.findOne({ email: admin.email });
+    const user = await Admin.findOne({ email: admin.email });
 
     if (!user) {
       throw new CustomError("Admin with email not found", 404);
