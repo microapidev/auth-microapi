@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 
 let PORT = process.env.PORT;
 let AUTH_API_DB = process.env.AUTH_API_MONGODB_URI;
@@ -11,7 +11,7 @@ let ACCOUNT_SID=process.env.ACCOUNT_SID;
 let AUTH_TOKEN=process.env.AUTH_TOKEN;
 let SERVICE_ID=process.env.SERVICE_ID;
 
-if (process.env.NODE_ENV === 'test') {
+if (process.env.NODE_ENV === "test") {
   AUTH_API_DB = process.env.TEST_MONGODB_URI;
 }
 

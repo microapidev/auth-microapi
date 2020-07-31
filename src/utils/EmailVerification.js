@@ -5,11 +5,11 @@
  * =================================================================
  */
 
-const RandomString = require('randomstring');
-const User = require('../models/user');
-const EmailVerification = require('../models/EmailVerification');
-const EmailFactory = require('../EmailFactory');
-const { CustomError } = require('../utils/CustomError');
+const RandomString = require("randomstring");
+const User = require("../models/user");
+const EmailVerification = require("../models/EmailVerification");
+const EmailFactory = require("../EmailFactory");
+const { CustomError } = require("../utils/CustomError");
 
 const { sendVerificationMail } = EmailFactory;
 
@@ -33,25 +33,25 @@ class EmailVerificationUtil {
     if (!(await EmailVerification.create(data))) {
       let deletedUser = User.deleteOne({ email: user.email });
       // this.logger('DELETED USER', deletedUser);
-      throw new CustomError('Failed to generate token. Try signup again', 403);
+      throw new CustomError("Failed to generate token. Try signup again", 403);
     }
 
     let verificationUrl =
-      'http://' +
+      "http://" +
       req.headers.host +
       req.baseUrl +
-      '/email-verification/' +
+      "/email-verification/" +
       data.token;
-    console.log('URL', verificationUrl);
+    console.log("URL", verificationUrl);
     //Now send the mail to the user (expires after 1hr)
     if (!(await sendVerificationMail(user.email, verificationUrl))) {
-      throw new CustomError('Email Could not be Sent. Try Again.');
+      throw new CustomError("Email Could not be Sent. Try Again.");
     }
 
     // this.logger('SUCCESS', 'Sending mail...');
     return {
       verificationUrl,
-      message: 'We sent you mail to confirm your email address',
+      message: "We sent you mail to confirm your email address",
       success: true,
       code: 200,
     };
@@ -61,7 +61,7 @@ class EmailVerificationUtil {
   logger(title, msg) {
     let debug = false;
     if (debug) {
-      console.log('============' + title + '==LOGGER=======');
+      console.log("============" + title + "==LOGGER=======");
       console.log(msg);
     }
   }

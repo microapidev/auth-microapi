@@ -5,18 +5,18 @@
  * =================================================================
  */
 
-const mongoose = require('mongoose');
-const session = require('express-session');
-const mongoStoreFactory = require('connect-mongo')(session);
-const passport = require('passport');
-const CustomResponse = require('../utils/response');
-const { v4: uuidv4 } = require('uuid');
+const mongoose = require("mongoose");
+const session = require("express-session");
+const mongoStoreFactory = require("connect-mongo")(session);
+const passport = require("passport");
+const CustomResponse = require("../utils/response");
+const { v4: uuidv4 } = require("uuid");
 
 
 // persistence store of our session
 const sessionStore = new mongoStoreFactory({
   mongooseConnection: mongoose.connection,
-  collection: 'sessions'
+  collection: "sessions"
 });
 
 const sess = {
@@ -24,24 +24,24 @@ const sess = {
   genid: function () {
     return uuidv4();; // use UUIDs for session IDs
   },
-  secret: 'canyoukeepasecret',
+  secret: "canyoukeepasecret",
   saveUninitialized: false,
   resave: false,
   rolling: true,
   cookie: {
-    path: '/',
-    sameSite: 'none',
+    path: "/",
+    sameSite: "none",
     httpOnly: true,
     secure: false,
     maxAge: 24 * 60 * 60 * 1000  //24 hours
   },
-  name: 'user_sid'
+  name: "user_sid"
 };
 
 class SessionManagement {
   async config(app) {
-    if (app.get('env') === 'production') {
-      app.set('trust proxy', 1); // trust first proxy
+    if (app.get("env") === "production") {
+      app.set("trust proxy", 1); // trust first proxy
       sess.cookie.secure = true; // serve secure cookies
     }
     app.use(session(sess));
@@ -55,32 +55,32 @@ class SessionManagement {
 
       sessionStore.get(request.session.id)
         .then(() => {
-          return;
+          
         })
         .catch(error => {
           console.log(error);
         });
-      return response.status(200).json(CustomResponse('User is already logged in, redirect them to dashboard.'));
+      return response.status(200).json(CustomResponse("User is already logged in, redirect them to dashboard."));
 
-    } else {
-      // If there's no session, create dummy session with admin id, app id, and user's IP instantiating request
+    } 
+    // If there's no session, create dummy session with admin id, app id, and user's IP instantiating request
 
-      request.session.flag = {
-        admin: request.admin,
-        remoteAddress: request.ip
-      };
-      // cookie remains only for duration of user-agent
-      request.session.cookie.expires = false;
+    request.session.flag = {
+      admin: request.admin,
+      remoteAddress: request.ip
+    };
+    // cookie remains only for duration of user-agent
+    request.session.cookie.expires = false;
 
-      sessionStore.set(sess.genid(), request.session)
-        .then(() => {
-          return;
-        })
-        .catch(error => {
-          console.log(error);
-        });
-      next();
-    }
+    sessionStore.set(sess.genid(), request.session)
+      .then(() => {
+          
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    next();
+    
 
   }
 
@@ -95,7 +95,7 @@ class SessionManagement {
     };
     sessionStore.set(sess.genid(), request.session)
       .then(() => {
-        return;
+        
       })
       .catch(error => {
         console.log(error);
@@ -106,12 +106,12 @@ class SessionManagement {
 
   logout(request) {
     sessionStore.destroy(request.session.id)
-    .then(() => {
-      request.session.destroy();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+      .then(() => {
+        request.session.destroy();
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 }
 

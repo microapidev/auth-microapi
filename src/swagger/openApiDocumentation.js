@@ -879,15 +879,6 @@ const openApiDocumentation = {
         description: "Access token is missing or invalid",
       },
     },
-    securitySchemes: {
-      bearerAuth: {
-        type: "http",
-        scheme: "bearer",
-        bearerFormat: "JWT",
-        name: "Authorization",
-        in: "header",
-      },
-    },
   },
 };
 
