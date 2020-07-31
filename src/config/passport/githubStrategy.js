@@ -1,8 +1,8 @@
-const { Strategy: GitHubStrategy } = require("passport-github2");
-const User = require("../../models/user");
-const _ = require("lodash");
-const passport = require("passport");
-const SessionManagement = require("../../services/SessionManagement");
+const { Strategy: GitHubStrategy } = require('passport-github2');
+const User = require('../../models/user');
+const _ = require('lodash');
+const passport = require('passport');
+const SessionManagement = require('../../services/SessionManagement');
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
@@ -25,7 +25,7 @@ passport.use(
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
       callbackURL: `${process.env.HOST}/api/github/callback`,
       passReqToCallback: true,
-      scope: ["user:email"],
+      scope: ['user:email'],
     },
     (req, accessToken, refreshToken, profile, done) => {
       console.log(req.session);
@@ -42,13 +42,13 @@ passport.use(
         // But a person’s twitter username is guaranteed to be unique
         // so we can "fake" a twitter email address as follows:
         user.email = _.get(
-          _.orderBy(profile.emails, ["primary", "verified"], ["desc", "desc"]),
-          [0, "value"],
+          _.orderBy(profile.emails, ['primary', 'verified'], ['desc', 'desc']),
+          [0, 'value'],
           null
         );
 
         user.github = profile.id;
-        user.tokens.push({ kind: "github", accessToken });
+        user.tokens.push({ kind: 'github', accessToken });
         user.profile.name = profile.displayName;
         user.username = profile.displayName;
         user.profile.name = user.profile.name || profile.displayName;

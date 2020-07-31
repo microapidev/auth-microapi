@@ -58,7 +58,6 @@ app.use(
 //   })
 // );
 
-
 // configure user session
 SessionMgt.config(app);
 
