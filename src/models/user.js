@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const mongodbErrorHandler = require('mongoose-mongodb-errors');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const findOrCreate = require('mongoose-findorcreate');
 const saltRounds = 10;
@@ -103,6 +103,13 @@ userSchema.pre('save', function () {
   if (user.password && user.isModified('password')) {
     user.password = bcrypt.hashSync(user.password, saltRounds);
   }
+});
+
+userSchema.pre('findOneAndUpdate', function (next) {
+  if (this._update.password) {
+    this._update.password = bcrypt.hashSync(this._update.password, saltRounds);
+  }
+  next();
 });
 
 userSchema.methods.generateToken = async function () {
