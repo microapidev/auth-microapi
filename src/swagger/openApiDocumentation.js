@@ -4,7 +4,7 @@ const USER_TAG = "Users";
 const AUTH_PROVIDER_TAG = "Authentication Providers";
 
 // Security schema.
-const apiKeySecurity = [{ Bearer: [] }];
+const apiKeySecurity = [{ Bearer: {} }];
 
 const openApiDocumentation = {
   openapi: "3.0.21",
@@ -742,13 +742,6 @@ const openApiDocumentation = {
     },
   },
   components: {
-    securitySchemes: {
-      Bearer: {
-        type: "http",
-        scheme: "bearer",
-        bearerFormat: "JWT",
-      },
-    },
     schemas: {
       User: {
         type: "object",
@@ -880,7 +873,7 @@ const openApiDocumentation = {
       },
     },
     securitySchemes: {
-      bearerAuth: {
+      Bearer: {
         type: "http",
         scheme: "bearer",
         bearerFormat: "JWT",
