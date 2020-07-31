@@ -15,8 +15,8 @@ class EmailVerification {
     // return res.status(200).send(response("Email Address Verified", data));
     //hardcoding call back url to redirect back to microapi site
 
-    if (data) {
-      return res.redirect("https://microapi.dev/accounts/signin");
+    if (data.success) {
+      res.redirect("https://microapi.dev/accounts/signin");
     }
   }
 
