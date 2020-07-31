@@ -30,7 +30,7 @@ module.exports = () => {
     .get(UserController.activeUser);
 
   userRouter
-    .route("/enable")
+    .route("/enable2fa")
     // .get(SessionMgt.checkSession, (request, response) => {
     //   response.redirect('/');
     // })
