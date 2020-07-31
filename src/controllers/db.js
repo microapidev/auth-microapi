@@ -1,9 +1,9 @@
-const { AUTH_API_DB } = require('../utils/config');
-const mongoose = require('mongoose');
-mongoose.set('debug', true);
+const { AUTH_API_DB } = require("../utils/config");
+const mongoose = require("mongoose");
+mongoose.set("debug", true);
 
 const connectDB = () => {
-  console.log('Connecting to database...');
+  console.log("Connecting to database...");
 
   mongoose.connect(
     AUTH_API_DB,
@@ -17,10 +17,10 @@ const connectDB = () => {
     }
   )
     .then(() => {
-      console.log('Connected to Auth-MicroAPI database!');
+      console.log("Connected to Auth-MicroAPI database!");
     })
     .catch(error => {
-      console.error.bind(console, 'MongoDB Connection Error>> : ');
+      console.error.bind(console, "MongoDB Connection Error>> : ");
     });
 };
 

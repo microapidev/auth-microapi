@@ -5,8 +5,8 @@
  * =====================================================================
  */
 
-const EmailVerService = require('../services/EmailVerification');
-const response = require('../utils/response');
+const EmailVerService = require("../services/EmailVerification");
+const response = require("../utils/response");
 
 class EmailVerification{
 
@@ -14,13 +14,13 @@ class EmailVerification{
 
     const data = await EmailVerService.verifyEmail(req);
 
-    return res.status(200).send(response('Email Address Verified', data));
+    return res.status(200).send(response("Email Address Verified", data));
 
   }
 
   async resendVerification(req, res){
     const data = await EmailVerService.resendVerificationEmail(req);
-    return res.status(200).send(response('New Verification Link Sent.', data));
+    return res.status(200).send(response("New Verification Link Sent.", data));
   }
 }
 module.exports = new EmailVerification();

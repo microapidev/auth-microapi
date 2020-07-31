@@ -1,5 +1,4 @@
-const Joi = require('@hapi/joi');
-
+const Joi = require("@hapi/joi");
 
 const validator = async (schema, toValidate, res, next) => {
   // This middleware will validate client's request body
@@ -19,7 +18,10 @@ exports.registerValidation = () => (req, res, next) => {
       .trim()
       .required(),
     password: Joi.string().min(8).max(20).required(),
-    phone_number: Joi.string().min(10).max(11).pattern(/^[0-9]+$/),
+    phone_number: Joi.string()
+      .min(10)
+      .max(11)
+      .pattern(/^[0-9]+$/),
   });
   return validator(schema, req.body, res, next);
 };
@@ -35,6 +37,55 @@ exports.loginValidation = () => (req, res, next) => {
       .required(),
     password: Joi.string().min(8).max(20).required(),
   });
+  return validator(schema, req.body, res, next);
+};
+
+exports.getSettingsValidation = () => (req, res, next) => {
+  const schema = Joi.object().keys({
+    email: Joi.string()
+      .email({
+        minDomainSegments: 2,
+        tlds: { allow: true },
+      })
+      .trim()
+      .required(),
+  });
+  return validator(schema, req.body, res, next);
+};
+
+exports.updateSettingsValidation = () => (req, res, next) => {
+  const schema = Joi.object()
+    .keys({
+      email: Joi.string()
+        .email({
+          minDomainSegments: 2,
+          tlds: { allow: true },
+        })
+        .trim()
+        .required(),
+      facebookAuthProvider: Joi.object().keys({
+        appID: Joi.string().allow(null).required(),
+        appSecret: Joi.string().allow(null).required(),
+      }),
+      twitterAuthProvider: Joi.object().keys({
+        key: Joi.string().allow(null).required(),
+        secret: Joi.string().allow(null).required(),
+      }),
+      githubAuthProvider: Joi.object().keys({
+        clientID: Joi.string().allow(null).required(),
+        clientSecret: Joi.string().allow(null).required(),
+      }),
+      googleAuthProvider: Joi.object().keys({
+        clientID: Joi.string().allow(null).required(),
+        clientSecret: Joi.string().allow(null).required(),
+      }),
+    })
+    .or(
+      "facebookAuthProvider",
+      "twitterAuthProvider",
+      "githubAuthProvider",
+      "googleAuthProvider"
+    );
   return validator(schema, req.body, res, next);
 };
 
@@ -54,7 +105,7 @@ exports.forgotValidation = () => (req, res, next) => {
 exports.resetPasswordValidation = () => (req, res, next) => {
   const schema = Joi.object().keys({
     password: Joi.string().min(8).max(20).required(),
-    password_confirmation: Joi.any().valid(Joi.ref('password')).required()
+    password_confirmation: Joi.any().valid(Joi.ref("password")).required(),
   });
   return validator(schema, req.body, res, next);
 };

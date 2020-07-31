@@ -5,11 +5,11 @@
  * =================================================================
  */
 
-const router = require('express').Router();
-const EmailVerCtrl = require('../controllers/EmailVerification');
+const router = require("express").Router();
+const EmailVerCtrl = require("../controllers/EmailVerification");
 
 module.exports = () => {
-  router.get('/:token', EmailVerCtrl.verifyEmail);
-  router.get('/resend', EmailVerCtrl.resendVerification);
+  router.get("/:token", EmailVerCtrl.verifyEmail);
+  router.get("/resend", EmailVerCtrl.resendVerification);
   return router;
 };
