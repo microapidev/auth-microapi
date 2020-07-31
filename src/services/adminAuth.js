@@ -90,6 +90,9 @@ class AdminService {
     // Update settings with the providers provided in the request body.
     const update = {};
 
+    update.successCallbackUrl = body.successCallbackUrl;
+    update.failureCallbackUrl = body.failureCallbackUrl;
+
     if (body.facebookAuthProvider) {
       update.facebookAuthProvider = body.facebookAuthProvider;
     }

@@ -22,6 +22,8 @@ route.get("/", authorizeUser, googleAuthProvider, async (req, res) => {
   activeCredentials[req.provider.clientID] = {
     clientID: req.provider.clientID,
     clientSecret: req.provider.clientSecret,
+    successCallbackUrl: req.successCallbackUrl,
+    failureCallbackUrl: req.failureCallbackUrl,
   };
 
   // generate a url that asks permissions for Blogger and Google Calendar scopes
@@ -47,24 +49,28 @@ route.get("/", authorizeUser, googleAuthProvider, async (req, res) => {
 route.get(
   "/callback",
   (req, res, next) => {
+    try {
+      const provider = activeCredentials[req.query.state];
+
+      passport.authenticate(createGoogleStrategy(provider))(req, res, next);
+    } catch (error) {
+      // Remove the credentials from the cache.
+      activeCredentials[req.query.state] = null;
+
+      res.redirect(provider.failureCallbackUrl);
+    }
+  },
+  (req, res) => {
     const provider = activeCredentials[req.query.state];
 
     // Remove the credentials from the cache.
     activeCredentials[req.query.state] = null;
 
-    console.log(provider);
-
-    passport.authenticate(createGoogleStrategy(provider), {
-      failureRedirect: "/api/google",
-    })(req, res, next);
-  },
-  (req, res) => {
-    console.log(req.user);
-    res.status(200).json({
-      success: true,
-      message: "Google authenticated",
-      user: req.user,
-    });
+    try {
+      res.redirect(provider.successCallbackUrl);
+    } catch (error) {
+      res.redirect(provider.failureCallbackUrl);
+    }
   }
 );
 

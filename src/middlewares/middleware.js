@@ -93,6 +93,8 @@ const authProvider = (providerType) => {
 
     if (isProviderEnabled) {
       req.provider = provider;
+      req.successCallbackUrl = admin.settings.successCallbackUrl;
+      req.failureCallbackUrl = admin.settings.failureCallbackUrl;
     } else {
       throw new CustomError(message, 401);
     }
