@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const mongodbErrorHandler = require('mongoose-mongodb-errors');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const findOrCreate = require('mongoose-findorcreate');
 const saltRounds = 10;
