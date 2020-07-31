@@ -202,7 +202,6 @@ const openApiDocumentation = {
         tags: [ADMINISTRATOR_TAG],
         description: "Get new password in case of forgotten password",
         operationId: "reset-password",
-        security: apiKeySecurity,
         requestBody: {
           content: {
             "application/json": {
@@ -243,7 +242,6 @@ const openApiDocumentation = {
         tags: [ADMINISTRATOR_TAG],
         description: "Get new password in case of forgotten password",
         operationId: "reset-password",
-        security: apiKeySecurity,
         requestBody: {
           content: {
             "application/json": {
