@@ -104,6 +104,13 @@ userSchema.pre("save", function () {
   }
 });
 
+userSchema.pre('findOneAndUpdate', function (next) {
+  if (this._update.password) {
+    this._update.password = bcrypt.hashSync(this._update.password, saltRounds);
+  }
+  next();
+});
+
 userSchema.methods.generateToken = async function () {
   // Generate token for user session, and save to user schema in DB
   let user = this;
