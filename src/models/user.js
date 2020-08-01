@@ -104,7 +104,7 @@ userSchema.pre("save", function () {
   }
 });
 
-userSchema.pre('findOneAndUpdate', function (next) {
+userSchema.pre("findOneAndUpdate", function (next) {
   if (this._update.password) {
     this._update.password = bcrypt.hashSync(this._update.password, saltRounds);
   }
