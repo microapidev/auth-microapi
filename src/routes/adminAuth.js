@@ -1,19 +1,48 @@
-const adminRouter = require('express').Router();
+const adminRouter = require("express").Router();
+const { authorizeUser } = require("../middlewares/middleware");
+const {
+  registerValidation,
+  loginValidation,
+  getSettingsValidation,
+  updateSettingsValidation,
+  forgotValidation,
+  resetPasswordValidation,
+} = require("../utils/validation/joiValidation");
+const AdminCtrl = require("../controllers/admin");
 
-const { registerValidation, loginValidation, forgotValidation, resetPasswordValidation } = require('../utils/validation/joiValidation');
+module.exports = () => {
+  adminRouter.post("/register", registerValidation(), AdminCtrl.register);
+  adminRouter.post("/getkey", loginValidation(), AdminCtrl.getKey);
+  adminRouter.post(
+    "/reset-password",
+    forgotValidation(),
+    AdminCtrl.forgotPassword
+  );
+  adminRouter.get(
+    "/settings",
+    authorizeUser,
+    getSettingsValidation(),
+    AdminCtrl.getSettings
+  );
+  adminRouter.patch(
+    "/settings",
+    authorizeUser,
+    updateSettingsValidation(),
+    AdminCtrl.updateSettings
+  );
+  /* I'll deal with this later */
+  adminRouter.get("/reset-password/:token", (request, response, next) => {
+    response
+      .status(200)
+      .send(
+        "It's cool you're here 😁, but you should be using postman to send a PATCH request to change password via this url!"
+      );
+  });
+  adminRouter.patch(
+    "/reset-password/:token",
+    resetPasswordValidation(),
+    AdminCtrl.resetPassword
+  );
 
-const { adminRegister, adminGetKey, adminForgotPassword, adminResetPassword } = require('../controllers/admin');
-
-adminRouter.post('/register', registerValidation(), adminRegister);
-
-adminRouter.post('/getkey', loginValidation(), adminGetKey);
-
-adminRouter.post('/reset-password', forgotValidation(), adminForgotPassword);
-
-adminRouter.get('/reset-password/:token', (request, response, next) => {
-  response.status(200).send('It\'s cool you\'re here 😁, but you should be using postman to send a PATCH request to change password via this url!');
-});
-
-adminRouter.patch('/reset-password/:token', resetPasswordValidation(), adminResetPassword);
-
-module.exports = adminRouter;
+  return adminRouter;
+};

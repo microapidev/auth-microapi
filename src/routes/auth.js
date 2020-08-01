@@ -1,44 +1,92 @@
-const userRouter = require('express').Router();
+const userRouter = require("express").Router();
+const {
+  registerValidation,
+  loginValidation,
+} = require("../utils/validation/joiValidation");
+const { authorizeUser } = require("../middlewares/middleware");
+const UserController = require("../controllers/auth");
+const {
+  forgotValidation,
+  resetPasswordValidation,
+} = require("../utils/validation/joiValidation");
+const SessionMgt = require("../services/SessionManagement");
 
-const { registerValidation, loginValidation } = require('../utils/validation/joiValidation');
+module.exports = () => {
+  // userRouter.get('/active', auth, (req, res) => {
+  //   res.status(200).json({
+  //     _id: req.user.id,
+  //     isAdmin: req.user.isEmailVerified,
+  //     isAuth: true,
+  //     email: req.user.email,
+  //     username: req.user.username,
+  //   });
+  // });
 
-const { auth } = require('../utils/middleware');
+  userRouter
+    .route("/active")
+    // .get(SessionMgt.checkSession, (request, response) => {
+    //   response.redirect('/');
+    // })
+    .get(UserController.activeUser);
 
-const { userRegistration, userLogin } = require('../controllers/auth');
-const SessionMgt = require('../services/SessionManagement');
+  userRouter
+    .route("/enable2fa")
+    // .get(SessionMgt.checkSession, (request, response) => {
+    //   response.redirect('/');
+    // })
+    .get(UserController.enable2FA);
 
+  userRouter
+    .route("/register")
+    .get(authorizeUser, SessionMgt.checkSession, (request, response) => {
+      response.status(200).json({
+        success: true,
+      });
+    })
+    .post(authorizeUser, registerValidation(), UserController.register);
 
-userRouter.get('/active', auth, (req, res) => {
-  res.status(200).json({
-    _id: req.user.id,
-    isAdmin: req.user.isEmailVerified,
-    isAuth: true,
-    email: req.user.email,
-    username: req.user.username,
+  userRouter
+    .route("/login")
+    .get(SessionMgt.checkSession, (request, response) => {
+      response.status(200).json({
+        success: true,
+      });
+    })
+    .post(loginValidation(), UserController.login);
+
+  userRouter
+    .route("/verify")
+    // .get(SessionMgt.checkSession, (request, response) => {
+    //   response.redirect('/');
+    // })
+    .get(UserController.otpVerify);
+
+  userRouter.get("/logout", async (request, response) => {
+    response.clearCookie("user_sid", { path: "/" });
+
+    SessionMgt.logout(request);
+
+    // response.redirect('/');
+    response.status(200).json({
+      success: true,
+      message: "Redirect user to login at GET: /api/user/login",
+    });
   });
-});
 
-userRouter.route('/register')
-  .get(SessionMgt.checkSession, (request, response) => {
-    response.redirect('/');
-  })
-  .post(registerValidation(), userRegistration);
+  userRouter.post("/reset", forgotValidation(), UserController.forgotPassword);
 
-userRouter.route('/login')
-  .get(SessionMgt.checkSession, (request, response) => {
-    response.redirect('/');
-  })
-  .post(loginValidation(), userLogin);
-
-userRouter.get('/logout', async (request, response) => {
-  response.clearCookie('connect.sid');
-  request.session.destroy();
-
-  // response.redirect('/');
-  response.status(200).send({
-    success: true,
+  userRouter.get("/:token/:", (request, response, next) => {
+    response.redirect(
+      `https://upbeat-leavitt-2a7b54.netlify.app/pages/forgot-new/?token=${request.params.token}`
+    );
   });
-});
 
+  userRouter.patch(
+    "/:token",
+    authorizeUser,
+    resetPasswordValidation(),
+    UserController.resetPassword
+  );
 
-module.exports = userRouter;
+  return userRouter;
+};

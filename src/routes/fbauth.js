@@ -1,56 +1,28 @@
-require('dotenv').config();
-const fbRouter = require('express').Router();
-const User = require('../models/user');
-const passport = require('passport');
-const FacebookStrategy = require('passport-facebook').Strategy;
-const findOrCreate = require('mongoose-findorcreate');
+require("dotenv").config();
+const fbRouter = require("express").Router();
+const passport = require("passport");
+const createFacebookStrategy = require("../config/passport/facebookStrategy");
+const {
+  authorizeUser,
+  facebookAuthProvider,
+} = require("../middlewares/middleware");
 
+fbRouter.get("/", authorizeUser, facebookAuthProvider, (req, res, next) =>
+  passport.authenticate(createFacebookStrategy(req.provider), {
+    scope: ["email", "public_profile"],
+  })(req, res, next)
+);
 
-
-
-// use static serialize and deserialize of model for passport session support
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser((id, done) => {
-
-
-  User.findById(id, (err, user) => {
-    done(err, user);
-  });
-  
-
-
-});
-
-
-// facebook Auth
-passport.use(new FacebookStrategy({
-  clientID: process.env.FACEBOOK_APP_ID,
-  clientSecret: process.env.FACEBOOK_APP_SECRET,
-  callbackURL:
-    'https://auth-microapi.herokuapp.com/callback'
-},
-((accessToken, refreshToken, profile, cb) => {
-  User.findOrCreate({ facebookId: profile.id }, (err, user) => {
-    return cb(err, user);
-  });
-    
-})
-));
-fbRouter.get('/', passport.authenticate('facebook'));
-
-fbRouter.get('/callback',
-  passport.authenticate('facebook', { failureRedirect: '/login' }),
+fbRouter.get(
+  "/callback",
+  passport.authenticate(createFacebookStrategy(), {
+    failureRedirect: "/login",
+  }),
   (req, res) => {
-  // Successful authentication, redirect home.
-    res.status(200).json({
-      success: true
-    });
-    res.redirect('/');
-  
-  });
-
+    res.redirect(
+      "https://upbeat-leavitt-2a7b54.netlify.app/pages/dashboard.html"
+    );
+  }
+);
 
 module.exports = fbRouter;
