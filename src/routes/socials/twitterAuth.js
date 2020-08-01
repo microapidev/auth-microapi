@@ -1,11 +1,11 @@
 require("dotenv").config();
 const twitterRoute = require("express").Router();
 const passport = require("passport");
-const createTwitterStrategy = require("../config/passport/twitterStrategy");
+const createTwitterStrategy = require("../../config/passport/twitterStrategy");
 const {
   authorizeUser,
   twitterAuthProvider,
-} = require("../middlewares/middleware");
+} = require("../../middlewares/middleware");
 
 twitterRoute.get("/", authorizeUser, twitterAuthProvider, (req, res, next) =>
   passport.authenticate(createTwitterStrategy(req.provider))(req, res, next)

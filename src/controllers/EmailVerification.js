@@ -10,14 +10,12 @@ const response = require("../utils/response");
 
 class EmailVerification {
   async verifyEmail(req, res) {
-    const data = await EmailVerService.verifyEmail(req);
+    await EmailVerService.verifyEmail(req);
 
     // return res.status(200).send(response("Email Address Verified", data));
     //hardcoding call back url to redirect back to microapi site
 
-    if (data.success) {
-      res.redirect("https://microapi.dev/accounts/signin");
-    }
+    res.redirect("https://microapi.dev/accounts/signin");
   }
 
   async resendVerification(req, res) {

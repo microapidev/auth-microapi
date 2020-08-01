@@ -1,11 +1,11 @@
 require("dotenv").config();
 const fbRouter = require("express").Router();
 const passport = require("passport");
-const createFacebookStrategy = require("../config/passport/facebookStrategy");
+const createFacebookStrategy = require("../../config/passport/facebookStrategy");
 const {
   authorizeUser,
   facebookAuthProvider,
-} = require("../middlewares/middleware");
+} = require("../../middlewares/middleware");
 
 fbRouter.get("/", authorizeUser, facebookAuthProvider, (req, res, next) =>
   passport.authenticate(createFacebookStrategy(req.provider), {
