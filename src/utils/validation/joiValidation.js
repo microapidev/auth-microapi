@@ -100,7 +100,7 @@ exports.forgotValidation = () => (req, res, next) => {
       })
       .trim()
       .required(),
-    cbUrl: Joi.string().trim().required(),
+    emailVerifyCallbackUrl: Joi.string().trim().required(),
   });
   return validator(schema, req.body, res, next);
 };
