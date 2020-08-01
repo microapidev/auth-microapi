@@ -4,6 +4,14 @@ const findOrCreate = require("mongoose-findorcreate");
 
 // Settings model
 const settingsSchema = new mongoose.Schema({
+  successCallbackUrl: {
+    type: String,
+    default: null,
+  },
+  failureCallbackUrl: {
+    type: String,
+    default: null,
+  },
   facebookAuthProvider: {
     appID: {
       type: String,

@@ -63,6 +63,8 @@ exports.updateSettingsValidation = () => (req, res, next) => {
         })
         .trim()
         .required(),
+      successCallbackUrl: Joi.string().uri().required(),
+      failureCallbackUrl: Joi.string().uri().required(),
       facebookAuthProvider: Joi.object().keys({
         appID: Joi.string().allow(null).required(),
         appSecret: Joi.string().allow(null).required(),

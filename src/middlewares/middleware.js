@@ -5,6 +5,11 @@ const { JWT_ADMIN_SECRET } = require("../utils/config");
 const CustomResponse = require("../utils/response");
 const { CustomError } = require("../utils/CustomError");
 
+const TWITTER_PROVIDER = "Twitter";
+const FACEBOOK_PROVIDER = "Facebook";
+const GITHUB_PROVIDER = "GitHub";
+const GOOGLE_PROVIDER = "Google";
+
 const auth = async (request, response, next) => {
   let userId = request.sessions.user;
 
@@ -45,11 +50,6 @@ const authorizeUser = (request, response, next) => {
   next();
 };
 
-const TWITTER_PROVIDER = "Twitter";
-const FACEBOOK_PROVIDER = "Facebook";
-const GITHUB_PROVIDER = "GitHub";
-const GOOGLE_PROVIDER = "Google";
-
 const twitterAuthProvider = (req, res, next) =>
   authProvider(TWITTER_PROVIDER)(req, res, next);
 const facebookAuthProvider = (req, res, next) =>
@@ -62,27 +62,33 @@ const googleAuthProvider = (req, res, next) =>
 const authProvider = (providerType) => {
   return async (req, res, next) => {
     const admin = await Admin.findById(req.admin.id).populate("settings");
+    const { successCallbackUrl, failureCallbackUrl } = admin.settings;
+
+    console.log(successCallbackUrl);
 
     let provider;
-    let isProviderEnabled;
-    const message = `${providerType} authentication is not authorized for this account.`;
+    let providerEnabled = false;
+    const callbacksAvailable =
+      successCallbackUrl !== null && failureCallbackUrl !== null;
+
+    console.log(callbacksAvailable);
 
     switch (providerType) {
       case TWITTER_PROVIDER:
         provider = admin.settings.twitterAuthProvider;
-        isProviderEnabled = provider && provider.key;
+        providerEnabled = provider && provider.key;
         break;
       case FACEBOOK_PROVIDER:
         provider = admin.settings.facebookAuthProvider;
-        isProviderEnabled = provider && provider.appID;
+        providerEnabled = provider && provider.appID;
         break;
       case GITHUB_PROVIDER:
         provider = admin.settings.githubAuthProvider;
-        isProviderEnabled = provider && provider.clientID;
+        providerEnabled = provider && provider.clientID;
         break;
       case GOOGLE_PROVIDER:
         provider = admin.settings.googleAuthProvider;
-        isProviderEnabled = provider && provider.clientID;
+        providerEnabled = provider && provider.clientID;
         break;
 
       default:
@@ -91,13 +97,18 @@ const authProvider = (providerType) => {
         );
     }
 
-    if (isProviderEnabled) {
+    if (providerEnabled && callbacksAvailable) {
       req.provider = provider;
-    } else {
-      throw new CustomError(message, 401);
-    }
+      req.successCallbackUrl = successCallbackUrl;
+      req.failureCallbackUrl = failureCallbackUrl;
 
-    next();
+      next();
+    } else {
+      const message = `${providerType} authentication is not authorized for this account.`;
+      res
+        .status(401)
+        .json(CustomResponse(message, { statusCode: 401, message }, false));
+    }
   };
 };
 
