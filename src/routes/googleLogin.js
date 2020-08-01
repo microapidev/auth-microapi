@@ -1,5 +1,6 @@
 const express = require("express");
 const passport = require("passport");
+const url = require("url");
 const { google } = require("googleapis");
 const createGoogleStrategy = require("../config/passport/googleStrategy");
 const {
@@ -57,7 +58,14 @@ route.get(
       // Remove the credentials from the cache.
       activeCredentials[req.query.state] = null;
 
-      res.redirect(provider.failureCallbackUrl);
+      res.redirect(
+        url.format({
+          pathname: provider.failureCallbackUrl,
+          query: {
+            success: false,
+          },
+        })
+      );
     }
   },
   (req, res) => {
@@ -67,9 +75,40 @@ route.get(
     activeCredentials[req.query.state] = null;
 
     try {
-      res.redirect(provider.successCallbackUrl);
+      const {
+        _id,
+        googleId,
+        isVerified,
+        firstname,
+        lastname,
+        username,
+        email,
+      } = req.user;
+
+      res.redirect(
+        url.format({
+          pathname: provider.successCallbackUrl,
+          query: {
+            success: true,
+            id: _id,
+            googleId,
+            isVerified,
+            firstname,
+            lastname,
+            username,
+            email,
+          },
+        })
+      );
     } catch (error) {
-      res.redirect(provider.failureCallbackUrl);
+      res.redirect(
+        url.format({
+          pathname: provider.failureCallbackUrl,
+          query: {
+            success: false,
+          },
+        })
+      );
     }
   }
 );
