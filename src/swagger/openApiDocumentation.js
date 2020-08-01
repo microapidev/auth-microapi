@@ -1,79 +1,57 @@
+// List of tags used by documentation.
+const ADMINISTRATOR_TAG = 'Administrators';
+const USER_TAG = 'Users';
+const AUTH_PROVIDER_TAG = 'Authentication Providers';
+
+// Security schema.
+const apiKeySecurity = [{ Bearer: {} }];
+
 const openApiDocumentation = {
-  swagger: '3.0',
-  openapi: '3.0.1',
+  openapi: '3.0.21',
   info: {
+    version: '1.0.0',
     title: 'HNGI Authetication Micro-Service',
     description: 'A Dockerized Microservice for Authentication',
     contact: {
       name: 'HNGI',
     },
   },
-  server: [
+  servers: [
     {
-      url: 'http:localhost:5000',
-      description: 'Local Server',
+      url: 'https://auth-microapi.herokuapp.com/api',
+      description: 'Staging Server (uses test data)',
     },
     {
-      url: 'https://auth-microapi.herokuapp.com',
-      description: 'Staging Server',
+      url: 'https://auth.microapi.dev/api',
+      description: 'Production Server (uses live data)',
     },
     {
-      url: 'https://auth.microapi.dev',
-      description: 'Staging Server',
-    }
+      url: '/api',
+      description: 'Local Server (uses your data)',
+    },
   ],
   tags: [
     {
-      name: 'Authentication',
+      name: ADMINISTRATOR_TAG,
+      description: 'Create and modify administrators.',
+    },
+    {
+      name: USER_TAG,
+      description: 'Create and modify users.',
+    },
+    {
+      name: AUTH_PROVIDER_TAG,
+      description: 'Create and modify users via the authentication providers.',
     },
   ],
-  schemes: [
-    'HTTP',
-    'HTTPS'
-  ],
-  security: {
-    bearerAuth: {},
-  },
+  schemes: ['HTTP', 'HTTPS'],
   //input api paths in here
   paths: {
-    '/api/user/active': {
-      get: {
-        tags: ['Active user'],
-        description: 'Registers admin',
-        operationId: 'register',
-        security: [ {bearerAuth: {}}],
-        requestBody: {},
-        parameters: [],
-        responses: {
-          '200': {
-            description: 'Success',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Response',
-                },
-              },
-            },
-          },
-          '400': {
-            description: 'Bad Request',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Response',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    '/api/admin/register': {
+    '/admin/register': {
       post: {
-        tags: ['Register Admin'],
+        tags: [ADMINISTRATOR_TAG],
         description: 'Registers admin',
         operationId: 'register',
-        security: [ {bearerAuth: {}}],
         requestBody: {
           content: {
             'application/json': {
@@ -109,12 +87,11 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/admin/getkey': {
+    '/admin/getkey': {
       post: {
-        tags: ['Get APIKEY'],
+        tags: [ADMINISTRATOR_TAG],
         description: 'login user',
         operationId: 'getkey',
-        security: [ {bearerAuth: {}}],
         requestBody: {
           content: {
             'application/json': {
@@ -150,12 +127,93 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/admin/reset-password': {
+    '/admin/settings': {
+      get: {
+        tags: [ADMINISTRATOR_TAG],
+        description: 'Returns the settings of an admin',
+        operationId: 'settings',
+        security: apiKeySecurity,
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                email: {
+                  type: "string"
+                }
+              },
+            },
+          },
+          required: true,
+        },
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+      patch: {
+        tags: [ADMINISTRATOR_TAG],
+        description: 'Updates the settings of an admin',
+        operationId: 'settings',
+        security: apiKeySecurity,
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/UpdateSettings',
+              },
+            },
+          },
+          required: true,
+        },
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/admin/reset-password': {
       post: {
-        tags: ['Admin reset password'],
+        tags: [ADMINISTRATOR_TAG],
         description: 'Get new password in case of forgotten password',
         operationId: 'reset-password',
-        security: [ {bearerAuth: {}}],
         requestBody: {
           content: {
             'application/json': {
@@ -191,12 +249,11 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/admin/reset-password/{token}': {
+    '/admin/reset-password/{token}': {
       patch: {
-        tags: ['Admin chanage password'],
+        tags: [ADMINISTRATOR_TAG],
         description: 'Get new password in case of forgotten password',
         operationId: 'reset-password',
-        security: [ {bearerAuth: {}}],
         requestBody: {
           content: {
             'application/json': {
@@ -241,12 +298,12 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/user/register': {
+    '/user/register': {
       post: {
-        tags: ['Register User'],
+        tags: [USER_TAG],
         description: 'Registers user',
         operationId: 'registeruser',
-        security: [ {bearerAuth: {}}],
+        security: apiKeySecurity,
         requestBody: {
           content: {
             'application/json': {
@@ -282,12 +339,44 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/user/email-verification/resend': {
+    '/user/active': {
       get: {
-        tags: ['Email resend verification'],
+        tags: [USER_TAG],
+        description: 'Registers admin',
+        operationId: 'register',
+        security: apiKeySecurity,
+        requestBody: {},
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/user/email-verification/resend': {
+      get: {
+        tags: [USER_TAG],
         description: 'email resend varification',
         operationId: 'verifyuseremail',
-        security: [ {bearerAuth: {}}],
+        security: apiKeySecurity,
         parameters: [],
         responses: {
           '200': {
@@ -313,12 +402,12 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/user/enable': {
+    '/user/enable2fa': {
       get: {
-        tags: ['enable 2FA'],
+        tags: [USER_TAG],
         description: 'enable 2FA',
         operationId: 'enable2FA',
-        security: [ {bearerAuth: {}}],
+        security: apiKeySecurity,
         parameters: [],
         responses: {
           '200': {
@@ -344,12 +433,12 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/user/login': {
+    '/user/login': {
       post: {
-        tags: ['Login User'],
+        tags: [USER_TAG],
         description: 'login user',
         operationId: 'loginuser',
-        security: [ {bearerAuth: {}}],
+        security: apiKeySecurity,
         requestBody: {
           content: {
             'application/json': {
@@ -385,12 +474,12 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/user/verify': {
+    '/user/verify': {
       get: {
-        tags: ['verify OTP'],
+        tags: [USER_TAG],
         description: 'verify OTP',
         operationId: 'verifyOTP',
-        security: [ {bearerAuth: {}}],
+        security: apiKeySecurity,
         requestBody: {},
         parameters: [],
         responses: {
@@ -417,12 +506,12 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/user/password/reset': {
+    '/user/password/reset': {
       post: {
-        tags: ['forgot-password'],
+        tags: [USER_TAG],
         description: 'Enter your email to reset your password',
         operationId: 'forgot-password',
-        security: [ {bearerAuth: {}}],
+        security: apiKeySecurity,
         requestBody: {
           content: {
             'application/json': {
@@ -458,12 +547,12 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/user/password/{token}': {
+    '/user/password/{token}': {
       patch: {
-        tags: ['reset-password'],
+        tags: [USER_TAG],
         description: 'Enter your new password to reset password',
         operationId: 'reset-password',
-        security: [ {bearerAuth: {}}],
+        security: apiKeySecurity,
         requestBody: {
           content: {
             'application/json': {
@@ -508,132 +597,136 @@ const openApiDocumentation = {
         },
       },
     },
-    '/api/auth/facebook': {
+    '/user/logout': {
       get: {
-        tags: ['Facebook Auth'],
-        description: 'Creates or logs in User through Facebook',
-        operationId: 'FacebookAuth',
-        parameters: [],
-        responses: {
-          '200': {
-            description: 'Success',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Response',
-                },
-              },
-            },
-          },
-          '400': {
-            description: 'Bad Request',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Response',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    '/api/auth/google': {
-      get: {
-        tags: ['Google Auth'],
-        description: 'Creates or logs in User through Google',
-        operationId: 'googleauth',
-        parameters: [],
-        responses: {
-          '200': {
-            description: 'Success',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Response',
-                },
-              },
-            },
-          },
-          '400': {
-            description: 'Bad Request',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Response',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    '/api/auth/twitter': {
-      get: {
-        tags: ['Twitter Auth'],
-        description: 'Creates or logs in User through Twitter',
-        operationId: 'twitterauth',
-        parameters: [],
-        responses: {
-          '200': {
-            description: 'Success',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Response',
-                },
-              },
-            },
-          },
-          '400': {
-            description: 'Bad Request',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Response',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    '/api/auth/github': {
-      get: {
-        tags: ['Github auth'],
-        description: 'github auth',
-        operationId: 'github auth',
-        security: [ {bearerAuth: {}}],
-        parameters: [],
-        responses: {
-          '200': {
-            description: 'Success',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Response',
-                },
-              },
-            },
-          },
-          '400': {
-            description: 'Bad Request',
-            content: {
-              'application/json': {
-                schema: {
-                  $ref: '#/components/schemas/Response',
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-    '/api/user/logout': {
-      get: {
-        tags: ['Logout user '],
+        tags: [USER_TAG],
         description: 'logout user',
         operationId: 'logoutuser',
+        security: apiKeySecurity,
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/facebook': {
+      get: {
+        tags: [AUTH_PROVIDER_TAG],
+        description: 'Creates or logs in User through Facebook',
+        operationId: 'FacebookAuth',
+        security: apiKeySecurity,
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/google': {
+      get: {
+        tags: [AUTH_PROVIDER_TAG],
+        description: 'Creates or logs in User through Google',
+        operationId: 'googleauth',
+        security: apiKeySecurity,
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/twitter': {
+      get: {
+        tags: [AUTH_PROVIDER_TAG],
+        description: 'Creates or logs in User through Twitter',
+        operationId: 'twitterauth',
+        security: apiKeySecurity,
+        parameters: [],
+        responses: {
+          '200': {
+            description: 'Success',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Bad Request',
+            content: {
+              'application/json': {
+                schema: {
+                  $ref: '#/components/schemas/Response',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/github': {
+      get: {
+        tags: [AUTH_PROVIDER_TAG],
+        description: 'github auth',
+        operationId: 'github auth',
+        security: apiKeySecurity,
         parameters: [],
         responses: {
           '200': {
@@ -696,6 +789,64 @@ const openApiDocumentation = {
           },
         },
       },
+      UpdateSettings: {
+        type: 'object',
+        properties: {
+          email: {
+            type: 'string',
+          },
+          successCallbackUrl: {
+            type: 'string',
+          },
+          failureCallbackUrl: {
+            type: 'string',
+          },
+          facebookAuthProvider: {
+            type: 'object',
+            properties: {
+              appID: {
+                type: 'string',
+              },
+              appSecret: {
+                type: 'string',
+              },
+            },
+          },
+          twitterAuthProvider: {
+            type: 'object',
+            properties: {
+              key: {
+                type: 'string',
+              },
+              secret: {
+                type: 'string',
+              },
+            },
+          },
+          githubAuthProvider: {
+            type: 'object',
+            properties: {
+              clientID: {
+                type: 'string',
+              },
+              clientSecret: {
+                type: 'string',
+              },
+            },
+          },
+          googleAuthProvider: {
+            type: 'object',
+            properties: {
+              clientID: {
+                type: 'string',
+              },
+              clientSecret: {
+                type: 'string',
+              },
+            },
+          },
+        },
+      },
       Forgot: {
         type: 'object',
         properties: {
@@ -735,11 +886,11 @@ const openApiDocumentation = {
     },
     responses: {
       UnauthorizedError: {
-        description: 'Access token is missing or invalid'
-      }
+        description: 'Access token is missing or invalid',
+      },
     },
     securitySchemes: {
-      bearerAuth: {
+      Bearer: {
         type: 'http',
         scheme: 'bearer',
         bearerFormat: 'JWT',

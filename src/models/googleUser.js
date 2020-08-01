@@ -1,6 +1,6 @@
 
-let mongoose = require('mongoose');
-let passportLocalMongoose = require('passport-local-mongoose');
+let mongoose = require("mongoose");
+let passportLocalMongoose = require("passport-local-mongoose");
 //create a schema
 let userSchema = new mongoose.Schema({
   googleId: String,
@@ -15,7 +15,7 @@ let userSchema = new mongoose.Schema({
 });
 
 userSchema.plugin(passportLocalMongoose);
-let GoogleUser = mongoose.model('GoogleUser',userSchema);
+let GoogleUser = mongoose.model("GoogleUser",userSchema);
 
 //export for use in route
 module.exports = GoogleUser;

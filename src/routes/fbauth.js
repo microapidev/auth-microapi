@@ -1,17 +1,28 @@
-require('dotenv').config();
-const fbRouter = require('express').Router();
-const passport = require('passport');
+require("dotenv").config();
+const fbRouter = require("express").Router();
+const passport = require("passport");
+const createFacebookStrategy = require("../config/passport/facebookStrategy");
+const {
+  authorizeUser,
+  facebookAuthProvider,
+} = require("../middlewares/middleware");
 
+fbRouter.get("/", authorizeUser, facebookAuthProvider, (req, res, next) =>
+  passport.authenticate(createFacebookStrategy(req.provider), {
+    scope: ["email", "public_profile"],
+  })(req, res, next)
+);
 
-
-
-fbRouter.get('/', passport.authenticate('facebook', { scope: ['email', 'public_profile'] }));
-
-fbRouter.get('/callback',
-  passport.authenticate('facebook', { failureRedirect: '/login' }),
+fbRouter.get(
+  "/callback",
+  passport.authenticate(createFacebookStrategy(), {
+    failureRedirect: "/login",
+  }),
   (req, res) => {
-    res.redirect('https://upbeat-leavitt-2a7b54.netlify.app/pages/dashboard.html');
-  });
-
+    res.redirect(
+      "https://upbeat-leavitt-2a7b54.netlify.app/pages/dashboard.html"
+    );
+  }
+);
 
 module.exports = fbRouter;
