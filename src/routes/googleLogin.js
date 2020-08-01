@@ -46,73 +46,64 @@ route.get("/", authorizeUser, googleAuthProvider, async (req, res) => {
       state: req.provider.clientID,
     });
 
-    res.json({ redirectUrl: url });
-  } catch {
-    res.status(500).json(CustomResponse("InternalServerError"));
+    res.json(
+      CustomResponse(
+        "Successfully retrieved Google's authentication URL.",
+        { redirectUrl: url },
+        true
+      )
+    );
+  } catch (error) {
+    res
+      .status(500)
+      .json(
+        CustomResponse(
+          "Unhandled Error",
+          { statusCode: 500, message: error.message },
+          false
+        )
+      );
   }
 });
 
 route.get(
   "/callback",
   (req, res, next) => {
-    try {
-      const provider = activeCredentials[req.query.state];
-
-      passport.authenticate(createGoogleStrategy(provider))(req, res, next);
-    } catch (error) {
-      // Remove the credentials from the cache.
-      activeCredentials[req.query.state] = null;
-
-      res.redirect(
-        url.format({
-          pathname: provider.failureCallbackUrl,
-          query: {
-            success: false,
-          },
-        })
-      );
-    }
-  },
-  (req, res) => {
     const provider = activeCredentials[req.query.state];
+    req.successCallbackUrl = provider.successCallbackUrl;
 
     // Remove the credentials from the cache.
     activeCredentials[req.query.state] = null;
 
-    try {
-      const {
-        _id,
+    const failureRedirect = url.format({
+      pathname: provider.failureCallbackUrl,
+      query: {
+        success: false,
+      },
+    });
+
+    passport.authenticate(createGoogleStrategy(provider), {
+      failureFlash: true,
+      failureRedirect,
+    })(req, res, next);
+  },
+  (req, res) => {
+    const { _id, isVerified, firstname, lastname, username, email } = req.user;
+
+    const successRedirect = url.format({
+      pathname: req.successCallbackUrl,
+      query: {
+        success: true,
+        id: _id.toString(),
         isVerified,
         firstname,
         lastname,
         username,
         email,
-      } = req.user;
+      },
+    });
 
-      res.redirect(
-        url.format({
-          pathname: provider.successCallbackUrl,
-          query: {
-            success: true,
-            id: _id.toString(),
-            isVerified,
-            firstname,
-            lastname,
-            username,
-            email,
-          },
-        })
-      );
-    } catch (error) {
-      res.redirect(
-        url.format({
-          pathname: provider.failureCallbackUrl,
-          query: {
-            success: false,
-          },
-        })
-      );
-    }
+    res.redirect(successRedirect);
   }
 );
 
