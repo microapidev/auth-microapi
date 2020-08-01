@@ -5,7 +5,7 @@
  * =================================================================
  */
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const emailVerificationSchema = new mongoose.Schema({
 
@@ -23,8 +23,8 @@ const emailVerificationSchema = new mongoose.Schema({
 
   _userId: {
     type: mongoose.Schema.Types.ObjectId, 
-    ref: 'user'
+    ref: "user"
   }
 });
 
-module.exports = mongoose.model('EmailVerificationToken', emailVerificationSchema);
+module.exports = mongoose.model("EmailVerificationToken", emailVerificationSchema);
