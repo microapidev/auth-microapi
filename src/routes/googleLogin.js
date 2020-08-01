@@ -82,7 +82,6 @@ route.get(
     try {
       const {
         _id,
-        googleId,
         isVerified,
         firstname,
         lastname,
@@ -95,8 +94,7 @@ route.get(
           pathname: provider.successCallbackUrl,
           query: {
             success: true,
-            id: _id,
-            googleId,
+            id: _id.toString(),
             isVerified,
             firstname,
             lastname,
