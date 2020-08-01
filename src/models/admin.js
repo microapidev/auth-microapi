@@ -6,14 +6,13 @@ const findOrCreate = require("mongoose-findorcreate");
 // const moment = require('moment');
 const saltRounds = 10;
 const {
-  JWT_EXPIRE,
   JWT_SECRET,
   JWT_ADMIN_SECRET,
   AUTH_API_DB,
 } = require("../utils/config");
 
 // Modified user model
-const userSchema = new mongoose.Schema({
+const adminSchema = new mongoose.Schema({
   username: {
     type: String,
     uniqueCaseInsensitive: true,
@@ -46,11 +45,11 @@ const userSchema = new mongoose.Schema({
     ref: "Settings",
   },
 });
-userSchema.plugin(findOrCreate);
-userSchema.plugin(mongodbErrorHandler);
+adminSchema.plugin(findOrCreate);
+adminSchema.plugin(mongodbErrorHandler);
 
 // remove password, _id and return id instead whenever user is retrieved from db
-userSchema.set("toJSON", {
+adminSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
   transform: (document, returnedObject) => {
@@ -59,12 +58,12 @@ userSchema.set("toJSON", {
   },
 });
 
-userSchema.methods.matchPasswords = async function (enteredPassword) {
+adminSchema.methods.matchPasswords = async function (enteredPassword) {
   // Match User Entered Password
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-userSchema.pre("save", function () {
+adminSchema.pre("save", function () {
   // Check if password is present and is modified, then hash
   const user = this;
 
@@ -75,8 +74,8 @@ userSchema.pre("save", function () {
   }
 });
 
-userSchema.methods.generateAPIKEY = function () {
-  // Generate signed API KEY for admin
+adminSchema.methods.generateACCESSKEY = function () {
+  // Generate signed ACCESS KEY for admin
   const admin = this;
   return jwt.sign(
     {
@@ -88,7 +87,7 @@ userSchema.methods.generateAPIKEY = function () {
   );
 };
 
-userSchema.statics.findByToken = function (token, cb) {
+adminSchema.statics.findByToken = function (token, cb) {
   const user = this;
 
   jwt.verify(token, JWT_SECRET, (err, decode) => {
@@ -104,4 +103,4 @@ userSchema.statics.findByToken = function (token, cb) {
   });
 };
 
-module.exports = mongoose.model("adminUser", userSchema);
+module.exports = mongoose.model("admin", adminSchema);

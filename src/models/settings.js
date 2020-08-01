@@ -1,3 +1,7 @@
+/**
+ * Project based settings and configuration 
+**/
+
 const mongoose = require("mongoose");
 const mongodbErrorHandler = require("mongoose-mongodb-errors");
 const findOrCreate = require("mongoose-findorcreate");
@@ -51,7 +55,7 @@ const settingsSchema = new mongoose.Schema({
       type: String,
       default: null,
     },
-  },
+  }
 });
 
 settingsSchema.plugin(findOrCreate);

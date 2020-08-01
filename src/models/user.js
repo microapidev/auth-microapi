@@ -13,16 +13,6 @@ const userSchema = new mongoose.Schema({
     uniqueCaseInsensitive: true,
     required: [true, "Please add a name"],
   },
-  twoFactorAuth: {
-    is2FA: {
-      type: Boolean,
-      default: false,
-    },
-    status: {
-      type: String,
-      default: null,
-    },
-  },
   failedAttempts: {
     count: {
       type: Number,
@@ -76,6 +66,16 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: 1,
   },
+  twoFactorAuth: {
+    is2FA: {
+      type: Boolean,
+      default: false,
+    },
+    status: {
+      type: String,
+      default: null,
+    },
+  }
 });
 
 userSchema.plugin(mongodbErrorHandler);
@@ -111,7 +111,7 @@ userSchema.pre("findOneAndUpdate", function (next) {
   next();
 });
 
-userSchema.methods.generateToken = async function () {
+userSchema.methods.generateSESSIONTOKEN = async function () {
   // Generate token for user session, and save to user schema in DB
   let user = this;
   const token = jwt.sign(user.id, JWT_SECRET);

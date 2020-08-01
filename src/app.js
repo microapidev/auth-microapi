@@ -13,10 +13,10 @@ const docRouter = require("./routes/documentation");
 const emailVerificationRouter = require("./routes/EmailVerification");
 const { connectDB } = require("./controllers/db");
 const {
-  authorizeUser,
   errorHandler,
   unknownRoutes,
-} = require("./middlewares/middleware");
+} = require("./middlewares/errorHandler");
+const authorizeUser = require("./middlewares/authorization")
 const googleLoginRouter = require("./routes/googleLogin");
 require("./config/passport/twitterStrategy");
 require("./config/passport/githubStrategy");
