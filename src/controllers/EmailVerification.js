@@ -16,7 +16,7 @@ class EmailVerification {
     //hardcoding call back url to redirect back to microapi site
 
     if (data.success) {
-      res.redirect("https://microapi.dev/accounts/signin");
+      res.redirect(decodeURI(data.cbUrl));
     }
   }
 
