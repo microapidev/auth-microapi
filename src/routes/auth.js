@@ -1,4 +1,4 @@
-const router = require("express").Router();
+const userRouter = require("express").Router();
 const {
   registerValidation,
   loginValidation,
@@ -10,15 +10,33 @@ const {
   resetPasswordValidation,
 } = require("../utils/validation/joiValidation");
 const SessionMgt = require("../services/SessionManagement");
-// .get(SessionMgt.checkSession, (request, response) => {
-//   response.redirect('/');
-// })
 
 module.exports = () => {
-  router.get("/active", UserController.activeUser);
-  router.get("/enable2fa", UserController.enable2FA);
+  // userRouter.get('/active', auth, (req, res) => {
+  //   res.status(200).json({
+  //     _id: req.user.id,
+  //     isAdmin: req.user.isEmailVerified,
+  //     isAuth: true,
+  //     email: req.user.email,
+  //     username: req.user.username,
+  //   });
+  // });
 
-  router
+  userRouter
+    .route("/active")
+    // .get(SessionMgt.checkSession, (request, response) => {
+    //   response.redirect('/');
+    // })
+    .get(UserController.activeUser);
+
+  userRouter
+    .route("/enable2fa")
+    // .get(SessionMgt.checkSession, (request, response) => {
+    //   response.redirect('/');
+    // })
+    .get(UserController.enable2FA);
+
+  userRouter
     .route("/register")
     .get(authorizeUser, SessionMgt.checkSession, (request, response) => {
       response.status(200).json({
@@ -27,7 +45,7 @@ module.exports = () => {
     })
     .post(authorizeUser, registerValidation(), UserController.register);
 
-  router
+  userRouter
     .route("/login")
     .get(SessionMgt.checkSession, (request, response) => {
       response.status(200).json({
@@ -36,14 +54,14 @@ module.exports = () => {
     })
     .post(loginValidation(), UserController.login);
 
-  router
+  userRouter
     .route("/verify")
     // .get(SessionMgt.checkSession, (request, response) => {
     //   response.redirect('/');
     // })
     .get(UserController.otpVerify);
 
-  router.get("/logout", async (request, response) => {
+  userRouter.get("/logout", async (request, response) => {
     response.clearCookie("user_sid", { path: "/" });
 
     SessionMgt.logout(request);
@@ -55,20 +73,20 @@ module.exports = () => {
     });
   });
 
-  router.post("/reset", forgotValidation(), UserController.forgotPassword);
+  userRouter.post("/reset", forgotValidation(), UserController.forgotPassword);
 
-  router.get("/:token", (request, response, next) => {
+  userRouter.get("/:token", (request, response, next) => {
     response.redirect(
       `https://upbeat-leavitt-2a7b54.netlify.app/pages/forgot-new/?token=${request.params.token}`
     );
   });
 
-  router.patch(
+  userRouter.patch(
     "/:token",
     authorizeUser,
     resetPasswordValidation(),
     UserController.resetPassword
   );
 
-  return router;
+  return userRouter;
 };

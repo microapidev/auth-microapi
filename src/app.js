@@ -6,7 +6,10 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const userRouter = require("./routes/auth");
 const adminRouter = require("./routes/adminAuth");
-const socialRoutes = require("./routes/socialsRoutes");
+const fbRouter = require("./routes/fbauth");
+const twitterRouter = require("./routes/twitterAuth");
+const gitRouter = require("./routes/gitauth");
+const docRouter = require("./routes/documentation");
 const emailVerificationRouter = require("./routes/EmailVerification");
 const { connectDB } = require("./controllers/db");
 const {
@@ -43,7 +46,10 @@ app.use("/api/admin", adminRouter());
 app.use("/api/user/email-verification", emailVerificationRouter());
 app.use("/api/user/password", userRouter());
 app.use("/api/user", authorizeUser, userRouter());
-app.use("/api", socialRoutes);
+app.use("/api/facebook", fbRouter);
+app.use("/api/twitter", twitterRouter);
+app.use("/api/github", gitRouter);
+app.use("/api/google", googleLoginRouter);
 
 // documentation routes
 app.use("/", docRouter);
