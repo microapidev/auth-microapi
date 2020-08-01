@@ -284,7 +284,7 @@ class UserService {
   } // end activeUser
 
   async forgotPassword(req) {
-    const { email } = req.body;
+    const { email, cbUrl } = req.body;
     // const buffer = crypto.randomBytes(32);
     // const token = buffer.toString();
 
@@ -297,6 +297,7 @@ class UserService {
       {
         resetPasswordToken: token,
         resetPasswordExpire: expirationTime,
+        callbackUrl: cbUrl,
       },
       {
         new: true,
@@ -311,7 +312,7 @@ class UserService {
       );
     }
 
-    const resetUrl = `http:\/\/${req.headers.host}\/api\/user\/password\/${token}`;
+    const resetUrl = `http:\/\/${req.headers.host}\/api\/user\/password\/${token}\/${cbUrl}`;
     sendForgotPasswordMail(user.email, user.username, resetUrl);
 
     return {
