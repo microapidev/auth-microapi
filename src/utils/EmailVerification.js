@@ -24,10 +24,17 @@ class EmailVerificationUtil {
    */
 
   async createVerificationLink(user, req) {
+ 
+    let temp = req.body.emailVerifyCallbackUrl;
+    
+    if (temp.indexOf("%") < 0) {
+      temp = encodeURIComponent(temp);
+    }
     // console.log(req);
     let data = {
       token: RandomString.generate(64),
       _userId: user._id,
+      emailVerifyCallbackUrl: temp,
     };
 
     if (!(await EmailVerification.create(data))) {
