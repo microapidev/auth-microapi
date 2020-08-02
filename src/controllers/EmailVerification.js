@@ -12,11 +12,9 @@ class EmailVerification {
   async verifyEmail(req, res) {
     const data = await EmailVerService.verifyEmail(req);
 
-    // return res.status(200).send(response("Email Address Verified", data));
-    //hardcoding call back url to redirect back to microapi site
-
-    if (data.success) {
-      res.redirect(decodeURI(data.cbUrl));
+    // add callback url and redirect
+    if (data.isVerified) {
+      res.redirect(decodeURIComponent(data.emailVerifyCallbackUrl));
     }
   }
 

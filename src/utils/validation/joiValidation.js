@@ -22,6 +22,7 @@ exports.registerValidation = () => (req, res, next) => {
       .min(10)
       .max(11)
       .pattern(/^[0-9]+$/),
+    emailVerifyCallbackUrl: Joi.string().trim(),
   });
   return validator(schema, req.body, res, next);
 };

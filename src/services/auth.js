@@ -5,13 +5,14 @@ const { createVerificationLink } = require("../utils/EmailVerification");
 const { CustomError } = require("../utils/CustomError");
 const { sendForgotPasswordMail } = require("../EmailFactory");
 const { ACCOUNT_SID, AUTH_TOKEN, SERVICE_ID } = require("../utils/config");
+const EmailVerification = require("../models/EmailVerification");
 
 const client = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 
 class UserService {
   async register(req) {
     // Register as guest
-    const { body, admin } = req;
+    const { body } = req;
 
     // Check if user email is taken in DB
     let user = await User.findOne({ email: body.email });
@@ -20,7 +21,12 @@ class UserService {
       throw new CustomError("Email address already in use", 403);
     }
 
-    user = new User(body);
+    user = new User({
+      email: req.body.email,
+      username: req.body.username,
+      password: req.body.password,
+      phone_number: req.body.phone_number,
+    });
     user = await user.save();
 
     // Send a confirmation link to email
@@ -244,7 +250,6 @@ class UserService {
 
   async activeUser(req) {
     const active = req.session.user;
-    console.log(active);
     try {
       if (!active) {
         return {
@@ -287,7 +292,10 @@ class UserService {
     const { email, emailVerifyCallbackUrl } = req.body;
     // const buffer = crypto.randomBytes(32);
     // const token = buffer.toString();
-
+    let temp = emailVerifyCallbackUrl;
+    if (emailVerifyCallbackUrl.indexOf("%") < 0) {
+      temp = encodeURIComponent(emailVerifyCallbackUrl);
+    }
     const token = RandomString.generate(64);
     const expirationTime = Date.now() + 3600000; // 1 hour
     const user = await User.findOneAndUpdate(
@@ -297,12 +305,20 @@ class UserService {
       {
         resetPasswordToken: token,
         resetPasswordExpire: expirationTime,
-        emailVerifyCallbackUrl: emailVerifyCallbackUrl,
       },
       {
         new: true,
       }
     );
+
+    //add data to email verification model
+
+    const emailVerify = new EmailVerification({
+      token: token,
+      _userId: user._id,
+      emailVerifyCallbackUrl: temp,
+    });
+    await emailVerify.save();
     // console.log(user);
 
     if (!user) {
@@ -312,7 +328,7 @@ class UserService {
       );
     }
 
-    const resetUrl = `http:\/\/${req.headers.host}\/api\/user\/password\/${token}`;
+    const resetUrl = `https:\/\/${req.headers.host}\/api\/user\/password\/${token}`;
     sendForgotPasswordMail(user.email, user.username, resetUrl);
 
     return {
