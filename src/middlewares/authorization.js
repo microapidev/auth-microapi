@@ -1,8 +1,8 @@
 /**
   * This middleware serves as governance and security for authorizing access to all routes provisioned by the authentication microservice. It checks for whichever of the following tokens is provided by its users, and verifies whichever is provided against a secret. 
-  * @param serviceToken ==> API KEY to guard access to API usage; this service token is gotten from MICROAPI, and is used to grant authorization to all subsequent actions related to a project running on the authentication microservice.
-  * @param accessToken  ==> Guards Admin routes; controls access to admin specific routes, such as routes for api configuration and user analytics.
-  * @param sessionToken ==> Controls User Session on a project; It is provided to user on log in, and is used for user specific actions.
+  * @param serviceKey ==> API KEY to guard access to API usage; this service token is gotten from MICROAPI, and is used to grant authorization to all subsequent actions related to a project running on the authentication microservice.
+  * @param accessKey  ==> Guards Admin routes; generated when a new project is initialized. It controls access to admin specific routes, such as routes for api configuration and user analytics. Access key gives permissions for multiple admins 
+  * @param sessionKey ==> Controls User Session on a project; It is generated and provided to user on log in, and is used for user specific actions.
 **/
 
 const User = require("../models/user");

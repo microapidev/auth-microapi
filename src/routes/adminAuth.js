@@ -1,5 +1,5 @@
 const adminRouter = require("express").Router();
-const { authorizeUser } = require("../middlewares/middleware");
+const { authorizeUser } = require("../middlewares/authorization");
 const {
   registerValidation,
   loginValidation,

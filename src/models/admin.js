@@ -11,7 +11,7 @@ const {
   AUTH_API_DB,
 } = require("../utils/config");
 
-// Modified user model
+// Admin model to be stored in user db
 const adminSchema = new mongoose.Schema({
   username: {
     type: String,

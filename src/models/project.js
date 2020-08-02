@@ -13,7 +13,7 @@ const projectSchema = new mongoose.Schema({
   },
   timestamp: true
 });
-
+ 
 projectSchema.plugin(findOrCreate);
 projectSchema.plugin(mongodbErrorHandler);
 
@@ -26,5 +26,8 @@ projectSchema.set("toJSON", {
     delete returnedObject.__v;
   },
 });
+
+// Generate signed ACCESS KEY for admin to access a project's configurations
+projectSchema.methods.generateACCESSKEY = () => RandomString.generate(64);
 
 module.exports = mongoose.model("Project", projectSchema);

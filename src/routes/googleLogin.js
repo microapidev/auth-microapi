@@ -4,10 +4,8 @@ const url = require("url");
 const { google } = require("googleapis");
 const CustomResponse = require("../utils/response");
 const createGoogleStrategy = require("../config/passport/googleStrategy");
-const {
-  authorizeUser,
-  googleAuthProvider,
-} = require("../middlewares/middleware");
+const { googleAuthProvider } = require("../middlewares/checkAuthProvider");
+const { authorizeUser } = require("../middlewares/authorization");
 const route = express.Router();
 
 // The credentials of all who are currently undergoing Google's authentication flow.
@@ -42,7 +40,7 @@ route.get("/", authorizeUser, googleAuthProvider, async (req, res) => {
       // If you only need one scope you can pass it as a string
       scope: scopes,
 
-      // Add the client ID to ensure the correnct credentials are used on server response (callback)
+      // Add the client ID to ensure the correct credentials are used on server response (callback)
       state: req.provider.clientID,
     });
 

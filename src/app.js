@@ -9,15 +9,15 @@ const adminRouter = require("./routes/adminAuth");
 const fbRouter = require("./routes/fbauth");
 const twitterRouter = require("./routes/twitterAuth");
 const gitRouter = require("./routes/gitauth");
+const googleLoginRouter = require("./routes/googleLogin");
 const docRouter = require("./routes/documentation");
 const emailVerificationRouter = require("./routes/EmailVerification");
 const { connectDB } = require("./controllers/db");
+const { authorizeUser } = require("./middlewares/authorization")
 const {
   errorHandler,
   unknownRoutes,
 } = require("./middlewares/errorHandler");
-const authorizeUser = require("./middlewares/authorization")
-const googleLoginRouter = require("./routes/googleLogin");
 require("./config/passport/twitterStrategy");
 require("./config/passport/githubStrategy");
 require("./config/passport/googleStrategy");

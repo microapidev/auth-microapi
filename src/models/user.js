@@ -80,6 +80,7 @@ const userSchema = new mongoose.Schema({
 
 userSchema.plugin(mongodbErrorHandler);
 userSchema.plugin(findOrCreate);
+
 // remove password, _id and return id instead whenever user is retrieved from db
 userSchema.set("toJSON", {
   virtuals: true,

@@ -3,7 +3,7 @@ const {
   registerValidation,
   loginValidation,
 } = require("../utils/validation/joiValidation");
-const { authorizeUser } = require("../middlewares/middleware");
+const { authorizeUser } = require("../middlewares/authorization");
 const UserController = require("../controllers/auth");
 const {
   forgotValidation,

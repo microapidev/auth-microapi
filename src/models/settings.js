@@ -5,16 +5,39 @@
 const mongoose = require("mongoose");
 const mongodbErrorHandler = require("mongoose-mongodb-errors");
 const findOrCreate = require("mongoose-findorcreate");
+require('mongoose-schema-jsonschema')(mongoose); // allows to create accessible json object based on schema, negating need to store model defaults in database
 
-// Settings model
+// Settings model: default stored in auth
 const settingsSchema = new mongoose.Schema({
-  successCallbackUrl: {
-    type: String,
-    default: null,
+  emailVerification: {
+    successCallbackUrl: {
+      type: String,
+      default: null,
+    },
+    failureCallbackUrl: {
+      type: String,
+      default: null,
+    }
   },
-  failureCallbackUrl: {
-    type: String,
-    default: null,
+  passwordReset: {
+    successCallbackUrl: {
+      type: String,
+      default: null,
+    },
+    failureCallbackUrl: {
+      type: String,
+      default: null,
+    }
+  },
+  socialAuth: {
+    successCallbackUrl: {
+      type: String,
+      default: null,
+    },
+    failureCallbackUrl: {
+      type: String,
+      default: null,
+    }
   },
   facebookAuthProvider: {
     appID: {
@@ -71,5 +94,9 @@ settingsSchema.set("toJSON", {
     delete returnedObject.__v;
   },
 });
+
+const jsonSchema = settingsSchema.jsonSchema();
+ 
+// console.dir(jsonSchema, { depth: null });
 
 module.exports = mongoose.model("Settings", settingsSchema);
