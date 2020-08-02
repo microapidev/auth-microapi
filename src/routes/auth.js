@@ -80,9 +80,6 @@ module.exports = () => {
     EmailVerificationModel.findOne({
       token: request.params.token,
     }).then((doc) => {
-      console.log(doc + " from redirect");
-      console.log(doc.emailVerifyCallbackUrl + " Callback url");
-      console.log(decodeURIComponent(doc.emailVerifyCallbackUrl));
       response.redirect(
         `${decodeURIComponent(
           doc.emailVerifyCallbackUrl
