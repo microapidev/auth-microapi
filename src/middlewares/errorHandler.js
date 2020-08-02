@@ -1,17 +1,14 @@
 /**
- * This middleware returns response when client tries to access unknown routes through this domain, and handles error responses sent to client when a transaction fails
+ * This middleware returns response when client tries to access unknown routes through this domain, and handles error responses sent to client when a transaction fails or throws an error
 **/
 
 const CustomResponse = require("../utils/response");
 
 const unknownRoutes = (request, response, next) => {
-  // 
   response.status(404).send({ error: "unknown endpoint" });
 };
 
 const errorHandler = (error, request, response, next) => {
-  // 
-  console.log(error);
   if (error.name === "ValidationError") {
     response
       .status(400)
@@ -53,6 +50,7 @@ const errorHandler = (error, request, response, next) => {
         )
       );
   } else {
+    console.log(error);
     response
       .status(500)
       .json(
