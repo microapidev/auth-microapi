@@ -5,6 +5,7 @@ const {
 } = require("../utils/validation/joiValidation");
 const { authorizeUser } = require("../middlewares/middleware");
 const UserController = require("../controllers/auth");
+const EmailVerificationModel = require("../models/EmailVerification");
 const {
   forgotValidation,
   resetPasswordValidation,
@@ -75,10 +76,16 @@ module.exports = () => {
 
   userRouter.post("/reset", forgotValidation(), UserController.forgotPassword);
 
-  userRouter.get("/:token/:", (request, response, next) => {
-    response.redirect(
-      `https://upbeat-leavitt-2a7b54.netlify.app/pages/forgot-new/?token=${request.params.token}`
-    );
+  userRouter.get("/:token", (request, response, next) => {
+    EmailVerificationModel.findOne({
+      token: request.params.token,
+    }).then((doc) => {
+      response.redirect(
+        `${decodeURIComponent(
+          doc.emailVerifyCallbackUrl
+        )}?passwordResetToken=${doc.token}`
+      );
+    });
   });
 
   userRouter.patch(

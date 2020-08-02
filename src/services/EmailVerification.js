@@ -30,20 +30,16 @@ class EmailVerificationService {
         { new: true }
       );
     }
-    // else if (req.baseUrl === '/api/admin/email-verification') {
-    //   userData = await AdminUser.findByIdAndUpdate(token._userId,
-    //     {$set: {isEmailVerified: true}},
-    //     {new: true});
-    // }
-
-    this.logger(userData);
+    const verified = await EmailVerification.findOne({ _userId: userData._id });
+    
+    // this.logger(userData);
     if (!userData) {
       throw new CustomError("User Could Not Be Updated", 401);
     }
 
     return {
       isVerified: userData.isEmailVerified,
-      cbUrl: userData.cbUrl,
+      emailVerifyCallbackUrl: verified.emailVerifyCallbackUrl,
     };
   }
 
@@ -59,7 +55,7 @@ class EmailVerificationService {
     }
 
     //Sends new token
-    let data = await verifyEmail.createVerificationLink(req.user, req);
+    await verifyEmail.createVerificationLink(req.user, req);
     return {
       code: 200,
       message: "New Verification Link Sent",

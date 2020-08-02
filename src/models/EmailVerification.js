@@ -25,7 +25,7 @@ const emailVerificationSchema = new mongoose.Schema({
     ref: "user",
   },
 
-  cbUrl: {
+  emailVerifyCallbackUrl: {
     type: String,
     required: true,
   },

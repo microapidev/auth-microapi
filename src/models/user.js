@@ -75,7 +75,7 @@ const userSchema = new mongoose.Schema({
     enum: [0, 1],
     required: true,
     default: 1,
-  },
+  }
 });
 
 userSchema.plugin(mongodbErrorHandler);

@@ -22,6 +22,7 @@ exports.registerValidation = () => (req, res, next) => {
       .min(10)
       .max(11)
       .pattern(/^[0-9]+$/),
+    emailVerifyCallbackUrl: Joi.string().trim(),
   });
   return validator(schema, req.body, res, next);
 };
@@ -100,7 +101,7 @@ exports.forgotValidation = () => (req, res, next) => {
       })
       .trim()
       .required(),
-    cbUrl: Joi.string().trim().required(),
+    emailVerifyCallbackUrl: Joi.string().trim().required(),
   });
   return validator(schema, req.body, res, next);
 };
