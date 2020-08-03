@@ -17,6 +17,12 @@ const jsonMiddleware = (req, res, next) => {
   }
 };
 
+router.get("/info", (req, res) => {
+  const { title, description } = openApiDocumentation.info;
+
+  res.send(JSON.stringify({ title, description }));
+});
+
 // use swagger-ui-express for your app documentation endpoint
 router.use("/", swaggerUi.serve);
 router.get(
