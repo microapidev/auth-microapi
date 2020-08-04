@@ -11,6 +11,7 @@ const twitterRouter = require("./routes/twitterAuth");
 const gitRouter = require("./routes/gitauth");
 const docRouter = require("./routes/documentation");
 const emailVerificationRouter = require("./routes/EmailVerification");
+const serveStatic = require("serve-static");
 const { connectDB } = require("./controllers/db");
 const {
   authorizeUser,
@@ -40,6 +41,9 @@ app.use(
 
 // configure user session
 SessionMgt.config(app);
+
+// Static files
+app.use(serveStatic("public/ftp", { index: false }));
 
 // auth routes
 app.use("/api/admin", adminRouter());
