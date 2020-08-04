@@ -58,7 +58,7 @@ exports.settingsSchema = [
   },
   {
     setting_name: "Twitter Credentials",
-    setting_type: "Array",
+    setting_type: "Object",
     setting_key: "twitterAuthProvider",
     setting_required: false,
     setting_value: [
@@ -80,7 +80,7 @@ exports.settingsSchema = [
   },
   {
     setting_name: "Github Credentials",
-    setting_type: "Array",
+    setting_type: "Object",
     setting_key: "githubAuthProvider",
     setting_required: false,
     setting_value: [
