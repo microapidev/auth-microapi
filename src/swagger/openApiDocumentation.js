@@ -18,7 +18,7 @@ const openApiDocumentation = {
   },
   servers: [
     {
-      url: "https://auth-microapi.herokuapp.com/api",
+      url: "https://authentication-microapi.herokuapp.com/api",
       description: "Staging Server (uses test data)",
     },
     {
@@ -138,8 +138,8 @@ const openApiDocumentation = {
             "application/json": {
               schema: {
                 email: {
-                  type: "string"
-                }
+                  type: "string",
+                },
               },
             },
           },
@@ -774,6 +774,10 @@ const openApiDocumentation = {
             type: "string",
             Sdescription: "User phone number",
           },
+          emailVerifyCallbackUrl:{
+            type: "string",
+            description: "Callback url for redirect on email verification",
+          }
         },
       },
       Login: {
@@ -853,6 +857,10 @@ const openApiDocumentation = {
           email: {
             type: "string",
             description: "User Email Address",
+          },
+          emailVerifyCallbackUrl: {
+            type: "string",
+            description: "Callback url for redirect on email verification",
           },
         },
       },
