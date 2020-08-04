@@ -23,7 +23,7 @@ const jsonMiddleware = (req, res, next) => {
   }
 };
 
-router.get("/info", (req, res) => {
+router.get("/api/info", (req, res) => {
   const iconLink = `${process.env.HOST}/icon.svg`;
   const { title, description } = openApiDocumentation.info;
 
