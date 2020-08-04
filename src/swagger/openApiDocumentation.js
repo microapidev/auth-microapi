@@ -1,4 +1,5 @@
 // List of tags used by documentation.
+const GENERAL_TAG = "General";
 const ADMINISTRATOR_TAG = "Administrators";
 const USER_TAG = "Users";
 const AUTH_PROVIDER_TAG = "Authentication Providers";
@@ -32,6 +33,10 @@ const openApiDocumentation = {
   ],
   tags: [
     {
+      name: GENERAL_TAG,
+      description: "General information and data.",
+    },
+    {
       name: ADMINISTRATOR_TAG,
       description: "Create and modify administrators.",
     },
@@ -47,6 +52,36 @@ const openApiDocumentation = {
   schemes: ["HTTP", "HTTPS"],
   //input api paths in here
   paths: {
+    "/info": {
+      get: {
+        tags: [GENERAL_TAG],
+        description: "Returns the basic information of the API.",
+        operationId: "info",
+        parameters: [],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     "/admin/register": {
       post: {
         tags: [ADMINISTRATOR_TAG],
