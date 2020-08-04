@@ -3,7 +3,6 @@ const { authorizeUser } = require("../middlewares/middleware");
 const {
   registerValidation,
   loginValidation,
-  getSettingsValidation,
   updateSettingsValidation,
   forgotValidation,
   resetPasswordValidation,
@@ -18,12 +17,7 @@ module.exports = () => {
     forgotValidation(),
     AdminCtrl.forgotPassword
   );
-  adminRouter.get(
-    "/settings",
-    authorizeUser,
-    getSettingsValidation(),
-    AdminCtrl.getSettings
-  );
+  adminRouter.get("/settings", authorizeUser, AdminCtrl.getSettings);
   adminRouter.patch(
     "/settings",
     authorizeUser,

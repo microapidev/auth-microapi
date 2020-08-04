@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const swaggerUi = require("swagger-ui-express");
+const CustomResponse = require("../utils/response");
 const openApiDocumentation = require("../swagger/openApiDocumentation");
 
 const swaggerUiOptions = {
@@ -11,17 +12,28 @@ const jsonMiddleware = (req, res, next) => {
   const { format } = req.query;
 
   if (format && format.toString() === "json") {
-    res.send(JSON.stringify(openApiDocumentation));
+    res.json(
+      CustomResponse(
+        "API documentation retrieved successfully",
+        openApiDocumentation
+      )
+    );
   } else {
     next();
   }
 };
 
-router.get("/info", (req, res) => {
+router.get("/api/info", (req, res) => {
   const iconLink = `${process.env.HOST}/icon.svg`;
   const { title, description } = openApiDocumentation.info;
 
-  res.send(JSON.stringify({ title, description, icon: iconLink }));
+  res.json(
+    CustomResponse("API information retrieved successfully", {
+      title,
+      description,
+      icon: iconLink,
+    })
+  );
 });
 
 // use swagger-ui-express for your app documentation endpoint

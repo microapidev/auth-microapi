@@ -29,7 +29,7 @@ exports.settingsSchema = [
   },
   {
     setting_name: "Facebook Credentials",
-    setting_type: "Object",
+    setting_type: "Array",
     setting_key: "facebookAuthProvider",
     setting_required: false,
     setting_value: [
@@ -126,7 +126,7 @@ exports.settingsSchema = [
 
 exports.parseSettings = (data) => {
   return data.reduce((acc, item) => {
-    if (item["setting_type"] == "Object") {
+    if (item["setting_type"] == "Array") {
       const newTemp = parseSettings(item.setting_value);
       return { ...acc, [item["setting_key"]]: newTemp };
     }

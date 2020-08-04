@@ -41,19 +41,6 @@ exports.loginValidation = () => (req, res, next) => {
   return validator(schema, req.body, res, next);
 };
 
-exports.getSettingsValidation = () => (req, res, next) => {
-  const schema = Joi.object().keys({
-    email: Joi.string()
-      .email({
-        minDomainSegments: 2,
-        tlds: { allow: true },
-      })
-      .trim()
-      .required(),
-  });
-  return validator(schema, req.body, res, next);
-};
-
 exports.updateSettingsValidation = () => (req, res, next) => {
   const schema = Joi.object()
     .keys({
