@@ -17,6 +17,13 @@ const jsonMiddleware = (req, res, next) => {
   }
 };
 
+router.get("/info", (req, res) => {
+  const iconLink = `${process.env.HOST}/icon.svg`;
+  const { title, description } = openApiDocumentation.info;
+
+  res.send(JSON.stringify({ title, description, icon: iconLink }));
+});
+
 // use swagger-ui-express for your app documentation endpoint
 router.use("/", swaggerUi.serve);
 router.get(
