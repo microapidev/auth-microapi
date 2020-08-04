@@ -30,11 +30,6 @@ module.exports = () => {
     updateSettingsValidation(),
     AdminCtrl.updateSettings
   );
-  adminRouter.get(
-    "/settings-schema",
-    authorizeUser,
-    AdminCtrl.getSettingsSchema
-  );
   /* I'll deal with this later */
   adminRouter.get("/reset-password/:token", (request, response, next) => {
     response

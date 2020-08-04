@@ -26,11 +26,6 @@ class AdminController {
     return response.status(200).json(CustomResponse(data.message, data.data));
   } //end getSettings
 
-  async getSettingsSchema(request, response) {
-    const data = await AdminSrv.getSettingsSchema(request);
-    return response.status(200).json(CustomResponse(data.message, data.data));
-  } //end getSettingsSchema
-
   async updateSettings(request, response) {
     const data = await AdminSrv.updateSettings(request);
     return response.status(200).json(CustomResponse(data.message, data.data));

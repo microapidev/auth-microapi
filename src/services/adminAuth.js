@@ -5,7 +5,6 @@ const Settings = require("../models/settings");
 const { CustomError } = require("../utils/CustomError");
 const RandomString = require("randomstring");
 const { sendForgotPasswordMail } = require("../EmailFactory/index");
-const { settingsSchema } = require("../utils/settingsHandler");
 
 class AdminService {
   async register(body) {
@@ -74,15 +73,6 @@ class AdminService {
 
     return {
       data: data,
-      message: message,
-    };
-  }
-
-  async getSettingsSchema(req) {
-    // New API KEY for admin
-    const message = "Settings retrieved successfully";
-    return {
-      data: settingsSchema,
       message: message,
     };
   }
