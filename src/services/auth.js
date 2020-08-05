@@ -374,18 +374,12 @@ class UserService {
   }
 
   async changePassword(req) {
-    const { email, oldPassword, newPassword, confirmNewPassword } = req.body;
+    const { oldPassword, newPassword } = req.body;
+    const { userId } = req.params;
 
     try {
-      const user = await User.findOne({ email: email });
+      const user = await User.findById(userId);
 
-      if (newPassword !== confirmNewPassword) {
-        return {
-          success: false,
-          message: "Password does not match",
-          data: {},
-        };
-      }
       let passwordMatched = await comparePassword(oldPassword, user.password);
 
       if (passwordMatched) {

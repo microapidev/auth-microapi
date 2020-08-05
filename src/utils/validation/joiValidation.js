@@ -94,16 +94,14 @@ exports.forgotValidation = () => (req, res, next) => {
 };
 exports.changePasswordValidation = () => (req, res, next) => {
   const schema = Joi.object().keys({
-    email: Joi.string()
-      .email({
-        minDomainSegments: 2,
-        tlds: { allow: true },
-      })
-      .trim()
-      .required(),
+    headers: Joi.object({
+      authorization: Joi.string().required(),
+    }),
+    params: Joi.object().keys({
+      userId: Joi.string().required(),
+    }),
     oldPassword: Joi.string().trim().required(),
     newPassword: Joi.string().trim().required(),
-    confirmNewPassword: Joi.string().trim().required(),
   });
   return validator(schema, req.body, res, next);
 };
