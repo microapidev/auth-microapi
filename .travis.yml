@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+- '12'
+before_script:
+- npm run lint
+script:
+- npm run test:ci
+deploy:
+  provider: heroku
+  app: authentication-microapi-v2
+  on:
+    branch: v2
+  api_key:
+    secure: UK+3xlbGNiVPV+Nqi4jvJgYtlceYeY/E0qFqxOuLJRKnYoOctOyLUI0b4HC1Oyqy+gQ48ncq41qbrQiAUadGS3FQUJdC7VIkHU0riCar1b6cbSHNVNadMxQWwuI0gtk2FVqgkqvbGge/zX7/J/C/eISN6pLUgQ4KJTPNbOo9dTug4oPneiuyswl8rGWRc2ImhyyBOj+FS3FgxZpxZHMGe2PRGJX0tZMSgdIlQjOFBfF5xhoUhrYx98duOzIWwOc8d6wwf8Zwmv1+Q8h+tlLYxgRYx9sj7qOfpNLv9FoL4MzcSQM9RBW7epvisQZfhv5TH7w0D/OnpRcIfHnnHkva02U4Gt92vNZJd/VRdQqJrmqOwoTNN1mKjt60W6rhgPWk2FlA4rUb4sIiSUAqHzGoXH/izNDsEcLXiYMQzWlExZH9F79vjVvFU/kIPCO5R/YGODFpM8Ahnam0fWCQPlGmSjX2lwWdI8/j6VFxbQwn9A1ffbew1xliq71IFU1Ug1eVqlwNqcAPmKCGriCHHP1uqV28ziPmLlValx0wY9VvoHlobeqwpZWYDq74jprV0UAmb5RlAdIeK7DztaCHFIpLRstYXekf10CRY40rnhanxNbBZ8qfMfg+Ozjdu+niMMZsi43JJttzoHF1z8kp437J8RPGoHK3wFdY2wu8f2sXz3k=
