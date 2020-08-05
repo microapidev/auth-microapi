@@ -7,11 +7,10 @@ assignees: ''
 
 ---
 
-**Is your test related to a feature? Please describe.**
-A clear and concise description of what the test is about. Ex. I'm testing [...]
+### Is your test related to a feature? Please describe
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+A clear and concise description of the test case(s).
 
-**Additional context**
-Add any other context or screenshots about the test here.
+### Additional context
+
+Add any other context or screenshots about the test(s) here.

@@ -7,4 +7,6 @@ assignees: ''
 
 ---
 
-**Give brief description of what documentation changes were made.**
+### Give brief description of what documentation changes were made
+
+> NOTE: typos and minor document updates should create PR directly
