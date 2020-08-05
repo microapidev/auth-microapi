@@ -374,11 +374,10 @@ class UserService {
   }
 
   async changePassword(req) {
-    const { oldPassword, newPassword } = req.body;
-    const { userId } = req.params;
+    const { email, oldPassword, newPassword } = req.body;
 
     try {
-      const user = await User.findById(userId);
+      const user = await User.findOne({ email: email });
 
       let passwordMatched = await comparePassword(oldPassword, user.password);
 
