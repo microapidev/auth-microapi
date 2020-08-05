@@ -74,6 +74,12 @@ class UserController {
       .status(200)
       .json(CustomResponse("Password updated successfully. You may login"));
   }
+
+  async changePassword(req, res) {
+    await UserService.changePassword(req);
+
+    res.status(200).json("Password changed successfully");
+  }
 } //end class UserController
 
 module.exports = new UserController();

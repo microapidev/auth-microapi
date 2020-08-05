@@ -371,6 +371,11 @@ class UserService {
       user: user,
     };
   }
+
+  async changePassword(req) {
+    const { oldPassword, newPassword } = req.body;
+    const {userId} = req.params
+  }
 }
 
 module.exports = new UserService();

@@ -95,5 +95,7 @@ module.exports = () => {
     UserController.resetPassword
   );
 
+  
+
   return userRouter;
 };
