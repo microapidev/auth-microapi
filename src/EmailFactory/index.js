@@ -13,7 +13,7 @@ module.exports = {
   sendVerificationMail: (emailAddress, verifyLink) => {
     const msg = {
       to: emailAddress,
-      from: "AUTH API <no-reply@authapi.com>",
+      from: "AUTH API <hngi7microapi@gmail.com>",
       subject: "CONFIRM YOUR EMAIL ADDRESS",
       html: `
         <div style="text-align: center;"><span style="font-family:verdana,geneva,sans-serif;">
