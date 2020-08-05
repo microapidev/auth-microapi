@@ -11,8 +11,8 @@ const openApiDocumentation = {
   openapi: "3.0.21",
   info: {
     version: "1.0.0",
-    title: "HNGI Authetication Micro-Service",
-    description: "A Dockerized Microservice for Authentication",
+    title: "Authetication MicroAPI",
+    description: "Authenticate all your users with local (email and password) and social authentication (Google, Twitter, Facebook, and GitHub). Get started and give your users a smooth authentication flow.",
     contact: {
       name: "HNGI",
     },
