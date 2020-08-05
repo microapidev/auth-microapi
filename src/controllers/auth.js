@@ -76,9 +76,12 @@ class UserController {
   }
 
   async changePassword(req, res) {
-    await UserService.changePassword(req);
+    const data = await UserService.changePassword(req);
 
-    res.status(200).json("Password changed successfully");
+    if (!data.success) {
+      return res.status(422).json(data);
+    }
+    return res.status(200).json(data);
   }
 } //end class UserController
 

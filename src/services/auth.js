@@ -6,6 +6,7 @@ const { CustomError } = require("../utils/CustomError");
 const { sendForgotPasswordMail } = require("../EmailFactory");
 const { ACCOUNT_SID, AUTH_TOKEN, SERVICE_ID } = require("../utils/config");
 const EmailVerification = require("../models/EmailVerification");
+const { hashPassword, comparePassword } = require("../utils/passwordUtils");
 
 const client = require("twilio")(ACCOUNT_SID, AUTH_TOKEN);
 
@@ -373,8 +374,34 @@ class UserService {
   }
 
   async changePassword(req) {
-    const { oldPassword, newPassword } = req.body;
-    const {userId} = req.params
+    const { email, oldPassword, newPassword, confirmNewPassword } = req.body;
+
+    try {
+      const user = await User.findOne({ email: email });
+
+      if (newPassword !== confirmNewPassword) {
+        return "Password does not match";
+      }
+      let passwordMatched = await comparePassword(oldPassword, user.password);
+
+      if (passwordMatched) {
+        const hashedPassword = await hashPassword(newPassword);
+        user.password = hashedPassword;
+        await user.save();
+        return {
+          success: true,
+          message: "Password Changed successfully",
+        };
+      }
+      return {
+        success: false,
+        message: "Old Password does not Match",
+      };
+    } catch (err) {
+      return {
+        data: err,
+      };
+    }
   }
 }
 
