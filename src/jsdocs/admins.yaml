@@ -1,0 +1,19 @@
+paths:
+  # Endpoint to authenticate a user
+  /admin/register:
+    # GET operation
+    post:
+      tags:
+        - admins
+
+      summary: Register an administrator
+
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            $ref: "#/definitions/CreateAdminResponse"
+        "400":
+          description: Invalid body supplied
+          schema:
+            $ref: "#/definitions/BadRequestResponse"

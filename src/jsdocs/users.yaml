@@ -1,0 +1,19 @@
+paths:
+  # Endpoint to register a user
+  /user/register:
+    # GET operation
+    post:
+      tags:
+        - users
+
+      summary: Register a user
+
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            $ref: "#/definitions/RegisterUserResponse"
+        "400":
+          description: Invalid body supplied
+          schema:
+            $ref: "#/definitions/BadRequestResponse"

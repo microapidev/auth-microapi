@@ -1,0 +1,32 @@
+paths:
+  # Endpoint to authenticate a user
+  /google:
+    # GET operation
+    get:
+      tags:
+        - providers
+
+      summary: Authenticates with Google
+
+      security:
+        - Bearer: []
+
+      responses:
+        "200":
+          description: Successful operation
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+              success:
+                type: boolean
+              data:
+                type: object
+                properties:
+                  redirectUrl:
+                    type: string
+        "400":
+          description: Invalid body supplied
+          schema:
+            $ref: "#/definitions/BadRequestResponse"
