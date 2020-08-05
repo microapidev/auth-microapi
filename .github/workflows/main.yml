@@ -1,0 +1,60 @@
+name: CICD
+
+on:
+  push:
+  pull_request:
+    branches:
+      - v2
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [10.x]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: npm ci
+      - run: npm run test:ci
+
+      - name: Coveralls Parallel
+        uses: coverallsapp/github-action@v1.1.0
+        env:
+          NODE_COVERALLS_DEBUG: 1
+          COVERALLS_SERVICE_NAME: Github Actions
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+          COVERALLS_GIT_BRANCH: v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: run-${{ matrix.node-version }}
+          parallel: true
+
+  finish-test:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@v1.1.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
+
+  build:
+    if: ${{ github.event_name == 'push' && github.repository == 'microapidev/auth-microapi' }}
+    needs: finish-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.4.6 # This is the action
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "authentication-microapi-v2" #Must be unique in Heroku
+          heroku_email: "allistair.vilakazi@gmail.com"
