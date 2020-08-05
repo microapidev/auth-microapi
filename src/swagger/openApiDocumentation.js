@@ -272,7 +272,7 @@ const openApiDocumentation = {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/Forgot",
+                $ref: "#/components/schemas/AdminForgot",
               },
             },
           },
@@ -956,6 +956,15 @@ const openApiDocumentation = {
           emailVerifyCallbackUrl: {
             type: "string",
             description: "Callback url for redirect on email verification",
+          },
+        },
+      },
+      AdminForgot: {
+        type: "object",
+        properties: {
+          email: {
+            type: "string",
+            description: "User Email Address",
           },
         },
       },
