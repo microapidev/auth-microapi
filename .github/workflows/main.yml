@@ -28,6 +28,8 @@ jobs:
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: run-${{ matrix.node-version }}
+          parallel: true
 
   finish-test:
     needs: test
@@ -40,7 +42,7 @@ jobs:
           parallel-finished: true
 
   build:
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ github.event_name == 'push' && github.repository == 'microapidev/auth-microapi' }}
     needs: finish-test
     runs-on: ubuntu-latest
     steps:
@@ -50,4 +52,3 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "authentication-microapi-v2" #Must be unique in Heroku
           heroku_email: "allistair.vilakazi@gmail.com"
-          usedocker: true
