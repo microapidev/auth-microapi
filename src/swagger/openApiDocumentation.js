@@ -272,7 +272,7 @@ const openApiDocumentation = {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/Forgot",
+                $ref: "#/components/schemas/AdminForgot",
               },
             },
           },
@@ -651,6 +651,47 @@ const openApiDocumentation = {
         },
       },
     },
+    "/user/password/change-password": {
+      post: {
+        tags: [USER_TAG],
+        description: "Enter details to change password",
+        operationId: "change-password",
+        security: apiKeySecurity,
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/ChangePassword",
+              },
+            },
+          },
+          required: true,
+        },
+        parameters: [],
+        responses: {
+          "200": {
+            description: "Success",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad Request",
+            content: {
+              "application/json": {
+                schema: {
+                  $ref: "#/components/schemas/Response",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     "/user/logout": {
       get: {
         tags: [USER_TAG],
@@ -915,6 +956,36 @@ const openApiDocumentation = {
           emailVerifyCallbackUrl: {
             type: "string",
             description: "Callback url for redirect on email verification",
+          },
+        },
+      },
+      AdminForgot: {
+        type: "object",
+        properties: {
+          email: {
+            type: "string",
+            description: "User Email Address",
+          },
+        },
+      },
+      ChangePassword: {
+        type: "object",
+        properties: {
+          email: {
+            type: "string",
+            description: "User Email Address",
+          },
+          oldPassword: {
+            type: "string",
+            description: "User Old Password",
+          },
+          newPassword: {
+            type: "string",
+            description: "User New Password",
+          },
+          confirmNewPassword: {
+            type: "string",
+            description: "Confirm new Password",
           },
         },
       },
