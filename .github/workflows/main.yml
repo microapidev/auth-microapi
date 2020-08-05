@@ -42,7 +42,7 @@ jobs:
           parallel-finished: true
 
   build:
-    if: ${{ github.event_name == 'push' }}
+    if: ${{ github.event_name == 'push' && github.repository == 'microapidev/auth-microapi' }}
     needs: finish-test
     runs-on: ubuntu-latest
     steps:
