@@ -380,7 +380,11 @@ class UserService {
       const user = await User.findOne({ email: email });
 
       if (newPassword !== confirmNewPassword) {
-        return "Password does not match";
+        return {
+          success: false,
+          message: "Password does not match",
+          data: {},
+        };
       }
       let passwordMatched = await comparePassword(oldPassword, user.password);
 
@@ -391,14 +395,18 @@ class UserService {
         return {
           success: true,
           message: "Password Changed successfully",
+          data: {},
         };
       }
       return {
         success: false,
         message: "Old Password does not Match",
+        data: {},
       };
     } catch (err) {
       return {
+        status: false,
+        message: "Something Went Wrong!!!",
         data: err,
       };
     }
