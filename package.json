@@ -11,8 +11,8 @@
     "lint": "eslint \"src/**/*.js\"",
     "lint:fix": "eslint --fix \"src/**/*.js\"",
     "build": "babel src --out-dir dist --delete-dir-on-start --ignore '**/*.test.js'",
-    "dev": "cross-env DEBUG=log NODE_ENV=development nodemon --exec babel-node ./src/index.js",
-    "start": "cross-env DEBUG=log NODE_ENV=production node ./dist/index.js"
+    "dev": "cross-env DEBUG=log NODE_ENV=development nodemon --exec babel-node ./src/server.js",
+    "start": "cross-env DEBUG=log NODE_ENV=production node ./dist/server.js"
   },
   "repository": {
     "type": "git",
