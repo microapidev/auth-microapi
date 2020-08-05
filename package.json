@@ -7,7 +7,7 @@
     "test": "cross-env NODE_ENV=test jest",
     "test:watch": "cross-env NODE_ENV=test jest --watch",
     "test:cover": "cross-env NODE_ENV=test jest --coverage",
-    "test:ci": "cross-env NODE_ENV=test jest --coverage && cat ./coverage/lcov.info",
+    "test:ci": "cross-env NODE_ENV=test jest --coverage",
     "lint": "eslint \"src/**/*.js\"",
     "lint:fix": "eslint --fix \"src/**/*.js\"",
     "build": "babel src --out-dir dist --delete-dir-on-start --ignore '**/*.test.js'",
