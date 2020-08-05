@@ -52,4 +52,3 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "authentication-microapi-v2" #Must be unique in Heroku
           heroku_email: "allistair.vilakazi@gmail.com"
-          usedocker: true
