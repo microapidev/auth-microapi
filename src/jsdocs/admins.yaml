@@ -9,10 +9,6 @@ paths:
       summary: Register an administrator
 
       responses:
-        "200":
-          description: Successful operation
-          schema:
-            $ref: "#/definitions/CreateAdminResponse"
         "400":
           description: Invalid body supplied
           schema:

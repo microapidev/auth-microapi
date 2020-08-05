@@ -17,15 +17,15 @@ paths:
           schema:
             type: object
             properties:
-              message:
+              status:
                 type: string
-              success:
-                type: boolean
+                example: success
               data:
                 type: object
                 properties:
                   redirectUrl:
                     type: string
+                    example: https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount
         "400":
           description: Invalid body supplied
           schema:
