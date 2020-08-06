@@ -1,6 +1,6 @@
 definitions:
-  # BadRequestResponse model
-  BadRequestResponse:
+  # BadRequest model
+  BadRequest:
     type: object
     properties:
       status:

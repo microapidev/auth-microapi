@@ -1,14 +1,5 @@
 import swaggerJSDoc from "swagger-jsdoc";
 
-// List of tags used by documentation.
-export const GENERAL_TAG = "General";
-export const ADMINISTRATOR_TAG = "Administrators";
-export const USER_TAG = "Users";
-export const AUTH_PROVIDER_TAG = "Authentication Providers";
-
-// Security schema.
-export const apiKeySecurity = [{ Bearer: {} }];
-
 // Swagger definition
 const swaggerDefinition = {
   info: {
@@ -59,7 +50,12 @@ const swaggerDefinition = {
   ],
   components: {
     securitySchemes: {
-      Bearer: {
+      AdminToken: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+      },
+      UserToken: {
         type: "http",
         scheme: "bearer",
         bearerFormat: "JWT",
