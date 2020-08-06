@@ -9,6 +9,7 @@ const EmailVerificationModel = require("../models/EmailVerification");
 const {
   forgotValidation,
   resetPasswordValidation,
+  changePasswordValidation,
 } = require("../utils/validation/joiValidation");
 const SessionMgt = require("../services/SessionManagement");
 
@@ -81,9 +82,9 @@ module.exports = () => {
       token: request.params.token,
     }).then((doc) => {
       response.redirect(
-        `${decodeURIComponent(
-          doc.emailVerifyCallbackUrl
-        )}?passwordResetToken=${doc.token}`
+        `${decodeURIComponent(doc.emailVerifyCallbackUrl)}?passwordResetToken=${
+          doc.token
+        }`
       );
     });
   });
@@ -93,6 +94,12 @@ module.exports = () => {
     authorizeUser,
     resetPasswordValidation(),
     UserController.resetPassword
+  );
+  userRouter.post(
+    "/change-password",
+    authorizeUser,
+    changePasswordValidation(),
+    UserController.changePassword
   );
 
   return userRouter;
