@@ -10,21 +10,9 @@ const connect = async (connectionUri) => {
         useUnifiedTopology: true,
       });
     } catch (err) {
-      console.error("Error Connecting to DB:", err.stack);
+      console.log(`Error Connecting to DB: ${err.stack}`);
       process.exit(1);
     }
-  }
-};
-
-const truncate = async () => {
-  if (mongoose.connection.readyState !== 0) {
-    const { collections } = mongoose.connection;
-
-    const promises = Object.keys(collections).map((collection) =>
-      mongoose.connection.collection(collection).deleteMany({})
-    );
-
-    await Promise.all(promises);
   }
 };
 
@@ -36,6 +24,5 @@ const disconnect = async () => {
 
 module.exports = {
   connect,
-  truncate,
   disconnect,
 };

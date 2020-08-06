@@ -1,14 +1,12 @@
 const IndexModel = require("../../models/index");
 const { connect, disconnect } = require("../database");
-const log = require("debug")("log");
 const mongoose = require("mongoose");
+require("dotenv").config();
 
 describe("INSERT", () => {
   test("Should confirm mongodb works by adding a record", async () => {
-    log("Attempting to connect to database...");
-    await connect();
-    log("Database connected successfully");
-
+    console.log("Attempting to connect to database...");
+    await connect(process.env.DB_URI);
     const id = mongoose.Types.ObjectId();
     const mockData = new IndexModel({
       _id: id,
