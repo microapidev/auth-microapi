@@ -9,70 +9,75 @@ const mongooose = require("mongoose");
  * User schema
  * @constructor User
  */
-const userSchema = new mongooose.Schema({
-  firstname: {
-    type: String,
-    required: true,
-  },
-  lastname: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    lowercase: true,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  resetPasswordToken: String,
-  resetPasswordExpire: Date,
-  phone: {
-    type: String,
-    required: true,
-  },
-  otp: {
-    isEnabled: {
+const userSchema = new mongooose.Schema(
+  {
+    firstname: {
+      type: String,
+      required: true,
+    },
+    lastname: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      lowercase: true,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
+    phone: {
+      type: String,
+      required: true,
+    },
+    otp: {
+      isEnabled: {
+        type: Boolean,
+        default: false,
+      },
+      status: {
+        type: String,
+      },
+    },
+    authProvider: [
+      {
+        authId: {
+          type: String,
+        },
+        authType: {
+          type: String,
+          enum: ["facebook", "github", "google", "twitter"],
+        },
+      },
+    ],
+    isVerified: {
       type: Boolean,
       default: false,
     },
-    status: {
-      type: String,
-    }
-  },
-  authProvider: [{
-    authId: {
-      type: String,
+    isActive: {
+      type: Boolean,
+      default: true,
     },
-    authType: {
-      type: String,
-      enum: ["facebook", "github", "google", "twitter"],
+    failedLoginAttempts: {
+      count: {
+        type: Number,
+        default: 0,
+      },
+      lastAttempt: {
+        type: Date,
+      },
     },
-  }],
-  isVerified: {
-    type: Boolean,
-    default: false,
-  },
-  isActive: {
-    type: Boolean,
-    default: true,
-  },
-  failedLoginAttempts: {
-    count: {
-      type: Number,
-      default: 0,
-    },
-    lastAttempt: {
+    createdAt: {
       type: Date,
+      default: Date.now,
     },
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },  
-}, { timestamps: true });
+  { timestamps: true }
+);
 
 module.exports = mongooose.model("User", userSchema);
