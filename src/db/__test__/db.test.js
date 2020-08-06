@@ -6,7 +6,9 @@ require("dotenv").config();
 describe("INSERT", () => {
   test("Should confirm mongodb works by adding a record", async () => {
     console.log("Attempting to connect to database...");
-    await connect(process.env.AUTH_API_MONGODB_URI);
+    await connect(
+      "mongodb+srv://microapi:secret123@cluster0.japiw.mongodb.net/microapi?retryWrites=true&w=majority"
+    );
     const id = mongoose.Types.ObjectId();
     const mockData = new IndexModel({
       _id: id,
@@ -28,14 +30,18 @@ describe("INSERT", () => {
   test("Should return error for existing connections", async () => {
     console.log("Attempting to connect to database...");
     mongoose.connection.readyState = 1;
-    expect(await connect(process.env.AUTH_API_MONGODB_URI)).toEqual(
-      Error("Connection already Established")
-    );
+    expect(
+      await connect(
+        "mongodb+srv://microapi:secret123@cluster0.japiw.mongodb.net/microapi?retryWrites=true&w=majority"
+      )
+    ).toEqual(Error("Connection already Established"));
   });
 
   test("Should return error for non-existing connections on disconnec", async () => {
     console.log("Attempting to connect to database...");
-    await connect(process.env.AUTH_API_MONGODB_URI);
+    await connect(
+      "mongodb+srv://microapi:secret123@cluster0.japiw.mongodb.net/microapi?retryWrites=true&w=majority"
+    );
     mongoose.connection.readyState = 0;
     expect(await disconnect()).toEqual(Error("No open connection(s)"));
   });
