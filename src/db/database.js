@@ -10,15 +10,18 @@ const connect = async (connectionUri) => {
         useUnifiedTopology: true,
       });
     } catch (err) {
-      console.log(`Error Connecting to DB: ${err.stack}`);
-      process.exit(1);
+      return new Error(err.message);
     }
+  } else {
+    return new Error("Connection already Established");
   }
 };
 
 const disconnect = async () => {
   if (mongoose.connection.readyState !== 0) {
     await mongoose.disconnect();
+  } else {
+    return new Error("No open connection(s)");
   }
 };
 
