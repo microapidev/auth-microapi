@@ -1,16 +1,17 @@
+const platform = process.platform === "win32" ? "windows" : "unix";
+
 module.exports = {
   env: {
     browser: true,
     commonjs: true,
     es2020: true,
   },
-  // extends: ['airbnb-base'],
   parserOptions: {
     ecmaVersion: 11,
   },
   rules: {
     indent: ["error", 2, { SwitchCase: 1 }],
-    "linebreak-style": ["error", "unix"],
+    "linebreak-style": ["error", platform],
     quotes: ["error", "double"],
     semi: ["error", "always"],
     "no-console": [
