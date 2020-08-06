@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import CustomError from "./utils/customError";
 import errorHandler from "./utils/errorhandler";
-import { docRouter } from "./routes";
+import { docRouter, socialRouter } from "./routes";
 
 // create express app
 const app = express();
@@ -16,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // docuementation routes
 app.use("/", docRouter);
+app.use("/social", socialRouter);
 
 // routes not found go here
 app.all("*", (req, res, next) => {

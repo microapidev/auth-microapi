@@ -38,6 +38,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-jwt": "^5.3.3",
+    "googleapis": "^58.0.0",
     "jsonwebtoken": "^8.5.1",
     "swagger-jsdoc": "^4.0.0",
     "swagger-ui-express": "^4.1.4"
