@@ -88,7 +88,15 @@ route.get(
     })(req, res, next);
   },
   (req, res) => {
-    const { _id, isVerified, firstname, lastname, username, email } = req.user;
+    const {
+      _id,
+      isVerified,
+      firstname,
+      lastname,
+      username,
+      email,
+      photo,
+    } = req.user;
 
     const successRedirect = url.format({
       pathname: req.successCallbackUrl,
@@ -100,6 +108,7 @@ route.get(
         lastname,
         username,
         email,
+        photo,
       },
     });
 

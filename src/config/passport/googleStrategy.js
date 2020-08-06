@@ -26,10 +26,18 @@ const callback = (accessToken, refreshToken, profile, done) => {
     if (err) {
       return done(err);
     }
+
+    let photo = null;
+
+    if (profile.photos.length > 0) {
+      photo = profile.photos[0].value;
+    }
+
     // Check if the user is available
     if (!user) {
       let newUser = new GoogleUser({
         googleId: profile.id,
+        photo: photo,
         username: profile.displayName.trim(),
         firstname: profile.name.givenName,
         lastname: profile.name.familyName,
@@ -41,13 +49,24 @@ const callback = (accessToken, refreshToken, profile, done) => {
         if (err) {
           console.log(err);
         }
-        console.log("===New=Google=Profile===");
         return done(err, newUser);
       });
     } else {
-      console.log("===Existing=Google=Profile===");
-      // console.log(user);
-      return done(err, user);
+      if (user.photo) {
+        return done(err, user);
+      }
+
+      GoogleUser.updateOne(
+        { googleId: user.googleId },
+        { $set: { photo: photo } },
+        (err, googleUser) => {
+          if (err) {
+            console.log(err);
+          } else {
+            return done(err, googleUser);
+          }
+        }
+      );
     }
   });
 };

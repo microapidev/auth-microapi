@@ -64,14 +64,10 @@ const authProvider = (providerType) => {
     const admin = await Admin.findById(req.admin.id).populate("settings");
     const { successCallbackUrl, failureCallbackUrl } = admin.settings;
 
-    console.log(successCallbackUrl);
-
     let provider;
     let providerEnabled = false;
     const callbacksAvailable =
       successCallbackUrl !== null && failureCallbackUrl !== null;
-
-    console.log(callbacksAvailable);
 
     switch (providerType) {
       case TWITTER_PROVIDER:
