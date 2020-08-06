@@ -3,5 +3,4 @@ module.exports = {
   testRegex: [".spec.js$", ".test.js$"],
   coverageDirectory: "./coverage",
   testEnvironment: "node",
-  preset: "@shelf/jest-mongodb",
 };
