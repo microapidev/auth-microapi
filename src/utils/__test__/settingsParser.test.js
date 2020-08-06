@@ -40,7 +40,7 @@ describe("Settings Parser test", () => {
       },
     ];
     const settings = parseSettings(dummySetting, true);
-    console.log(settings);
+
     expect(Object.keys(settings).length).toBe(3);
     expect(settings.errors.length).toBe(1);
   });
@@ -85,7 +85,7 @@ describe("Settings Parser test", () => {
       },
     ];
     const settings = parseSettings(dummySetting, true);
-    console.log(settings);
+
     expect(Object.keys(settings.setting3).length).toBe(2);
     expect(settings.errors.length).toBe(3);
   });
@@ -108,7 +108,6 @@ describe("Settings Parser test", () => {
       },
     ];
     const settings = parseSettings(dummySetting, true);
-    console.log(settings);
     expect(Object.keys(settings).length).toBe(3);
     expect(settings.errors.length).toBe(2);
   });
