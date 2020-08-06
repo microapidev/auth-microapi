@@ -41,6 +41,7 @@
     "express-jwt": "^5.3.3",
     "googleapis": "^58.0.0",
     "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.27",
     "swagger-jsdoc": "^4.0.0",
     "swagger-ui-express": "^4.1.4"
   },
