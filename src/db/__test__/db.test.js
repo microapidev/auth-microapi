@@ -6,7 +6,7 @@ require("dotenv").config();
 describe("INSERT", () => {
   test("Should confirm mongodb works by adding a record", async () => {
     console.log("Attempting to connect to database...");
-    await connect(process.env.DB_URI);
+    await connect(process.env.AUTH_API_MONGODB_URI);
     const id = mongoose.Types.ObjectId();
     const mockData = new IndexModel({
       _id: id,
