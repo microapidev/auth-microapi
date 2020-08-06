@@ -52,19 +52,30 @@ socialRouter.get(
   socialControllers.twitterController
 );
 
-// Facebook authentication callback route.
+/**
+ * Facebook authentication callback route.
+ */
 socialRouter.get("/facebook/callback");
 
-// GitHub authentication callback route.
-socialRouter.get("/github/callback");
+/**
+ * GitHub authentication callback route.
+ */
+socialRouter.get(
+  "/github/callback",
+  socialControllers.githubCallbackController
+);
 
-// Google authentication callback route.
+/**
+ * Google authentication callback route.
+ */
 socialRouter.get(
   "/google/callback",
   socialControllers.googleCallbackController
 );
 
-// Twitter authentication callback route.
+/**
+ * Twitter authentication callback route.
+ */
 socialRouter.get("/twitter/callback");
 
 export default socialRouter;

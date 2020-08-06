@@ -23,7 +23,7 @@ export default class GoogleService {
 
   // Cache the client.
   _cacheOAuth2Client() {
-    oauth2ClientsCache[this._clientID] = {
+    cache[this._clientID] = {
       oauth2Client: this.oauth2Client,
       socialCallback: this._socialCallback,
     };
@@ -54,22 +54,20 @@ export default class GoogleService {
   // Returns the formatted profile of the authenticated Google user and a redirect callback.
   async getData(clientID, code) {
     try {
-      const cachedClient = oauth2ClientsCache[clientID];
+      const { oauth2Client, socialCallback } = cache[clientID];
 
       // Delete cached client.
-      oauth2ClientsCache[clientID] = null;
+      cache[clientID] = null;
 
-      const { tokens } = await cachedClient.oauth2Client.getToken(code);
-      cachedClient.oauth2Client.setCredentials(tokens);
+      const { tokens } = await oauth2Client.getToken(code);
+      oauth2Client.setCredentials(tokens);
 
       const oauth2 = google.oauth2({
-        auth: cachedClient.oauth2Client,
+        auth: oauth2Client,
         version: "v2",
       });
 
       const res = await oauth2.userinfo.get();
-
-      console.log(res);
 
       const profile = {
         googleId: res.data.id,
@@ -83,7 +81,7 @@ export default class GoogleService {
 
       return {
         profile,
-        socialCallback: cachedClient.socialCallback,
+        socialCallback: socialCallback,
       };
     } catch (error) {
       console.log(error);
@@ -95,4 +93,4 @@ export default class GoogleService {
 /**
  * This cache stores clients for use on the callback received from Google.
  */
-const oauth2ClientsCache = {};
+const cache = {};

@@ -27,6 +27,10 @@ const authProvider = (providerType) => {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     };
+    req.settings.githubAuthProvider = {
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    };
     req.settings.socialCallback = `${process.env.HOST}/social/authCallback`;
 
     switch (providerType) {
@@ -44,7 +48,7 @@ const authProvider = (providerType) => {
         break;
       case TWITTER_PROVIDER:
         provider = req.settings.twitterAuthProvider;
-        providerEnabled = provider && provider.key;
+        providerEnabled = provider && provider.consumerKey;
         break;
 
       default:

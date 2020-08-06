@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/microapidev/auth-microapi#readme",
   "dependencies": {
+    "axios": "^0.19.2",
     "bcrypt": "^5.0.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
