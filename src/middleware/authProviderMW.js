@@ -1,4 +1,5 @@
 import CustomError from "../utils/customError";
+import testSettings from "./__test__/testSettings";
 
 // Supported federated authentication providers.
 export const FACEBOOK_PROVIDER = "Facebook";
@@ -21,26 +22,8 @@ const authProvider = (providerType) => {
     let provider;
     let providerEnabled = false;
 
-    // Test Data ===================================================
-    req.settings = {};
-    req.settings.facebookAuthProvider = {
-      appID: process.env.FACEBOOK_APP_ID,
-      appSecret: process.env.FACEBOOK_APP_SECRET,
-    };
-    req.settings.googleAuthProvider = {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    };
-    req.settings.githubAuthProvider = {
-      clientID: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    };
-    req.settings.twitterAuthProvider = {
-      consumerKey: process.env.TWITTER_CONSUMER_KEY,
-      consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-    };
-    req.settings.socialCallback = `${process.env.HOST}/social/authCallback`;
-    // End Test Data ===============================================
+    // Test Data
+    req.settings = testSettings();
 
     switch (providerType) {
       case FACEBOOK_PROVIDER:
