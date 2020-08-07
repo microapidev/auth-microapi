@@ -1,12 +1,12 @@
 paths:
-  # Endpoint to authenticate a Google user
-  /social/google:
+  # Endpoint to authenticate a Twitter user
+  /social/twitter:
     # GET operation
     get:
       tags:
         - providers
 
-      summary: Authenticates with Google
+      summary: Authenticates with Twitter
 
       responses:
         "200":
@@ -22,7 +22,7 @@ paths:
                 properties:
                   authenticationUrl:
                     type: string
-                    example: https://accounts.google.com/o/oauth2/v2/auth/oauthchooseaccount
+                    example: https://api.twitter.com/oauth/authenticate
         "400":
           description: Invalid body supplied
           schema:
