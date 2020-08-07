@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -9,3 +10,10 @@ const IndexSchema = new Schema({
 });
 
 module.exports = mongoose.model("Index", IndexSchema);
+=======
+const UserModel = require("./users");
+
+module.exports = {
+  UserModel,
+};
+>>>>>>> Stashed changes

@@ -33,7 +33,6 @@ const userSchema = new mongooose.Schema(
     resetPasswordExpire: Date,
     phone: {
       type: String,
-      required: true,
     },
     otp: {
       isEnabled: {
@@ -79,5 +78,14 @@ const userSchema = new mongooose.Schema(
   },
   { timestamps: true }
 );
+
+userSchema.set("toJSON", {
+  transform: (document, user) => {
+    user.id = user._id.toString();
+    delete user._id;
+    delete user.__v;
+    delete user.password;
+  },
+});
 
 module.exports = mongooose.model("User", userSchema);
