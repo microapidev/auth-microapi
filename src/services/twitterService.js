@@ -19,7 +19,7 @@ export default class TwitterService {
       this._consumerKey,
       this._consumerSecret,
       "1.0A",
-      "http://localhost:5000/social/twitter/callback",
+      `${process.env.HOST}/social/twitter/callback`,
       "HMAC-SHA1"
     );
   }

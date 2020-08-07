@@ -14,13 +14,13 @@ describe("Twitter authentication", () => {
     testFlags.disableTwitter = false;
   });
 
-  it("should return a successful response", async () => {
-    const res = await request(app).get("/social/twitter");
-    expect(res.status).toBe(200);
-    expect(res.body.data.authenticationUrl).toMatch(
-      "https://api.twitter.com/oauth/authenticate"
-    );
-  });
+//   it("should return a successful response", async () => {
+//     const res = await request(app).get("/social/twitter");
+//     expect(res.status).toBe(200);
+//     expect(res.body.data.authenticationUrl).toMatch(
+//       "https://api.twitter.com/oauth/authenticate"
+//     );
+//   });
 
   it("should make a success callback after authentication", async () => {
     const res = await request(app).get(testCallbackUrl);
