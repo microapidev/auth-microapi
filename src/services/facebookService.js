@@ -70,8 +70,6 @@ export default class FacebookService {
         },
       });
 
-      console.log(userResponse.data);
-
       return {
         profile: {
           facebookId: userResponse.data.id,

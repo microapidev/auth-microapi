@@ -33,4 +33,11 @@ describe("Google authentication", () => {
     const res = await request(app).get("/social/google");
     expect(res.status).toBe(401);
   });
+
+  it("should return a 500 error", async () => {
+    const res = await request(app).get(
+      "/social/google/callback?state=justastring&code=justanotherstring"
+    );
+    expect(res.status).toBe(500);
+  });
 });

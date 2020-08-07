@@ -33,4 +33,11 @@ describe("Facebook authentication", () => {
     const res = await request(app).get("/social/facebook");
     expect(res.status).toBe(401);
   });
+
+  it("should return a 500 error", async () => {
+    const res = await request(app).get(
+      "/social/facebook/callback?state=justastring&code=justanotherstring"
+    );
+    expect(res.status).toBe(500);
+  });
 });

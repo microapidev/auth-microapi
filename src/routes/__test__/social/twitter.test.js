@@ -33,4 +33,11 @@ describe("Twitter authentication", () => {
     const res = await request(app).get("/social/twitter");
     expect(res.status).toBe(401);
   });
+
+  it("should return a 500 error", async () => {
+    const res = await request(app).get(
+      "/social/twitter/callback?oauth_token=justastring&oauth_verifier=justanotherstring"
+    );
+    expect(res.status).toBe(500);
+  });
 });
