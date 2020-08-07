@@ -55,7 +55,10 @@ socialRouter.get(
 /**
  * Facebook authentication callback route.
  */
-socialRouter.get("/facebook/callback");
+socialRouter.get(
+  "/facebook/callback",
+  socialControllers.facebookCallbackController
+);
 
 /**
  * GitHub authentication callback route.
