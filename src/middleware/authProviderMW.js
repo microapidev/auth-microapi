@@ -21,7 +21,7 @@ const authProvider = (providerType) => {
     let provider;
     let providerEnabled = false;
 
-    // Test Data
+    // Test Data ===================================================
     req.settings = {};
     req.settings.googleAuthProvider = {
       clientID: process.env.GOOGLE_CLIENT_ID,
@@ -31,24 +31,32 @@ const authProvider = (providerType) => {
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
     };
+    req.settings.twitterAuthProvider = {
+      consumerKey: process.env.TWITTER_CONSUMER_KEY,
+      consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+    };
     req.settings.socialCallback = `${process.env.HOST}/social/authCallback`;
+    // End Test Data ===============================================
 
     switch (providerType) {
       case FACEBOOK_PROVIDER:
         provider = req.settings.facebookAuthProvider;
-        providerEnabled = provider && provider.appID;
+        providerEnabled = provider && provider.appID && provider.appSecret;
         break;
       case GITHUB_PROVIDER:
         provider = req.settings.githubAuthProvider;
-        providerEnabled = provider && provider.clientID;
+        providerEnabled =
+          provider && provider.clientID && provider.clientSecret;
         break;
       case GOOGLE_PROVIDER:
         provider = req.settings.googleAuthProvider;
-        providerEnabled = provider && provider.clientID;
+        providerEnabled =
+          provider && provider.clientID && provider.clientSecret;
         break;
       case TWITTER_PROVIDER:
         provider = req.settings.twitterAuthProvider;
-        providerEnabled = provider && provider.consumerKey;
+        providerEnabled =
+          provider && provider.consumerKey && provider.consumerSecret;
         break;
 
       default:

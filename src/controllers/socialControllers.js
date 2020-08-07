@@ -59,10 +59,11 @@ export const googleController = (req, res, next) => {
  * Controller responsible for returning an authentication URL for the client
  * to initiate the Twitter's authentication flow.
  */
-export const twitterController = (req, res, next) => {
+export const twitterController = async (req, res, next) => {
   try {
-    const twitterService = new TwitterService(req.provider);
-    const authenticationUrl = twitterService.getAuthenticationUrl();
+    const twitterService = new TwitterService();
+    twitterService.authenticate(req.provider, req.socialCallback);
+    const authenticationUrl = await twitterService.getAuthenticationUrl();
 
     responseHandler(res, 200, { authenticationUrl });
   } catch (error) {
@@ -138,6 +139,51 @@ export const googleCallbackController = async (req, res, next) => {
         query: {
           success: true,
           id: profile.googleId,
+          isVerified: profile.isVerified,
+          firstname: profile.firstname,
+          lastname: profile.lastname,
+          username: profile.username,
+          email: profile.email,
+          photo: profile.photo,
+        },
+      });
+    } else {
+      redirectUrl = url.format({
+        pathname: socialCallback,
+        query: { success: false },
+      });
+    }
+
+    res.redirect(redirectUrl);
+  } catch (error) {
+    next(new InternalServerError(error));
+  }
+};
+
+/**
+ * Controller responsible for handling the callback from Twitter's authentication flow and
+ * returning the user data to the client via a redirect to the client's provided
+ * socialCallback.
+ */
+export const twitterCallbackController = async (req, res, next) => {
+  try {
+    // The state contains the client ID.
+    const { oauth_token, oauth_verifier } = req.query;
+
+    const twitterService = new TwitterService();
+    const { profile, socialCallback } = await twitterService.getData(
+      oauth_token.toString(),
+      oauth_verifier.toString()
+    );
+
+    let redirectUrl;
+
+    if (profile && profile.twitterId) {
+      redirectUrl = url.format({
+        pathname: socialCallback,
+        query: {
+          success: true,
+          id: profile.twitterId,
           isVerified: profile.isVerified,
           firstname: profile.firstname,
           lastname: profile.lastname,

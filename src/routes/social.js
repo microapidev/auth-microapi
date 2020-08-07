@@ -76,6 +76,9 @@ socialRouter.get(
 /**
  * Twitter authentication callback route.
  */
-socialRouter.get("/twitter/callback");
+socialRouter.get(
+  "/twitter/callback",
+  socialControllers.twitterCallbackController
+);
 
 export default socialRouter;
