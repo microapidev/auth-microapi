@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const { connect, disconnect } = require("../../db");
 const UserModel = require("../users");
 const { userData, userDataIncomplete } = require("../__mocks__/user");
+const transformUser = require("../../utils/models/transform-user");
 
 describe("User model", () => {
   beforeAll(() => {
@@ -17,10 +18,12 @@ describe("User model", () => {
   });
 
   test("Create and save user", async () => {
+    const UserModelSetMock = jest.spyOn(UserModel.prototype, "set");
     const createdUser = new UserModel(userData);
     const savedUser = await createdUser.save();
     expect(savedUser).toEqual(createdUser);
     expect(savedUser).toMatchObject(userData);
+    expect(UserModelSetMock).toHaveBeenCalledTimes(1);
   });
 
   test("Create fails without required fields", async () => {
@@ -44,5 +47,19 @@ describe("User model", () => {
     const savedUserDataInvalid = await userDataInvalid.save();
     expect(savedUserDataInvalid).toMatchObject(userData);
     expect(savedUserDataInvalid.create).toBeUndefined();
+  });
+
+  test("Transform user document", async () => {
+    const createdUser = new UserModel(userData);
+    const properties = ["_id", "__v", "password"];
+    await createdUser.validate();
+    properties.forEach((property) => {
+      expect(createdUser).toHaveProperty(property);
+    });
+    properties.forEach((property) => {
+      expect(
+        createdUser.toObject({ transform: transformUser })
+      ).not.toHaveProperty(property);
+    });
   });
 });

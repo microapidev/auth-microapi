@@ -4,6 +4,7 @@
  * @author piouson <https://github.com/piouson>
  */
 const mongooose = require("mongoose");
+const transformUser = require("../utils/models/transform-user");
 
 /**
  * User schema
@@ -76,16 +77,15 @@ const userSchema = new mongooose.Schema(
       default: Date.now,
     },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toObject: {
+      transform: transformUser,
+    },
+    toJSON: {
+      transform: transformUser,
+    },
+  }
 );
-
-userSchema.set("toJSON", {
-  transform: (document, user) => {
-    user.id = user._id.toString();
-    delete user._id;
-    delete user.__v;
-    delete user.password;
-  },
-});
 
 module.exports = mongooose.model("User", userSchema);
