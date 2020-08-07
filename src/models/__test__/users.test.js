@@ -18,12 +18,24 @@ describe("User model", () => {
   });
 
   test("Create and save user", async () => {
-    const UserModelSetMock = jest.spyOn(UserModel.prototype, "set");
     const createdUser = new UserModel(userData);
     const savedUser = await createdUser.save();
     expect(savedUser).toEqual(createdUser);
     expect(savedUser).toMatchObject(userData);
-    expect(UserModelSetMock).toHaveBeenCalledTimes(1);
+  });
+
+  test("Create fails with duplicate emails", async () => {
+    const createdUser = new UserModel(userData);
+    await createdUser.save();
+    let err;
+    try {
+      await new UserModel(userData).save();
+    } catch (error) {
+      err = error;
+    }
+    expect(err).toBeDefined();
+    expect(err.name).toEqual("MongoError");
+    expect(err.message).toMatch(new RegExp(userData.email));
   });
 
   test("Create fails without required fields", async () => {
@@ -59,6 +71,9 @@ describe("User model", () => {
     properties.forEach((property) => {
       expect(
         createdUser.toObject({ transform: transformUser })
+      ).not.toHaveProperty(property);
+      expect(
+        createdUser.toJSON({ transform: transformUser })
       ).not.toHaveProperty(property);
     });
   });
