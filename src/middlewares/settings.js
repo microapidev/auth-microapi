@@ -24,6 +24,24 @@ const getSettings = async (apiKey) => {
   let connection;
   let connectionTries = 0;
 
+  let outsideResolve;
+  let outsideReject;
+  const promise = new Promise((resolve, reject) => {
+    outsideResolve = resolve;
+    outsideReject = reject;
+  });
+
+  function getConnectionErrorResponse(err) {
+    let message;
+
+    if (connectionTries === MAX_CONNECTION_TRIES) {
+      message = "Maximum connection tries reached";
+    } else {
+      message = err.message;
+    }
+    return { errors: [{ message }] };
+  }
+
   function handleDisconnect() {
     connectionTries += 1;
     // Recreate the connection, since the old one cannot be reused.
@@ -31,11 +49,14 @@ const getSettings = async (apiKey) => {
 
     connection.connect((err) => {
       // The server is either down or restarting (takes a while sometimes).
-      if (err) {
+      if (err && connectionTries <= MAX_CONNECTION_TRIES) {
         console.log("error when connecting to db:", err);
         // We introduce a delay before attempting to reconnect, to avoid a hot loop,
         // and to allow our node script to process asynchronous requests in the meantime.
         setTimeout(handleDisconnect, 2000);
+      } else {
+        const errorResponse = getConnectionErrorResponse(err);
+        outsideReject(errorResponse);
       }
     });
 
@@ -49,7 +70,8 @@ const getSettings = async (apiKey) => {
         // connnection idle timeout (the wait_timeout server variable configures this)
         handleDisconnect();
       } else {
-        throw err;
+        const errorResponse = getConnectionErrorResponse(err);
+        outsideReject(errorResponse);
       }
     });
   }
@@ -66,16 +88,20 @@ const getSettings = async (apiKey) => {
         handleDisconnect();
       }
       console.log("Query error: ", err);
-      return;
+      const errorResponse = getConnectionErrorResponse(err);
+      outsideReject(errorResponse);
     }
+
     console.log(results);
+    //mock the request for now with mocksettings
+    //settings need to come from source
+    //validate the settings by matching against predefined schema
+    // const settings = settingsHandler.parseSettings(getMockSettings(), true);
+
+    outsideResolve(results);
   });
 
-  //mock the request for now with mocksettings
-  //settings need to come from source
-  //validate the settings by matching against predefined schema
-  const settings = settingsHandler.parseSettings(getMockSettings(), true);
-  return settings;
+  return promise;
 };
 
 const settingsMiddleware = async (req, res, next) => {
