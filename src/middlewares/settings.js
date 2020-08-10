@@ -13,6 +13,8 @@ const dbConfig = {
   port: 5321,
 };
 
+const MAX_CONNECTION_TRIES = 5;
+
 //get settings from external DB or endpoint
 //function might be modified to accomodate both sources
 const getSettings = async (apiKey) => {
@@ -20,8 +22,10 @@ const getSettings = async (apiKey) => {
   log(apiKey);
 
   let connection;
+  let connectionTries = 0;
 
   function handleDisconnect() {
+    connectionTries += 1;
     // Recreate the connection, since the old one cannot be reused.
     connection = mysql.createConnection(dbConfig);
 
@@ -37,7 +41,10 @@ const getSettings = async (apiKey) => {
 
     connection.on("error", (err) => {
       console.log("db error", err);
-      if (err.code === "PROTOCOL_CONNECTION_LOST") {
+      if (
+        err.code === "PROTOCOL_CONNECTION_LOST" &&
+        connectionTries <= MAX_CONNECTION_TRIES
+      ) {
         // Connection to the MySQL server is usually lost due to either server restart, or a
         // connnection idle timeout (the wait_timeout server variable configures this)
         handleDisconnect();
@@ -52,7 +59,10 @@ const getSettings = async (apiKey) => {
   // Query the database for the project belonging to the project
   connection.query("SELECT * FROM user_dashboard_project", (err, results) => {
     if (err) {
-      if (err.code === "PROTOCOL_CONNECTION_LOST") {
+      if (
+        err.code === "PROTOCOL_CONNECTION_LOST" &&
+        connectionTries <= MAX_CONNECTION_TRIES
+      ) {
         handleDisconnect();
       }
       console.log("Query error: ", err);
