@@ -1,14 +1,65 @@
 require("dotenv").config();
+const mysql = require("mysql");
 const CustomResponse = require("../utils/response");
 const settingsHandler = require("../utils/settingsHandler");
 const getMockSettings = require("../utils/mocks/settings");
 const log = require("debug")("log");
+
+const dbConfig = {
+  host: "lucid.blog",
+  user: "root",
+  password: "123456",
+  database: "microapi",
+  port: 5321,
+};
 
 //get settings from external DB or endpoint
 //function might be modified to accomodate both sources
 const getSettings = async (apiKey) => {
   //fool linter
   log(apiKey);
+
+  let connection;
+
+  function handleDisconnect() {
+    // Recreate the connection, since the old one cannot be reused.
+    connection = mysql.createConnection(dbConfig);
+
+    connection.connect((err) => {
+      // The server is either down or restarting (takes a while sometimes).
+      if (err) {
+        console.log("error when connecting to db:", err);
+        // We introduce a delay before attempting to reconnect, to avoid a hot loop,
+        // and to allow our node script to process asynchronous requests in the meantime.
+        setTimeout(handleDisconnect, 2000);
+      }
+    });
+
+    connection.on("error", (err) => {
+      console.log("db error", err);
+      if (err.code === "PROTOCOL_CONNECTION_LOST") {
+        // Connection to the MySQL server is usually lost due to either server restart, or a
+        // connnection idle timeout (the wait_timeout server variable configures this)
+        handleDisconnect();
+      } else {
+        throw err;
+      }
+    });
+  }
+
+  handleDisconnect();
+
+  // Query the database for the project belonging to the project
+  connection.query("SELECT * FROM user_dashboard_project", (err, results) => {
+    if (err) {
+      if (err.code === "PROTOCOL_CONNECTION_LOST") {
+        handleDisconnect();
+      }
+      console.log("Query error: ", err);
+      return;
+    }
+    console.log(results);
+  });
 
   //mock the request for now with mocksettings
   //settings need to come from source
