@@ -61,29 +61,38 @@ const googleAuthProvider = (req, res, next) =>
 
 const authProvider = (providerType) => {
   return async (req, res, next) => {
-    const admin = await Admin.findById(req.admin.id).populate("settings");
-    const { successCallbackUrl, failureCallbackUrl } = admin.settings;
+    // Temporary check during experimentation to check whether or not the settingsMiddleware
+    // is enabled. If its enabled then we don't have to use our backup settings
+    // stored in our database.
+    if (!req.settings) {
+      console.log(`No settings from settingsMiddleware: ${req.settings}`);
+      admin = await Admin.findById(req.admin.id).populate("settings");
+      req.settings = admin.settings;
+    } else {
+      console.log(`Received settings from settingsMiddleware: ${req.settings}`);
+    }
 
     let provider;
     let providerEnabled = false;
     const callbacksAvailable =
-      successCallbackUrl !== null && failureCallbackUrl !== null;
+      req.settings.successCallbackUrl !== null &&
+      req.settings.failureCallbackUrl !== null;
 
     switch (providerType) {
       case TWITTER_PROVIDER:
-        provider = admin.settings.twitterAuthProvider;
+        provider = req.settings.settings.twitterAuthProvider;
         providerEnabled = provider && provider.key;
         break;
       case FACEBOOK_PROVIDER:
-        provider = admin.settings.facebookAuthProvider;
+        provider = req.settings.facebookAuthProvider;
         providerEnabled = provider && provider.appID;
         break;
       case GITHUB_PROVIDER:
-        provider = admin.settings.githubAuthProvider;
+        provider = req.settings.githubAuthProvider;
         providerEnabled = provider && provider.clientID;
         break;
       case GOOGLE_PROVIDER:
-        provider = admin.settings.googleAuthProvider;
+        provider = req.settings.googleAuthProvider;
         providerEnabled = provider && provider.clientID;
         break;
 
@@ -95,8 +104,8 @@ const authProvider = (providerType) => {
 
     if (providerEnabled && callbacksAvailable) {
       req.provider = provider;
-      req.successCallbackUrl = successCallbackUrl;
-      req.failureCallbackUrl = failureCallbackUrl;
+      req.successCallbackUrl = req.settings.successCallbackUrl;
+      req.failureCallbackUrl = req.settings.failureCallbackUrl;
 
       next();
     } else {
