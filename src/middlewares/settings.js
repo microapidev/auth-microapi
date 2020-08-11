@@ -6,11 +6,11 @@ const getMockSettings = require("../utils/mocks/settings");
 const log = require("debug")("log");
 
 const dbConfig = {
-  host: "lucid.blog",
-  user: "root",
-  password: "123456",
-  database: "microapi",
-  port: 5321,
+  host: process.env.MICROAPI_DB_HOST,
+  user: process.env.MICROAPI_DB_USER,
+  password: process.env.MICROAPI_DB_PASSWORD,
+  database: process.env.MICROAPI_DB_DATABASE,
+  port: process.env.MICROAPI_DB_PORT,
 };
 
 const MAX_CONNECTION_TRIES = 5;
@@ -37,7 +37,8 @@ const getSettings = async (apiKey) => {
     if (connectionTries === MAX_CONNECTION_TRIES) {
       message = "Maximum connection tries reached";
     } else {
-      message = err.message;
+      console.log(err);
+      message = err;
     }
     return { errors: [{ message }] };
   }
@@ -49,57 +50,64 @@ const getSettings = async (apiKey) => {
 
     connection.connect((err) => {
       // The server is either down or restarting (takes a while sometimes).
-      if (err && connectionTries <= MAX_CONNECTION_TRIES) {
-        console.log("error when connecting to db:", err);
-        // We introduce a delay before attempting to reconnect, to avoid a hot loop,
-        // and to allow our node script to process asynchronous requests in the meantime.
-        setTimeout(handleDisconnect, 2000);
+      if (err) {
+        if (connectionTries <= MAX_CONNECTION_TRIES) {
+          console.log("error when connecting to db:", err.message);
+          // We introduce a delay before attempting to reconnect, to avoid a hot loop,
+          // and to allow our node script to process asynchronous requests in the meantime.
+          setTimeout(handleDisconnect, 2000);
+        } else {
+          const errorResponse = getConnectionErrorResponse(err);
+          outsideReject(errorResponse);
+        }
       } else {
-        const errorResponse = getConnectionErrorResponse(err);
-        outsideReject(errorResponse);
+        // Query the database for the project belonging to the project
+        connection.query(
+          "SELECT * FROM user_dashboard_project",
+          (err, results) => {
+            if (err) {
+              if (
+                err.code === "PROTOCOL_CONNECTION_LOST" ||
+                connectionTries <= MAX_CONNECTION_TRIES
+              ) {
+                handleDisconnect();
+              }
+              console.log("Query error: ", err);
+              const errorResponse = getConnectionErrorResponse(err);
+              outsideReject(errorResponse);
+            }
+
+            console.log(results);
+            //mock the request for now with mocksettings
+            //settings need to come from source
+            //validate the settings by matching against predefined schema
+            // const settings = settingsHandler.parseSettings(getMockSettings(), true);
+
+            outsideResolve(results);
+          }
+        );
       }
     });
 
     connection.on("error", (err) => {
-      console.log("db error", err);
-      if (
-        err.code === "PROTOCOL_CONNECTION_LOST" &&
-        connectionTries <= MAX_CONNECTION_TRIES
-      ) {
-        // Connection to the MySQL server is usually lost due to either server restart, or a
-        // connnection idle timeout (the wait_timeout server variable configures this)
-        handleDisconnect();
-      } else {
-        const errorResponse = getConnectionErrorResponse(err);
-        outsideReject(errorResponse);
+      if (err) {
+        console.log("db error", err);
+        if (
+          err.code === "PROTOCOL_CONNECTION_LOST" ||
+          connectionTries <= MAX_CONNECTION_TRIES
+        ) {
+          // Connection to the MySQL server is usually lost due to either server restart, or a
+          // connnection idle timeout (the wait_timeout server variable configures this)
+          handleDisconnect();
+        } else {
+          const errorResponse = getConnectionErrorResponse(err);
+          outsideReject(errorResponse);
+        }
       }
     });
   }
 
   handleDisconnect();
-
-  // Query the database for the project belonging to the project
-  connection.query("SELECT * FROM user_dashboard_project", (err, results) => {
-    if (err) {
-      if (
-        err.code === "PROTOCOL_CONNECTION_LOST" &&
-        connectionTries <= MAX_CONNECTION_TRIES
-      ) {
-        handleDisconnect();
-      }
-      console.log("Query error: ", err);
-      const errorResponse = getConnectionErrorResponse(err);
-      outsideReject(errorResponse);
-    }
-
-    console.log(results);
-    //mock the request for now with mocksettings
-    //settings need to come from source
-    //validate the settings by matching against predefined schema
-    // const settings = settingsHandler.parseSettings(getMockSettings(), true);
-
-    outsideResolve(results);
-  });
 
   return promise;
 };
