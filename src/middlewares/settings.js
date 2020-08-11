@@ -123,15 +123,17 @@ const settingsMiddleware = async (req, res, next) => {
     // we are calling our custom HTTP header X-MicroAPI-ProjectKey
     const apiKey = req.headers["x-microapi-projectkey"];
     if (!apiKey) {
-      res
-        .status(401)
-        .json(
-          CustomResponse(
-            "UnauthorizedError",
-            { statusCode: 401, message: "No API key found" },
-            false
-          )
-        );
+      // Temporarily optional as this is an experimental feature.
+      next();
+      // res
+      //   .status(401)
+      //   .json(
+      //     CustomResponse(
+      //       "UnauthorizedError",
+      //       { statusCode: 401, message: "No API key found" },
+      //       false
+      //     )
+      //   );
     }
 
     // get settings from parent DB/source
