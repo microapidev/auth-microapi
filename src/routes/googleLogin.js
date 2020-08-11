@@ -3,6 +3,7 @@ const passport = require("passport");
 const url = require("url");
 const { google } = require("googleapis");
 const CustomResponse = require("../utils/response");
+const settingsMiddleware = require("../middlewares/settings");
 const createGoogleStrategy = require("../config/passport/googleStrategy");
 const {
   authorizeUser,
@@ -13,7 +14,7 @@ const route = express.Router();
 // The credentials of all who are currently undergoing Google's authentication flow.
 const activeCredentials = {};
 
-route.get("/", authorizeUser, googleAuthProvider, async (req, res) => {
+route.get("/", settingsMiddleware, authorizeUser, googleAuthProvider, async (req, res) => {
   try {
     const oauth2Client = new google.auth.OAuth2(
       req.provider.clientID,
